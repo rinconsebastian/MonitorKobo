@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>@ViewData["Title"] - seguimiento</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
+    <link rel="stylesheet" href="~/css/site.css" />
+
+    <partial name="_colorMenuPartial" />
+</head>
+<body>
+    <header <partial name="_imagenNavegacionPartial" />>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Basic"><partial name="_LogoPartial" /></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <partial name="_MenuHeaderPartial" />
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>@ViewData["Title"]</h2>
+        <div>
+            <h4>@ViewData["Subtitle"]</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-3">
+                    <partial name="_MenuAdmin" />
+                </div>
+                <div class="col-md-9">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_footerPartial" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $("a#@(ViewContext.RouteData.Values["Controller"])-@(ViewContext.RouteData.Values["Action"])").addClass("active");
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+

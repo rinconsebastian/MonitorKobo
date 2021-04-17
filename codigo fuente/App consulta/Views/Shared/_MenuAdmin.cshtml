@@ -1,0 +1,47 @@
+﻿
+@{
+
+    var permisoResponsable = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Responsable.Editar" && c.Value == "1"));
+    var permisoConfGeneral = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General" && c.Value == "1"));
+    var permisoRol = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar" && c.Value == "1"));
+    var permisoUsuario = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar" && c.Value == "1"));
+    var permisoLogs = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs" && c.Value == "1"));
+}
+<ul class="nav nav-pills flex-column">
+    <li class="nav-item">
+        <a id="Configuracions-Index" asp-controller="Configuracions" asp-action="Index" class="nav-link">Inicio</a>
+    </li>
+
+    @if (permisoConfGeneral == true)
+    {
+        <li class="nav-item">
+            <a id="Configuracions-Index2" asp-controller="Configuracions" asp-action="Index2" class="nav-link">General</a>
+        </li>
+    }
+
+    @if (permisoResponsable == true)
+    {
+        <li class="nav-item">
+            <a id="Responsables-Index2" asp-controller="Responsables" asp-action="Index2" class="nav-link">Dependencias</a>
+        </li>
+    }
+
+    @if (permisoLogs == true)
+    {
+        <li class="nav-item">
+            <a id="Logs-Index" asp-controller="Logs" asp-action="Index" class="nav-link">Registro de actividad</a>
+        </li>
+    }
+    @if (permisoRol == true)
+    {
+        <li class="nav-item">
+            <a id="Rol-Index" asp-controller="Rol" asp-action="Index" class="nav-link">Roles</a>
+        </li>
+    }
+    @if (permisoUsuario == true)
+    {
+        <li class="nav-item">
+            <a id="Users-Index" asp-controller="Users" asp-action="Index" class="nav-link">Usuarios</a>
+        </li>
+    }
+</ul>
