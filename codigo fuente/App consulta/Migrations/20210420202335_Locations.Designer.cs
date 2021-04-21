@@ -3,14 +3,16 @@ using System;
 using App_consulta.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210420202335_Locations")]
+    partial class Locations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -356,51 +358,6 @@ namespace App_consulta.Migrations
                         });
                 });
 
-            modelBuilder.Entity("App_consulta.Models.Pollster", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("DNI")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdLocation")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdResponsable")
-                        .HasColumnType("int");
-
-                    b.Property<string>("IdUser")
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("code")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("creationDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("email")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdLocation");
-
-                    b.HasIndex("IdResponsable");
-
-                    b.HasIndex("IdUser");
-
-                    b.ToTable("Pollster");
-                });
-
             modelBuilder.Entity("App_consulta.Models.Responsable", b =>
                 {
                     b.Property<int>("Id")
@@ -625,31 +582,6 @@ namespace App_consulta.Migrations
                     b.Navigation("LocationLevel");
 
                     b.Navigation("LocationParent");
-                });
-
-            modelBuilder.Entity("App_consulta.Models.Pollster", b =>
-                {
-                    b.HasOne("App_consulta.Models.Location", "LocationParent")
-                        .WithMany()
-                        .HasForeignKey("IdLocation")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("App_consulta.Models.Responsable", "Responsable")
-                        .WithMany()
-                        .HasForeignKey("IdResponsable")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("App_consulta.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("IdUser");
-
-                    b.Navigation("LocationParent");
-
-                    b.Navigation("Responsable");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("App_consulta.Models.Responsable", b =>

@@ -24,6 +24,12 @@ namespace App_consulta.Data
 
         public DbSet<LogModel> Log { get; set; }
 
+        public DbSet<LocationLevel> LocationLevel { get; set; }
+
+        public DbSet<Location> Location { get; set; }
+
+        public DbSet<Pollster> Pollster { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
