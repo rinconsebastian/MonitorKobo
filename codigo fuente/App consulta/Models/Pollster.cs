@@ -16,7 +16,7 @@ namespace App_consulta.Models
 
 
         [Display(Name = "Nombre")]
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Name { get; set; }
 
         [Display(Name = "Teléfono")]
@@ -29,7 +29,7 @@ namespace App_consulta.Models
 
 
         [Display(Name = "Cedula")]
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public int DNI { get; set; }
 
         [Display(Name = "Código")]
@@ -37,12 +37,14 @@ namespace App_consulta.Models
 
 
         [Display(Name = "Municipio")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public int IdLocation { get; set; }
         [ForeignKey("IdLocation")]
         public virtual Location LocationParent { get; set; }
 
 
         [Display(Name = "Coordinación")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public int IdResponsable { get; set; }
         [ForeignKey("IdResponsable")]
         public virtual Responsable Responsable { get; set; }

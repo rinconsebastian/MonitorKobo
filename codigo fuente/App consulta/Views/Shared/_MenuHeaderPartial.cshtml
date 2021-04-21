@@ -5,10 +5,12 @@
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
         </li>
        
-        @if (User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General" && c.Value == "1") ||
-   (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Responsable" && c.Value == "1") ||
-   (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar" && c.Value == "1") ||
-   (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar" && c.Value == "1")))
+        @if (User.HasClaim(c => 
+         (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General" && c.Value == "1") ||
+         (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Responsable" && c.Value == "1") ||
+         (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar" && c.Value == "1") ||
+         (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar" && c.Value == "1"))
+            )
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Configuracions" asp-action="Index2">Configuracion</a>

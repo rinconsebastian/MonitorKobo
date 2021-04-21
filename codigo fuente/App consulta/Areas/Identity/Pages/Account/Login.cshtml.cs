@@ -43,15 +43,17 @@ namespace App_consulta.Areas.Identity.Pages.Account
 
         public class InputModel
         {
+            [Display(Name = "Correo electrónico")]
             [Required]
             [EmailAddress]
             public string Email { get; set; }
 
             [Required]
+            [Display(Name = "Contraseña")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "¿Recuérdame?")]
             public bool RememberMe { get; set; }
         }
 

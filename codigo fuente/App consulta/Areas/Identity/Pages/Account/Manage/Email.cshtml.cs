@@ -32,6 +32,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
 
         public string Username { get; set; }
 
+        [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
         public bool IsEmailConfirmed { get; set; }
@@ -44,9 +45,9 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
-            [Display(Name = "New email")]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+            [EmailAddress(ErrorMessage = " El campo {0}  no es un correo electrónico válido.")]
+            [Display(Name = "Nuevo correo electrónico")]
             public string NewEmail { get; set; }
         }
 
@@ -68,7 +69,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"No fue posible de cargar al usuario con ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -80,7 +81,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"No fue posible de cargar al usuario con ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -102,14 +103,14 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Confirme su email ",
+                    $"Por favor confirme su cuenta  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>haciendo clic aquí </a>.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "Enlace de confirmación para cambiar el correo electrónico enviado. Por favor revise su correo electrónico.";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Su correo electrónico no ha cambiado. ";
             return RedirectToPage();
         }
 
@@ -118,7 +119,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"No fue posible de cargar al usuario con ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -138,10 +139,10 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
                 email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                "Confirme su email ",
+                $"Por favor confirme su cuenta   <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>haciendo clic aquí </a>.");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "El mensaje de verificación ha sido enviado. Por favor revise su correo electrónico. ";
             return RedirectToPage();
         }
     }
