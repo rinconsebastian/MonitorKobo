@@ -49,8 +49,8 @@ namespace App_consulta.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+            [EmailAddress(ErrorMessage = " El campo {0}  no es un correo electrónico válido.")]
             public string Email { get; set; }
         }
 

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace App_consulta.Models
 {
@@ -22,25 +22,30 @@ namespace App_consulta.Models
         [Display(Name = "Teléfono")]
         public string PhoneNumber { get; set; }
 
-
         [Display(Name = "Correo electrónico")]
-        public string email { get; set; }
+        [EmailAddress(ErrorMessage = " El campo {0}  no es un correo electrónico válido.")]
+        public string Email { get; set; }
 
-
-
+        
         [Display(Name = "Cedula")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        [Remote(action: "VerifyDNI", controller: "Encuestador", AdditionalFields = nameof(Id) )]
         public int DNI { get; set; }
 
         [Display(Name = "Código")]
-        public string code { get; set; }
+        public string Code { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Departamento")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public int IdLocationParent { get; set; }
 
 
         [Display(Name = "Municipio")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public int IdLocation { get; set; }
         [ForeignKey("IdLocation")]
-        public virtual Location LocationParent { get; set; }
+        public virtual Location Location { get; set; }
 
 
         [Display(Name = "Coordinación")]
@@ -56,6 +61,6 @@ namespace App_consulta.Models
         public virtual ApplicationUser User { get; set; }
 
         [Display(Name = "Fecha registro")]
-        public DateTime creationDate { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

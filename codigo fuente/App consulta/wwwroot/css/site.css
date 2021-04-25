@@ -1218,3 +1218,10 @@ input, select, textarea {
         .reporte-row .reporte-row-ejecucion .form-control.Reportar-form-input {
             font-size: 11px;
         }
+
+.btn-xs {
+    padding: .25rem .4rem;
+    font-size: .875rem;
+    line-height: .5;
+    border-radius: .2rem;
+}

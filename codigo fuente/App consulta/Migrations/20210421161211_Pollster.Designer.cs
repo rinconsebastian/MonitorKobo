@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210421010256_Pollsters")]
-    partial class Pollsters
+    [Migration("20210421161211_Pollster")]
+    partial class Pollster
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,6 +155,9 @@ namespace App_consulta.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("CodeEncuestador")
+                        .HasColumnType("int");
+
                     b.Property<string>("Entidad")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -199,6 +202,7 @@ namespace App_consulta.Migrations
                         new
                         {
                             id = 1,
+                            CodeEncuestador = 0,
                             Entidad = "Entidad",
                             Logo = "/images/SIE.png",
                             NombrePlan = "Plan",
@@ -383,16 +387,18 @@ namespace App_consulta.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("code")
+                    b.Property<string>("Code")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("creationDate")
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("email")
+                    b.Property<string>("Email")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("DNI");
 
                     b.HasIndex("IdLocation");
 

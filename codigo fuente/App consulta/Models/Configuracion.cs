@@ -54,7 +54,10 @@ namespace App_consulta.Models
         [Display(Name = "Libre")]
         public bool libre { get; set; }
 
-        
+        [Required]
+        [Range(0, 9999,ErrorMessage = "El valor del {0} debe estar entre {1} y {2}.")]
+        [Display(Name = "Código Encuestador")]
+        public int CodeEncuestador { get; set; }
 
     }
 }

@@ -62,19 +62,21 @@ namespace App_consulta
                                   policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General", "1", "2", "3", "4", "5"));
                 options.AddPolicy("Configuracion.Logs", policy =>
                              policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs", "1"));
-
                 options.AddPolicy("Configuracion.Responsable", policy =>
                               policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Responsable", "1"));
-
-                
                 options.AddPolicy("Responsable.Editar", policy =>
                                   policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Responsable.Editar", "1"));
-                
                 options.AddPolicy("Rol.Editar", policy =>
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar", "1"));
                 options.AddPolicy("Usuario.Editar", policy =>
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar", "1"));
-               
+
+                options.AddPolicy("Encuestador.Ver", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver", "1"));
+                options.AddPolicy("Encuestador.Editar", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar", "1"));
+                options.AddPolicy("Encuestador.Administrar", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar", "1"));
             });
 
 
@@ -88,6 +90,12 @@ namespace App_consulta
                    Configuration["EmailSender:displayName"]
                )
            );
+
+          services.AddRazorPages().AddMvcOptions(
+              options =>{
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+                    _ => "Este campo es obligatorio. ");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

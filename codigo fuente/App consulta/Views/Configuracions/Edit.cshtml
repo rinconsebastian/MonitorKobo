@@ -9,7 +9,7 @@
 <form asp-action="Edit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="id" />
-   
+
     <div class="form-group row">
         <label asp-for="Logo" class="col-sm-3 col-form-label"></label>
         <div class="col-sm-9">
@@ -79,7 +79,15 @@
             <span asp-validation-for="NombrePlan" class="text-danger"></span>
         </div>
     </div>
-   
+
+    <div class="form-group row">
+        <label asp-for="CodeEncuestador" class="col-sm-3 col-form-label"></label>
+        <div class="col-sm-9">
+            <input asp-for="CodeEncuestador" class="form-control" />
+            <span asp-validation-for="CodeEncuestador" class="text-danger"></span>
+        </div>
+    </div>
+
     <div class="form-group row row">
         <div class="col-sm-9 offset-3">
             <div class="custom-control custom-switch">

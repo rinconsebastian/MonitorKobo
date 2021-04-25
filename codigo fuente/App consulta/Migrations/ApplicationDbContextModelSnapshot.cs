@@ -153,6 +153,9 @@ namespace App_consulta.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("CodeEncuestador")
+                        .HasColumnType("int");
+
                     b.Property<string>("Entidad")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -197,6 +200,7 @@ namespace App_consulta.Migrations
                         new
                         {
                             id = 1,
+                            CodeEncuestador = 0,
                             Entidad = "Entidad",
                             Logo = "/images/SIE.png",
                             NombrePlan = "Plan",
@@ -381,16 +385,18 @@ namespace App_consulta.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("code")
+                    b.Property<string>("Code")
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime>("creationDate")
+                    b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("email")
+                    b.Property<string>("Email")
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
+
+                    b.HasAlternateKey("DNI");
 
                     b.HasIndex("IdLocation");
 

@@ -37,6 +37,15 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Número de teléfono")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Nombre")]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+
+            public string FirstName { get; set; }
+
+            [Display(Name = "Apellidos")]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+            public string Lastname { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -48,7 +57,9 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName = user.Nombre,
+                Lastname = user.Apellido
             };
         }
 
@@ -88,6 +99,18 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            if (Input.FirstName != user.Nombre)
+            {
+                user.Nombre = Input.FirstName;
+            }
+
+            if (Input.Lastname != user.Apellido)
+            {
+                user.Apellido = Input.Lastname;
+            }
+
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Tu perfil ha sido actualizado";

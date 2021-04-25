@@ -78,7 +78,7 @@ namespace App_consulta.Controllers
 
 
         [Authorize(Policy = "Configuracion.General")]
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }
@@ -109,7 +109,7 @@ namespace App_consulta.Controllers
         [Authorize(Policy = "Configuracion.General")]
         public async Task<IActionResult> Edit(Configuracion configuracion)
         {
-            Logger log = new Logger(db);
+            var log = new Logger(db);
 
             if (ModelState.IsValid)
             {

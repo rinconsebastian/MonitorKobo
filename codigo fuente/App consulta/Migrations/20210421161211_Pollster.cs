@@ -4,10 +4,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App_consulta.Migrations
 {
-    public partial class Pollsters : Migration
+    public partial class Pollster : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<int>(
+                name: "CodeEncuestador",
+                table: "Configuracion",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
+
             migrationBuilder.CreateTable(
                 name: "Pollster",
                 columns: table => new
@@ -16,17 +23,18 @@ namespace App_consulta.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "longtext", nullable: false),
                     PhoneNumber = table.Column<string>(type: "longtext", nullable: true),
-                    email = table.Column<string>(type: "longtext", nullable: true),
+                    Email = table.Column<string>(type: "longtext", nullable: true),
                     DNI = table.Column<int>(type: "int", nullable: false),
-                    code = table.Column<string>(type: "longtext", nullable: true),
+                    Code = table.Column<string>(type: "longtext", nullable: true),
                     IdLocation = table.Column<int>(type: "int", nullable: false),
                     IdResponsable = table.Column<int>(type: "int", nullable: false),
                     IdUser = table.Column<string>(type: "varchar(255)", nullable: true),
-                    creationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    CreationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Pollster", x => x.Id);
+                    table.UniqueConstraint("AK_Pollster_DNI", x => x.DNI);
                     table.ForeignKey(
                         name: "FK_Pollster_AspNetUsers_IdUser",
                         column: x => x.IdUser,
@@ -67,6 +75,10 @@ namespace App_consulta.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Pollster");
+
+            migrationBuilder.DropColumn(
+                name: "CodeEncuestador",
+                table: "Configuracion");
         }
     }
 }

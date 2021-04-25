@@ -31,7 +31,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Required]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
             [StringLength(100, ErrorMessage = "La {0} debe tener al menos {2} y un máximo de {1} caracteres. ", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Nueva contraseña")]

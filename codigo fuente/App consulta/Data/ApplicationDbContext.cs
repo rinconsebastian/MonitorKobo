@@ -35,7 +35,7 @@ namespace App_consulta.Data
             base.OnModelCreating(modelBuilder);
 
             //Tabla de politicas
-            List<Policy> policies = new List<Policy>
+            var policies = new List<Policy>
             {
                 new Policy() { id = 1, nombre = "Ver Configuración general", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General" },
                 new Policy() { id = 2, nombre = "Configuración dependencia", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Responsable" },
@@ -50,7 +50,7 @@ namespace App_consulta.Data
             modelBuilder.Entity<Policy>().HasData(policies);
 
             //Rol administrador
-            ApplicationRole rol = new ApplicationRole() { Id = "1", ConcurrencyStamp = "97f6ff5b-6816-44fc-8e6f-bbdedd1223f9", Name = "Administrador", NormalizedName = "ADMINISTRADOR" };
+            var rol = new ApplicationRole() { Id = "1", ConcurrencyStamp = "97f6ff5b-6816-44fc-8e6f-bbdedd1223f9", Name = "Administrador", NormalizedName = "ADMINISTRADOR" };
             modelBuilder.Entity<ApplicationRole>().HasData(rol);
 
             //Permisos rol administrador
@@ -69,11 +69,11 @@ namespace App_consulta.Data
             modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(policiesRol);
 
             //Entidad por defecto
-            Responsable responsable = new Responsable() { Id = 1, Nombre = "Entidad", Editar = true };
+           var responsable = new Responsable() { Id = 1, Nombre = "Entidad", Editar = true };
             modelBuilder.Entity<Responsable>().HasData(responsable);
 
             //Usuario administrador
-            ApplicationUser user = new ApplicationUser()
+            var user = new ApplicationUser()
             {
                 Id = "1",
                 Nombre = "Admin",
@@ -92,12 +92,12 @@ namespace App_consulta.Data
             modelBuilder.Entity<ApplicationUser>().HasData(user);
 
             //Roles del usuario administrador
-            IdentityUserRole<string> userRol = new IdentityUserRole<string>() { RoleId = "1", UserId = "1" };
+            var userRol = new IdentityUserRole<string>() { RoleId = "1", UserId = "1" };
             modelBuilder.Entity<IdentityUserRole<string>>().HasData(userRol);
 
 
             //Configuración inicial
-            Configuracion config = new Configuracion()
+            var config = new Configuracion()
             {
                 id = 1,
                
@@ -113,6 +113,13 @@ namespace App_consulta.Data
             };
             modelBuilder.Entity<Configuracion>().HasData(config);
 
+            modelBuilder.Entity<Pollster>().HasIndex(u => u.DNI).IsUnique();
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies(true);
+            base.OnConfiguring(optionsBuilder);
         }
     }
     }

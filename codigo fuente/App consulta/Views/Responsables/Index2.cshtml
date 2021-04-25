@@ -22,7 +22,10 @@
         <th>
             @Html.DisplayNameFor(model => model.Nombre)
         </th>
-      
+
+        <th>
+            Dependencia padre
+        </th>
         <th>
             Usuarios
         </th>
@@ -35,7 +38,11 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Nombre)
             </td>
-           
+            <td>
+                @if (item.ResponsableJefe != null) { 
+                    @Html.DisplayFor(modelItem => item.ResponsableJefe.Nombre)
+                }
+            </td>
             <td>
                 @await Component.InvokeAsync("UsuariosFromResponsable", new { idResponsable = item.Id })
 

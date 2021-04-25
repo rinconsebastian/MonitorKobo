@@ -26,12 +26,7 @@
         </li>
     }
 
-    @if (permisoLogs == true)
-    {
-        <li class="nav-item">
-            <a id="Logs-Index" asp-controller="Logs" asp-action="Index" class="nav-link">Registro de actividad</a>
-        </li>
-    }
+
     @if (permisoRol == true)
     {
         <li class="nav-item">
@@ -42,6 +37,13 @@
     {
         <li class="nav-item">
             <a id="Users-Index" asp-controller="Users" asp-action="Index" class="nav-link">Usuarios</a>
+        </li>
+    }
+    @if (permisoLogs == true)
+    {
+        <li><hr class="dropdown-divider"></li>
+        <li class="nav-item">
+            <a id="Logs-Index" asp-controller="Logs" asp-action="Index" class="nav-link">Registro de actividad</a>
         </li>
     }
 </ul>
