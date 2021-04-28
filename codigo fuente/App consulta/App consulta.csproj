@@ -30,6 +30,7 @@
     <Folder Include="Views\Rol\" />
     <Folder Include="Views\Users\" />
     <Folder Include="wwwroot\lib\font-awesome\" />
+    <Folder Include="wwwroot\data\" />
   </ItemGroup>
 
   <ItemGroup>

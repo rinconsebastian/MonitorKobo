@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210421161211_Pollster")]
-    partial class Pollster
+    [Migration("20210426180004_Encuestador")]
+    partial class Encuestador
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -166,6 +166,18 @@ namespace App_consulta.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ImgHeader")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboApiToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboAssetUid")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboKpiUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboParamsMap")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Logo")
@@ -368,8 +380,17 @@ namespace App_consulta.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("Code")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("DNI")
                         .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("IdLocation")
                         .HasColumnType("int");
@@ -387,18 +408,10 @@ namespace App_consulta.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext");
-
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("DNI");
+                    b.HasIndex("DNI")
+                        .IsUnique();
 
                     b.HasIndex("IdLocation");
 
@@ -637,7 +650,7 @@ namespace App_consulta.Migrations
 
             modelBuilder.Entity("App_consulta.Models.Pollster", b =>
                 {
-                    b.HasOne("App_consulta.Models.Location", "LocationParent")
+                    b.HasOne("App_consulta.Models.Location", "Location")
                         .WithMany()
                         .HasForeignKey("IdLocation")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -653,7 +666,7 @@ namespace App_consulta.Migrations
                         .WithMany()
                         .HasForeignKey("IdUser");
 
-                    b.Navigation("LocationParent");
+                    b.Navigation("Location");
 
                     b.Navigation("Responsable");
 
