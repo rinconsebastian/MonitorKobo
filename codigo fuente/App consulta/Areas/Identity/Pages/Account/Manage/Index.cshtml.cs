@@ -23,6 +23,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
         }
 
+        [Display(Name = "Nombre de usuario")]
         public string Username { get; set; }
 
         [TempData]
@@ -34,8 +35,17 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Número de teléfono")]
             public string PhoneNumber { get; set; }
+
+            [Display(Name = "Nombre")]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+
+            public string FirstName { get; set; }
+
+            [Display(Name = "Apellidos")]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+            public string Lastname { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -47,7 +57,9 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName = user.Nombre,
+                Lastname = user.Apellido
             };
         }
 
@@ -56,7 +68,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"No fue posible de cargar al usuario con ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -68,7 +80,7 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"No fue posible de cargar al usuario con ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -83,13 +95,25 @@ namespace App_consulta.Areas.Identity.Pages.Account.Manage
                 var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Error inesperado al intentar establecer el número de teléfono. ";
                     return RedirectToPage();
                 }
             }
 
+            if (Input.FirstName != user.Nombre)
+            {
+                user.Nombre = Input.FirstName;
+            }
+
+            if (Input.Lastname != user.Apellido)
+            {
+                user.Apellido = Input.Lastname;
+            }
+
+            await _userManager.UpdateAsync(user);
+
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Tu perfil ha sido actualizado";
             return RedirectToPage();
         }
     }

@@ -1,0 +1,7 @@
+[Wed, 28 Apr 2021 09:22:01 GMT] EXITO: Se cargo con el archivo con 5 encuestas.
+[Wed, 28 Apr 2021 14:37:16 GMT] EXITO: Se cargo con el archivo con 6 encuestas.
+[Wed, 28 Apr 2021 14:40:20 GMT] EXITO: Se cargo con el archivo con 6 encuestas.
+[Wed, 28 Apr 2021 14:49:25 GMT] EXITO: Se cargo con el archivo con 30000 encuestas.
+[Wed, 28 Apr 2021 14:53:58 GMT] EXITO: Se cargo con el archivo con 30000 encuestas.
+[Wed, 28 Apr 2021 14:58:35 GMT] EXITO: Se cargo con el archivo con 6 encuestas.
+[Wed, 28 Apr 2021 15:02:26 GMT] EXITO: Se cargo con el archivo con 30000 encuestas.

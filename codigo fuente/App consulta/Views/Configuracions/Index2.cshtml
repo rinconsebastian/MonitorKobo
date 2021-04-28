@@ -10,7 +10,8 @@
 {
     if (prop.Name == "id") { continue; }
     String name = prop.Name;
-    var value = prop.GetValue(Model);
+    var value = name.StartsWith("Kobo")|| name == "CodeEncuestador" ? "********":  prop.GetValue(Model);
+
 
     <div class="form-group row">
         <label class="col-sm-3 col-form-label">@Html.DisplayName(name)</label>

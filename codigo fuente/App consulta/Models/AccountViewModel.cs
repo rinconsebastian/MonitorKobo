@@ -9,9 +9,9 @@ namespace App_consulta.Models
 {
     public class RegisterViewModel
     {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "El campo nombre es obligatorio.")]
+        [EmailAddress(ErrorMessage = " El campo {0}  no es un correo electrónico válido.")]
+        [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "El campo nombre es obligatorio.")]
@@ -52,18 +52,18 @@ namespace App_consulta.Models
 
         public string Id { get; set; }
 
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
+        [Required(ErrorMessage = "El campo nombre es obligatorio.")]
+        [EmailAddress(ErrorMessage = " El campo {0}  no es un correo electrónico válido.")]
+        [Display(Name = "Correo electrónico")]
 
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo nombre es obligatorio.")]
         [StringLength(100, ErrorMessage = "El {0}  debe contener al menos {2} caracteres.", MinimumLength = 3)]
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo nombre es obligatorio.")]
         [StringLength(100, ErrorMessage = "El {0}  debe contener al menos {2} caracteres.", MinimumLength = 3)]
         [Display(Name = "Apellido")]
         public string Apellido { get; set; }
@@ -71,14 +71,14 @@ namespace App_consulta.Models
         [Display(Name = "Dependencia")]
         public int IDDependencia { get; set; }
 
-        [StringLength(100, ErrorMessage = "El {0} debe contener al menos {2} Caracteres.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "El {0} debe contener al menos {2} caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar Contraseña")]
-        [Compare("Password", ErrorMessage = "Las contraseñas no coinciden")]
+        [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden. ")]
         public string ConfirmPassword { get; set; }
 
         [Display(Name = "Email confirmado")]

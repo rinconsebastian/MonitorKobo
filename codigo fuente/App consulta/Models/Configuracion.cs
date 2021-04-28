@@ -54,7 +54,22 @@ namespace App_consulta.Models
         [Display(Name = "Libre")]
         public bool libre { get; set; }
 
-        
+        [Required]
+        [Range(0, 9999,ErrorMessage = "El valor del {0} debe estar entre {1} y {2}.")]
+        [Display(Name = "Código Encuestador")]
+        public int CodeEncuestador { get; set; }
+
+        [Display(Name = "KPI Url")]
+        public string KoboKpiUrl { get; set; }
+
+        [Display(Name = "Api Token")]
+        public string KoboApiToken { get; set; }
+
+        [Display(Name = "Asset UID")]
+        public string KoboAssetUid { get; set; }
+
+        [Display(Name = "Params Map")]
+        public string KoboParamsMap { get; set; }
 
     }
 }

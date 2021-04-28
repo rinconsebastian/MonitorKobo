@@ -32,9 +32,9 @@ namespace App_consulta.Areas.Identity.Pages.Account
         public class InputModel
         {
             [BindProperty]
-            [Required]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
             [DataType(DataType.Text)]
-            [Display(Name = "Recovery Code")]
+            [Display(Name = "Código de recuperación")]
             public string RecoveryCode { get; set; }
         }
 

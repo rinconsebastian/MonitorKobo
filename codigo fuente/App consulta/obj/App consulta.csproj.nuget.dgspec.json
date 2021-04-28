@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\rinco\\Documents\\GitHub\\templateNet5MVC\\codigo fuente\\App consulta\\App consulta.csproj": {}
+    "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\App consulta.csproj": {}
   },
   "projects": {
-    "C:\\Users\\rinco\\Documents\\GitHub\\templateNet5MVC\\codigo fuente\\App consulta\\App consulta.csproj": {
+    "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\App consulta.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rinco\\Documents\\GitHub\\templateNet5MVC\\codigo fuente\\App consulta\\App consulta.csproj",
+        "projectUniqueName": "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\App consulta.csproj",
         "projectName": "App consulta",
-        "projectPath": "C:\\Users\\rinco\\Documents\\GitHub\\templateNet5MVC\\codigo fuente\\App consulta\\App consulta.csproj",
-        "packagesPath": "C:\\Users\\rinco\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rinco\\Documents\\GitHub\\templateNet5MVC\\codigo fuente\\App consulta\\obj\\",
+        "projectPath": "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\App consulta.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\rinco\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -46,25 +46,29 @@
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[5.0.4, )"
+              "version": "[5.0.5, )"
             },
             "Microsoft.AspNetCore.Identity.UI": {
               "target": "Package",
-              "version": "[5.0.4, )"
+              "version": "[5.0.5, )"
             },
             "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
               "target": "Package",
               "version": "[5.0.5, )"
             },
+            "Microsoft.EntityFrameworkCore.Proxies": {
+              "target": "Package",
+              "version": "[5.0.5, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[5.0.4, )"
+              "version": "[5.0.5, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[5.0.4, )"
+              "version": "[5.0.5, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
@@ -93,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -43,15 +43,17 @@ namespace App_consulta.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Display(Name = "Correo electrónico")]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+            [EmailAddress(ErrorMessage = " El campo {0}  no es un correo electrónico válido.")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+            [Display(Name = "Contraseña")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "¿Recuérdame?")]
             public bool RememberMe { get; set; }
         }
 
@@ -85,21 +87,21 @@ namespace App_consulta.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
+                    _logger.LogInformation("Usuario conectado.");
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl,  Input.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("Cuenta de usuario bloqueada. ");
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Intento de inicio de sesión no válido. ");
                     return Page();
                 }
             }

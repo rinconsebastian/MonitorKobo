@@ -31,8 +31,9 @@ namespace App_consulta.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+            [EmailAddress(ErrorMessage = " El campo {0}  no es un correo electrónico válido.")]
+            [Display(Name = "Correo electrónico")]
             public string Email { get; set; }
         }
 
@@ -59,8 +60,8 @@ namespace App_consulta.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Restablecer la contraseña",
+                    $"Por favor confirme su cuenta  <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>haciendo click aqui</ a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

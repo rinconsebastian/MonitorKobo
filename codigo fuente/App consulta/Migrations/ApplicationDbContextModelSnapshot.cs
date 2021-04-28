@@ -153,6 +153,9 @@ namespace App_consulta.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int>("CodeEncuestador")
+                        .HasColumnType("int");
+
                     b.Property<string>("Entidad")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -161,6 +164,18 @@ namespace App_consulta.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("ImgHeader")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboApiToken")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboAssetUid")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboKpiUrl")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("KoboParamsMap")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Logo")
@@ -197,6 +212,7 @@ namespace App_consulta.Migrations
                         new
                         {
                             id = 1,
+                            CodeEncuestador = 0,
                             Entidad = "Entidad",
                             Logo = "/images/SIE.png",
                             NombrePlan = "Plan",
@@ -207,6 +223,49 @@ namespace App_consulta.Migrations
                             contacto = "rinconsebastian@gmail.com",
                             libre = true
                         });
+                });
+
+            modelBuilder.Entity("App_consulta.Models.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdLevel")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IdParent")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdLevel");
+
+                    b.HasIndex("IdParent");
+
+                    b.ToTable("Location");
+                });
+
+            modelBuilder.Entity("App_consulta.Models.LocationLevel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LocationLevel");
                 });
 
             modelBuilder.Entity("App_consulta.Models.LogModel", b =>
@@ -272,81 +331,93 @@ namespace App_consulta.Migrations
                         new
                         {
                             id = 3,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Ejecucion.Editar",
-                            nombre = "Editar ejecución"
-                        },
-                        new
-                        {
-                            id = 4,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Planeacion.Editar",
-                            nombre = "Editar planeación"
-                        },
-                        new
-                        {
-                            id = 5,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Indicador.Editar",
-                            nombre = "Editar indicadores"
-                        },
-                        new
-                        {
-                            id = 6,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Periodo.Editar",
-                            nombre = "Editar periodo"
-                        },
-                        new
-                        {
-                            id = 7,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Categoria.Editar",
-                            nombre = "Editar categorias"
-                        },
-                        new
-                        {
-                            id = 8,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Responsable.Editar",
                             nombre = "Editar dependencias"
                         },
                         new
                         {
-                            id = 9,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Nivel.Editar",
-                            nombre = "Editar niveles"
-                        },
-                        new
-                        {
-                            id = 10,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Campo.Editar",
-                            nombre = "Editar campos"
-                        },
-                        new
-                        {
-                            id = 11,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Evaluacion.Editar",
-                            nombre = "Editar evaluaciones"
-                        },
-                        new
-                        {
-                            id = 12,
+                            id = 4,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar",
                             nombre = "Editar roles"
                         },
                         new
                         {
-                            id = 13,
+                            id = 5,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar",
                             nombre = "Editar usuarios"
                         },
                         new
                         {
-                            id = 14,
+                            id = 6,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs",
                             nombre = "Ver registro actividad"
                         },
                         new
                         {
-                            id = 15,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Nota.Editar",
-                            nombre = "Editar notas"
+                            id = 7,
+                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar",
+                            nombre = "Editar encuestador"
+                        },
+                        new
+                        {
+                            id = 8,
+                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver",
+                            nombre = "Ver encuestador"
+                        },
+                        new
+                        {
+                            id = 9,
+                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar",
+                            nombre = "Administrar encuestador"
                         });
+                });
+
+            modelBuilder.Entity("App_consulta.Models.Pollster", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("DNI")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("IdLocation")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdResponsable")
+                        .HasColumnType("int");
+
+                    b.Property<string>("IdUser")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DNI")
+                        .IsUnique();
+
+                    b.HasIndex("IdLocation");
+
+                    b.HasIndex("IdResponsable");
+
+                    b.HasIndex("IdUser");
+
+                    b.ToTable("Pollster");
                 });
 
             modelBuilder.Entity("App_consulta.Models.Responsable", b =>
@@ -420,91 +491,49 @@ namespace App_consulta.Migrations
                         new
                         {
                             Id = 3,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Ejecucion.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Planeacion.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Indicador.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Periodo.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Categoria.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 8,
                             ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Responsable.Editar",
                             ClaimValue = "1",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 9,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Nivel.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Campo.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Evaluacion.Editar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 12,
+                            Id = 4,
                             ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar",
                             ClaimValue = "1",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 13,
+                            Id = 5,
                             ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar",
                             ClaimValue = "1",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 14,
+                            Id = 6,
                             ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs",
                             ClaimValue = "1",
                             RoleId = "1"
                         },
                         new
                         {
-                            Id = 15,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Nota.Editar",
+                            Id = 7,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar",
                             ClaimValue = "1",
                             RoleId = "1"
                         });
@@ -598,6 +627,48 @@ namespace App_consulta.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("App_consulta.Models.Location", b =>
+                {
+                    b.HasOne("App_consulta.Models.LocationLevel", "LocationLevel")
+                        .WithMany()
+                        .HasForeignKey("IdLevel")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("App_consulta.Models.Location", "LocationParent")
+                        .WithMany()
+                        .HasForeignKey("IdParent");
+
+                    b.Navigation("LocationLevel");
+
+                    b.Navigation("LocationParent");
+                });
+
+            modelBuilder.Entity("App_consulta.Models.Pollster", b =>
+                {
+                    b.HasOne("App_consulta.Models.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("IdLocation")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("App_consulta.Models.Responsable", "Responsable")
+                        .WithMany()
+                        .HasForeignKey("IdResponsable")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("App_consulta.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("IdUser");
+
+                    b.Navigation("Location");
+
+                    b.Navigation("Responsable");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("App_consulta.Models.Responsable", b =>

@@ -77,7 +77,7 @@ namespace App_consulta.Controllers
                 db.RoleClaims.AddRange(claims);
                 await db.SaveChangesAsync();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit",new { id =Rol.Id });
             }
             return View(Rol);
         }
