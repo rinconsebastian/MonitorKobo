@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -38,13 +39,14 @@
             @RenderBody()
         </main>
     </div>
-
+    @Html.Hidden("Root", Url.Content("~/"))
+   
     <partial name="_footerPartial" />
 
 
     <script src="~/js/site.js" asp-append-version="true"></script>
 
-    
+
 
 
 
