@@ -213,10 +213,10 @@ namespace App_consulta.Controllers
         public async Task<string> GenerateCode(int DNI)
         {
             int codigo = await db.Configuracion.Select(n => n.CodeEncuestador).FirstOrDefaultAsync();
-            int final = DNI % 10000;
+            int final = DNI % 100000;
 
             int clave = final > codigo ? final - codigo : codigo - final;
-            return clave.ToString("0000");
+            return clave.ToString("00000");
         }
 
 
