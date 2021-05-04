@@ -136,7 +136,7 @@ var funcLE = {
         // Carga las variables de configuración.
         root = $('#Root').val();
         code = $('#code').val();
-        source = root + "/Kobo/ListadoAjax/?code=" + code;
+        source = root + "Kobo/ListadoAjax/?code=" + code;
 
         showDNI = $('#showDNI').val() == 1;
         
