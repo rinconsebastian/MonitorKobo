@@ -14,7 +14,7 @@ var funcLE = {
             $("#" + childId).attr('disabled', 'disabled');
 
             if (selected) {
-                var fullurl = root + "/Encuestador/LocationsAjax/";
+                var fullurl = root + "Encuestador/LocationsAjax/";
                 $.post(fullurl, { IdParent: selected }).
                     done(function (data) {
                         if (data != null) {

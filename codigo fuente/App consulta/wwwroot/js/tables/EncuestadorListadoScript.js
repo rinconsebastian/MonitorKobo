@@ -183,7 +183,7 @@ var funcLE = {
     init: function () {
         // Carga las variables de configuración.
         root = $('#Root').val();
-        source = root + "/Encuestador/ListAjax/";
+        source = root + "Encuestador/ListAjax/";
 
         showEditar = $('#ShowEdit').val() == 1;
         showDelete = $('#ShowDelete').val()==1;
