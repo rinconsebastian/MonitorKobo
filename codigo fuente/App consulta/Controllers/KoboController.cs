@@ -36,7 +36,7 @@ namespace App_consulta.Controllers
             var text = "";
             try
             {
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
                 text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
             }
             catch (Exception){}
@@ -91,7 +91,7 @@ namespace App_consulta.Controllers
             var text = "";
             try
             {
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
                 DateTime creation = System.IO.File.GetCreationTime(Path.Combine(_path, "data.json"));
                 text = creation.ToString("f"); 
             }
@@ -101,13 +101,14 @@ namespace App_consulta.Controllers
 
 
         [HttpGet]
-        public ActionResult GetParams(String id = "id", String location = "location", String datetime = "datetime")
+        public ActionResult GetParams(String id = "id", String location = "location", String datetime = "datetime", String validation = "validation")
         {
             var data = new EncuestaMap
             {
                 Id = id,
                 LocationCode = location,
-                Datetime = datetime
+                Datetime = datetime,
+                Validation = validation
             };
             return Json(data);
         }
@@ -176,7 +177,14 @@ namespace App_consulta.Controllers
             var error = "";
             try
             {
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
+
+                if (!Directory.Exists(_path))
+                {
+                   Directory.CreateDirectory(_path);
+                }
+
+                
                 System.IO.File.Delete(Path.Combine(_path, "data.json"));
                 System.IO.File.WriteAllText(Path.Combine(_path, "data.json"), data);
             }
@@ -184,6 +192,41 @@ namespace App_consulta.Controllers
                 error = e.Message;
             }
             return error;
+        }
+
+        [Authorize(Policy = "Kobo.Actualizar")]
+        public async Task<ActionResult> ActualizarManual()
+        {
+            var error = "";
+            var fecha = DateTime.Now.ToString("r");
+            var resp = await UpdateDataFile();
+            var accion = "[" + fecha + "] " + resp;
+
+            var _path = Path.Combine(_env.ContentRootPath, "Storage");
+            var archivo = _path + "/Logs.txt";
+            try
+            {
+                if (!System.IO.File.Exists(archivo))
+                {
+                    using (StreamWriter sw = System.IO.File.CreateText(archivo))
+                    {
+                        sw.WriteLine(accion);
+                    }
+                }
+                else
+                {
+                    using (StreamWriter sw = System.IO.File.AppendText(archivo))
+                    {
+                        sw.WriteLine(accion);
+                    }
+                }
+            }
+            catch (Exception e) {
+                error = e.Message;
+            }
+            ViewBag.Error = error;
+            ViewBag.Accion = accion;
+            return View();
         }
 
         [HttpGet]
@@ -195,7 +238,7 @@ namespace App_consulta.Controllers
                 var resp = await UpdateDataFile();
                 var accion = "[" + fecha + "] "+ resp;
 
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
                 var archivo = _path + "/Logs.txt";
                 try
                 {

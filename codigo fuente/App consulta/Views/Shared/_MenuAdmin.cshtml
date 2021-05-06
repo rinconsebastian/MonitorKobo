@@ -6,6 +6,7 @@
     var permisoRol = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar" && c.Value == "1"));
     var permisoUsuario = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar" && c.Value == "1"));
     var permisoLogs = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs" && c.Value == "1"));
+    var actualizarDatos = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Kobo.Actualizar" && c.Value == "1"));
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">
@@ -44,6 +45,13 @@
         <li><hr class="dropdown-divider"></li>
         <li class="nav-item">
             <a id="Logs-Index" asp-controller="Logs" asp-action="Index" class="nav-link">Registro de actividad</a>
+        </li>
+    }
+    @if (actualizarDatos == true)
+    {
+        <li><hr class="dropdown-divider"></li>
+        <li class="nav-item">
+            <a id="Kobo-ActualizarManual" asp-controller="Kobo" asp-action="ActualizarManual" class="nav-link">Actualizar encuestadores</a>
         </li>
     }
 </ul>
