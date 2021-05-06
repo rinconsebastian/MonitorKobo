@@ -77,6 +77,18 @@ namespace App_consulta
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar", "1"));
                 options.AddPolicy("Encuestador.Administrar", policy =>
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar", "1"));
+
+
+                options.AddPolicy("Kobo.Actualizar", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Kobo.Actualizar", "1"));
+                options.AddPolicy("Informes.Encuestadores", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Informes.Encuestadores", "1"));
+                options.AddPolicy("Formalizacion.Ver", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver", "1"));
+                options.AddPolicy("Formalizacion.Editar", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar", "1"));
+                options.AddPolicy("Formalizacion.Validar", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar", "1"));
             });
 
 

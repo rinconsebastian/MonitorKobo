@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewData["Title"] = "Informes";
+    ViewData["Subtitle"] = "Encuestadores";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var verFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
+}
+@Html.Hidden("code", "")
+
+<div class="row mt-4">
+    <div class="col-12 ">
+        <div class="card">
+            <div class="card-body">
+                <div id="gridContainer" class="row-lm aux-selection">
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                <p class="font-weight-light mb-0 small">
+                    Actualizado el <i>@ViewBag.DataTime</i>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript" src="~/lib/jquery/moment.js"></script>
+    <script>
+        var myShowValidation = @(verFormalizacion ? "true": "false");
+        var myShowDni = true;
+    </script>
+    <script type="text/javascript" src="~/js/tables/EncuestaListadoScript.js"></script>
+}

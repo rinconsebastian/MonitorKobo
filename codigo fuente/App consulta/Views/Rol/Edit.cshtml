@@ -26,10 +26,21 @@
             <div class="row">
                 @foreach (PermisoDataModel p in ViewBag.Permisos)
                 {
+
+
                     <div class="col-sm-6">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" @(p.valor == "1" ? "checked": "") class="custom-control-input" id="p_@p.id" name="p_@p.id" value="1" />
-                            <label for="p_@p.id" class="custom-control-label">@p.texto</label>
+                            @if (p.id > 0)
+                            {
+                                <input type="checkbox" @(p.valor == "1" ? "checked" : "") class="custom-control-input" id="p_@p.id" name="p_@p.id" value="1" />
+                                <label for="p_@p.id" class="custom-control-label">@p.texto</label>
+                            }
+                            else
+                            {
+                                <input type="checkbox" @(p.valor == "1" ? "checked" : "") class="custom-control-input" id="n_@p.policy" name="n_@p.policy" value="1" />
+                                <label for="n_@p.policy" class="custom-control-label">@p.texto</label>
+                            }
+
                         </div>
                     </div>
                 }

@@ -7,5 +7,7 @@ namespace App_consulta.Models
         public int id { get; set; }
         public string texto { get; set; }
         public string valor { get; set; }
+        
+        public int policy { get; set; }
     }
 }

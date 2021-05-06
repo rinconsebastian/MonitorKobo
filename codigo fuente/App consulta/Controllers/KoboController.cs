@@ -31,23 +31,31 @@ namespace App_consulta.Controllers
         }
 
         [Authorize(Policy = "Encuestador.Ver")]
-        public async Task<ActionResult> ListadoAjax(String code)
+        public async Task<ActionResult> ListadoAjax(String code = null)
         {
+            var resp = new List<EncuestaDataModel>();
+
+            //Valida la consulta y los permisos
+            var verInforme = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Informes.Encuestadores" && c.Value == "1"));
+            if (code == null && !verInforme) { return Json(resp); }
+
+            //Consulta el archivo y valida que tenga datos.
             var text = "";
             try
             {
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
                 text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
             }
             catch (Exception){}
-            
-            var resp = new List<EncuestaDataModel>();
+
             if(text != "")
             {
                 var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
                 if(data.Count > 0)
                 {
-                    var dataFiltered = data.Where(n => n.Id == code).ToList();
+                    //Filtra los datos
+                    var dataFiltered = code != null ? data.Where(n => n.Id == code).ToList(): data;                        
+
                     if(dataFiltered.Count > 0)
                     {
                         var codesLocation = dataFiltered.Select(n => n.LocationCode).Distinct().ToList();
@@ -59,7 +67,10 @@ namespace App_consulta.Controllers
                                 Dep = n.LocationParent != null ? n.LocationParent.Name : ""
                             }).ToDictionaryAsync(n => n.Code, n => n);
 
-                        foreach(var item in dataFiltered)
+                        //Permisos de columnas
+                        var verValidacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
+
+                        foreach (var item in dataFiltered)
                         {
                             var encuesta = new EncuestaDataModel
                             {
@@ -67,8 +78,10 @@ namespace App_consulta.Controllers
                                 LocationCode = item.LocationCode,
                                 Datetime = item.Datetime,
                                 Mun = item.LocationCode,
-                                Dep = ""
+                                Dep = "",
+                                Validation = verValidacion ? item.Validation != null && item.Validation != "" : false
                             };
+                            //Completa los municipios y departamentos
                             if (locations.ContainsKey(item.LocationCode))
                             {
                                 var aux = locations[item.LocationCode];
@@ -91,7 +104,7 @@ namespace App_consulta.Controllers
             var text = "";
             try
             {
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
                 DateTime creation = System.IO.File.GetCreationTime(Path.Combine(_path, "data.json"));
                 text = creation.ToString("f"); 
             }
@@ -99,26 +112,25 @@ namespace App_consulta.Controllers
             return text;
         }
 
-
         [HttpGet]
-        public ActionResult GetParams(String id = "id", String location = "location", String datetime = "datetime")
+        public ActionResult GetParams(String id = "id", String location = "location", String datetime = "datetime", String validation = "validation")
         {
             var data = new EncuestaMap
             {
                 Id = id,
                 LocationCode = location,
-                Datetime = datetime
+                Datetime = datetime,
+                Validation = validation
             };
             return Json(data);
         }
-
 
         private async Task<String> UpdateDataFile()
         {
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var mapParams = JsonConvert.DeserializeObject<EncuestaMap>(config.KoboParamsMap);
-            var fields= JsonConvert.SerializeObject(new string[] { mapParams.Id, mapParams.LocationCode, mapParams.Datetime });
+            var fields= JsonConvert.SerializeObject(new string[] { mapParams.Id, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation });
             var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUid + "/submissions/?format=json&fields=" + HttpUtility.UrlEncode(fields);
 
        
@@ -149,6 +161,7 @@ namespace App_consulta.Controllers
                         Id = (String)result[mapParams.Id],
                         LocationCode = (String)result[mapParams.LocationCode],
                         Datetime = (String)result[mapParams.Datetime],
+                        Validation = (String)result[mapParams.Validation],
                     });
                 }
 
@@ -176,7 +189,14 @@ namespace App_consulta.Controllers
             var error = "";
             try
             {
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
+
+                if (!Directory.Exists(_path))
+                {
+                   Directory.CreateDirectory(_path);
+                }
+
+                
                 System.IO.File.Delete(Path.Combine(_path, "data.json"));
                 System.IO.File.WriteAllText(Path.Combine(_path, "data.json"), data);
             }
@@ -184,6 +204,41 @@ namespace App_consulta.Controllers
                 error = e.Message;
             }
             return error;
+        }
+
+        [Authorize(Policy = "Kobo.Actualizar")]
+        public async Task<ActionResult> ActualizarManual()
+        {
+            var error = "";
+            var fecha = DateTime.Now.ToString("r");
+            var resp = await UpdateDataFile();
+            var accion = "[" + fecha + "] " + resp;
+
+            var _path = Path.Combine(_env.ContentRootPath, "Storage");
+            var archivo = _path + "/Logs.txt";
+            try
+            {
+                if (!System.IO.File.Exists(archivo))
+                {
+                    using (StreamWriter sw = System.IO.File.CreateText(archivo))
+                    {
+                        sw.WriteLine(accion);
+                    }
+                }
+                else
+                {
+                    using (StreamWriter sw = System.IO.File.AppendText(archivo))
+                    {
+                        sw.WriteLine(accion);
+                    }
+                }
+            }
+            catch (Exception e) {
+                error = e.Message;
+            }
+            ViewBag.Error = error;
+            ViewBag.Accion = accion;
+            return View();
         }
 
         [HttpGet]
@@ -195,7 +250,7 @@ namespace App_consulta.Controllers
                 var resp = await UpdateDataFile();
                 var accion = "[" + fecha + "] "+ resp;
 
-                var _path = Path.Combine(_env.WebRootPath, "data");
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
                 var archivo = _path + "/Logs.txt";
                 try
                 {

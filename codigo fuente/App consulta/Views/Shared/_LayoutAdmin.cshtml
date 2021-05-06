@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>@ViewData["Title"] - AppConsulta</title>
+
+    <partial name="_faviconPartial" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 
@@ -12,18 +15,17 @@
     <partial name="_colorMenuPartial" />
 </head>
 <body>
-    <header <partial name="_imagenNavegacionPartial" />>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Basic"><partial name="_LogoPartial" /></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <partial name="_MenuHeaderPartial" />
-            </div>
-        </nav>
-    </header>
+    <nav class="navbar sticky-top navbar-light bg-light navbar-expand-sm navbar-toggleable-sm box-shadow mb-3"
+        <partial name="_imagenNavegacionPartial" /> >
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><partial name="_LogoPartial" /></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <partial name="_MenuHeaderPartial" />
+        </div>
+    </nav>
     <div class="container">
         <h2>@ViewData["Title"]</h2>
         <div>

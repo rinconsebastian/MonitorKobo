@@ -23,7 +23,7 @@
 
 
 <style>
-    .navbar a {
+    .navbar .nav-item > a, a.navbar-brand {
         color: @color !important;
         webkit-transition: 0.15s ease-in-out;
         -moz-transition: 0.15s ease-in-out;
@@ -31,7 +31,7 @@
         transition: 0.15s ease-in-out;
     }
 
-        .navbar a:hover {
+        .navbar .nav-item > a:hover, a.navbar-brand:hover {
             color: @color !important;
             -webkit-text-shadow: 0px 0px 5px rgba(0,0,0, 0.8);
             text-shadow: 0px 0px 5px rgba(0,0,0, 0.8);
@@ -73,26 +73,10 @@
         color: @colorTextoPrincipal !important;
     }
 
-    .btn-unicentro {
-        background-color: @colorPrincipal !important;
-        color: @colorTextoPrincipal !important;
-        border-color: @colorPrincipal !important;
-        webkit-transition: 0.1s ease-in-out;
-        -moz-transition: 0.1s ease-in-out;
-        -o-transition: 0.1s ease-in-out;
-        transition: 0.1s ease-in-out;
-    }
-
-
-        .btn-unicentro:hover {
-            -webkit-transform: scale(1.02);
-            transform: scale(1.02);
-        }
-
 
     .btn-outline-primary {
-    color: @colorPrincipal !important;
-    border-color: @colorPrincipal !important;
+        color: @colorPrincipal !important;
+        border-color: @colorPrincipal !important;
     }
 
     .btn-outline-primary:hover {
