@@ -7,6 +7,7 @@ namespace App_consulta.Models
         public string Id { get; set; }
         public string LocationCode { get; set; }
         public string Datetime { get; set; }
+        public string Validation { get; set; }
     }
 
     public class EncuestaDataModel
@@ -16,5 +17,6 @@ namespace App_consulta.Models
         public string Dep { get; set; }
         public string Mun { get; set; }
         public string Datetime { get; set; }
+        public bool Validation { get; set; }
     }
 }

@@ -8,9 +8,10 @@
 
     var permisoEditar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar" && c.Value == "1"));
     var permisoAdministrar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" && c.Value == "1"));
+    var verFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
+
 }
 @Html.Hidden("code", code)
-@Html.Hidden("showDNI", 0)
 
 <div class="row mt-4">
     <div class="col-12 col-sm-5">
@@ -32,7 +33,7 @@
                     </div>
                 </div>
                 <hr />
-            
+
 
                 <div class="form-group row">
                     <label asp-for="PhoneNumber" class="col-sm-5 col-form-label"></label>
@@ -116,7 +117,7 @@
                 <p class="font-weight-light mb-0 small">
                     Actualizado el <i>@ViewBag.DataTime</i>
                 </p>
-                     
+
             </div>
         </div>
     </div>
@@ -124,6 +125,8 @@
 
 @section Scripts {
     <script type="text/javascript" src="~/lib/jquery/moment.js"></script>
-
+    <script>
+        var myShowValidation =@(verFormalizacion ? "true": "false");
+    </script>
     <script type="text/javascript" src="~/js/tables/EncuestaListadoScript.js"></script>
 }

@@ -4,6 +4,7 @@ var dataGrid;
 var source = "";
 
 var showDNI = false;
+var showValidation = false;
 var code = "";
 //*********************************** funcLE ******************************************
 
@@ -103,6 +104,22 @@ var funcLE = {
                             .appendTo(container);
                     }
 
+                },
+                {
+                    dataField: "validation",
+                    caption: "Formalización",
+                    visible: showValidation,
+                    alignment: "center",
+                    width: '20%',
+                    cellTemplate: function (container, options) {
+                        var val = options.data.validation;
+                        var contenido = val ? "Si": "No";
+
+                        $("<div class='preventSelection'>")
+                            .append(contenido)
+                            .appendTo(container);
+                    }
+
                 }
             ],
             summary: {
@@ -136,11 +153,16 @@ var funcLE = {
         // Carga las variables de configuración.
         root = $('#Root').val();
         code = $('#code').val();
+
+        if (typeof myShowDni !== "undefined") {
+            showDNI = myShowDni;
+        }
+        if (typeof myShowValidation !== "undefined") {
+            showValidation = myShowValidation;
+        }
+
         source = root + "Kobo/ListadoAjax/?code=" + code;
 
-        showDNI = $('#showDNI').val() == 1;
-        
-        
         funcLE.instanceDataGrid();
     }
 };
