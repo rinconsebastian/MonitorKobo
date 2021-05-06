@@ -18,6 +18,9 @@ namespace App_consulta.Models
         [Display(Name = "Imagen logo")]
         public string Logo { get; set; }
 
+        [Display(Name = "Favicon")]
+        public string Favicon { get; set; }
+
         [Display(Name = "Imagen encabezado")]
         public string ImgHeader { get; set; }
 

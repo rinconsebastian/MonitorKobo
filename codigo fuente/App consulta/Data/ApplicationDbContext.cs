@@ -46,6 +46,14 @@ namespace App_consulta.Data
                 new Policy() { id = 7, nombre = "Editar encuestador", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar" },
                 new Policy() { id = 8, nombre = "Ver encuestador", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver" },
                 new Policy() { id = 9, nombre = "Administrar encuestador", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" },
+
+                new Policy() { id = 10, nombre = "Actualizar encuestas", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Kobo.Actualizar" },
+
+                new Policy() { id = 11, nombre = "Ver Informe Encuestadores", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Informes.Encuestadores" },
+
+                new Policy() { id = 12, nombre = "Ver formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" },
+                new Policy() { id = 13, nombre = "Editar formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar" },
+                new Policy() { id = 14, nombre = "Validar formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar" },
                 };
             modelBuilder.Entity<Policy>().HasData(policies);
 
