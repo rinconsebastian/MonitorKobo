@@ -30,6 +30,10 @@ namespace App_consulta.Data
 
         public DbSet<Pollster> Pollster { get; set; }
 
+        public DbSet<FormalizationConfig> FormalizationConfig { get; set; }
+
+        public DbSet<Formalization> Formalization { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -122,6 +126,29 @@ namespace App_consulta.Data
             modelBuilder.Entity<Configuracion>().HasData(config);
 
             modelBuilder.Entity<Pollster>().HasIndex(u => u.DNI).IsUnique();
+
+            //Permisos rol administrador
+            var formalizacionConfigs = new List<FormalizationConfig>
+            {
+                new FormalizationConfig() { Id = 1, Name="Id Kobo", Field = "IdKobo", Value = "_id"},
+                new FormalizationConfig() { Id = 2, Name="Número registro", Field = "NumeroRegistro", Value = "_id"},
+                new FormalizationConfig() { Id = 3, Name="Nombre y apellidos", Field = "Name", Value = ""},
+                new FormalizationConfig() { Id = 4, Name="Fecha solicitud", Field = "FechaSolicitud", Value = "_id"},
+                new FormalizationConfig() { Id = 5, Name="Cédula pescador" ,Field = "Cedula", Value = "_id"},
+                new FormalizationConfig() { Id = 6, Name="Departamento", Field = "Departamento", Value = "_id"},
+                new FormalizationConfig() { Id = 7, Name="Municipio", Field = "Municipio", Value = "_id"},
+                new FormalizationConfig() { Id = 8, Name="Área de pesca", Field = "AreaPesca", Value = "_id"},
+                new FormalizationConfig() { Id = 9, Name="Artes de pesca", Field = "ArtesPesca", Value = "_id"},
+                new FormalizationConfig() { Id =10, Name="Nombre asociación", Field = "NombreAsociacion", Value = "_id"},
+                new FormalizationConfig() { Id =11, Name="Foto pescador", Field = "ImgPescador", Value = "_id"},
+                new FormalizationConfig() { Id =12, Name="Foto solicitud carnet", Field = "ImgSolicitudCarnet", Value = "_id"},
+                new FormalizationConfig() { Id =13, Name="Foto certificación", Field = "ImgCertificacion", Value = "_id"},
+                new FormalizationConfig() { Id =14, Name="Foto cédula (anverso)", Field = "ImgCedulaAnverso", Value = "_id"},
+                new FormalizationConfig() { Id =15, Name="Foto cédula (reverso)", Field = "ImgCedulaReverso", Value = "_id"},
+                new FormalizationConfig() { Id =16, Name="Firma digital", Field = "ImgFirmaDigital", Value = "_id"},
+                };
+            modelBuilder.Entity<FormalizationConfig>().HasData(formalizacionConfigs);
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

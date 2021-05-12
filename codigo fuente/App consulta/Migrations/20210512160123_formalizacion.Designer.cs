@@ -3,14 +3,16 @@ using System;
 using App_consulta.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210512160123_formalizacion")]
+    partial class formalizacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -314,120 +316,6 @@ namespace App_consulta.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FormalizationConfig");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Field = "IdKobo",
-                            Name = "Id Kobo",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Field = "NumeroRegistro",
-                            Name = "Número registro",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Field = "Name",
-                            Name = "Nombre y apellidos",
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Field = "FechaSolicitud",
-                            Name = "Fecha solicitud",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Field = "Cedula",
-                            Name = "Cédula pescador",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Field = "Departamento",
-                            Name = "Departamento",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Field = "Municipio",
-                            Name = "Municipio",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Field = "AreaPesca",
-                            Name = "Área de pesca",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Field = "ArtesPesca",
-                            Name = "Artes de pesca",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Field = "NombreAsociacion",
-                            Name = "Nombre asociación",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Field = "ImgPescador",
-                            Name = "Foto pescador",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Field = "ImgSolicitudCarnet",
-                            Name = "Foto solicitud carnet",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Field = "ImgCertificacion",
-                            Name = "Foto certificación",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Field = "ImgCedulaAnverso",
-                            Name = "Foto cédula (anverso)",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Field = "ImgCedulaReverso",
-                            Name = "Foto cédula (reverso)",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Field = "ImgFirmaDigital",
-                            Name = "Firma digital",
-                            Value = "_id"
-                        });
                 });
 
             modelBuilder.Entity("App_consulta.Models.Location", b =>
