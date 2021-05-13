@@ -22,7 +22,7 @@ var funcLE = {
             noDataText: "No hay datos disponibles.",
             export: {
                 enabled: false,
-                fileName: "Listado_encuestadores_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
+                fileName: "Listado_encuestas_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
                 allowExportSelectedData: true
             },
 

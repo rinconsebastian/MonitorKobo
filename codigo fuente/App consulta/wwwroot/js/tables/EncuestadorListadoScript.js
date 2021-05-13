@@ -74,7 +74,7 @@ var funcLE = {
                 visible: true
             },
             columns: [
-          
+
                 {
                     dataField: "cedula",
                     caption: "Cedula",
@@ -138,14 +138,15 @@ var funcLE = {
                     cellTemplate: function (container, options) {
 
                         var idEnc = options.data.id;
-                        var contenido = '<a href="/Encuestador/Details/' + idEnc + '" title="Detalles encuestador ' + idEnc + '" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
+                        var nombre = options.data.nombre;
+                        var contenido = '<a href="/Encuestador/Details/' + idEnc + '" title="Detalles encuestador ' + nombre + '" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
                         if (showEditar) {
-                            contenido += '<a href="/Encuestador/Edit/' + idEnc + '" title="Editar encuestador ' + idEnc + '" class="btn btn-outline-success btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
+                            contenido += '<a href="/Encuestador/Edit/' + idEnc + '" title="Editar encuestador ' + nombre + '" class="btn btn-outline-success btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
                         }
                         if (showDelete) {
-                            contenido += '<a href="/Encuestador/Delete/' + idEnc + '" title="Borrar encuestador ' + idEnc + '" class="btn btn-outline-danger btn-xs ml-1" ><i class="fas fa-trash"></i></a>'
+                            contenido += '<a href="/Encuestador/Delete/' + idEnc + '" title="Borrar encuestador ' + nombre + '" class="btn btn-outline-danger btn-xs ml-1" ><i class="fas fa-trash"></i></a>'
                         }
-                        
+
                         $("<div class='preventSelection'>")
                             .append(contenido)
                             .appendTo(container);
@@ -162,7 +163,7 @@ var funcLE = {
                 }],
 
             },
-           
+
             onToolbarPreparing: function (e) {
                 var dataGrid = e.component;
                 e.toolbarOptions.items.unshift(
@@ -186,7 +187,7 @@ var funcLE = {
         source = root + "Encuestador/ListAjax/";
 
         showEditar = $('#ShowEdit').val() == 1;
-        showDelete = $('#ShowDelete').val()==1;
+        showDelete = $('#ShowDelete').val() == 1;
 
         funcLE.instanceDataGrid();
     }
@@ -198,10 +199,3 @@ $(function () {
     DevExpress.localization.locale("es-US");
     funcLE.init();
 });
-
-
-
-
-
-
-
