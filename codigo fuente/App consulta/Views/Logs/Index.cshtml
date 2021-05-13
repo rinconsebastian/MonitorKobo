@@ -14,46 +14,22 @@
         @ViewBag.error
     </div>
 }
-<table class="table font-smaller">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Usuario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Modelo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Accion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Usuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Modelo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Accion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                <span class="button-inline small-button">
-                    <a href='@Url.Action("Details", new { id=item.Id })' class="btn btn-default btn-sm" title="Detalles"><i class="fas fa-file-alt"></i></a>
-                </span>
-            </td>
-        </tr>
-    }
+<div class="card mt-4 mx-auto">
+    <div class="card-body">
+        <div id="gridContainer" class="row-lm marginTop10 aux-selection"></div>
+    </div>
+</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/devexpress/dx.common.css" />
+    <link rel="stylesheet" href="~/css/devexpress/dx.light.css" />
+}
 
-</table>
+@section Scripts {
+    <script src="~/js/devexpress/dx.all.js"></script>
+    <script type="text/javascript" src="~/lib/jquery/moment.js"></script>
+
+    <script type="text/javascript" src="~/js/tables/LogsListadoScript.js"></script>
+}
 
 

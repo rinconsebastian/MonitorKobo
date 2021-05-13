@@ -111,12 +111,15 @@ namespace App_consulta.Controllers
         {
             var log = new Logger(db);
 
+            var original = await db.Configuracion.AsNoTracking().Where(n => n.id == configuracion.id).FirstOrDefaultAsync();
+
             if (ModelState.IsValid)
             {
                 db.Entry(configuracion).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
-                await log.Registrar(new RegistroLog { Usuario = User.Identity.Name, Accion = "Edit", Modelo = "Configuracion", ValNuevo = configuracion });
+                var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "Edit", Modelo = "Configuracion", ValAnterior = original, ValNuevo = configuracion };
+                await log.Registrar(registro, typeof(Configuracion));
 
                 return RedirectToAction("Index2");
             }

@@ -16,7 +16,7 @@ namespace App_consulta.Models
 
         public string Modelo { get; set; }
 
-        public string ValAnterior { get; set; }
+        public Object ValAnterior { get; set; }
 
         public Object ValNuevo { get; set; }
     }

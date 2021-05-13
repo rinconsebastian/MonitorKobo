@@ -24,11 +24,8 @@ namespace App_consulta.Controllers
           
         }
 
-        
-
-
         [Authorize(Policy = "Configuracion.Logs")]
-        public async Task<ActionResult> Index(string resultado)
+        public ActionResult Index()
         {
             string error = (string)HttpContext.Session.GetComplex<string>("error");
             if (error != "")
@@ -36,16 +33,30 @@ namespace App_consulta.Controllers
                 ViewBag.error = error;
                 HttpContext.Session.Remove("error");
             }
-            var logs = await db.Log.OrderByDescending(n => n.Fecha).Take(100).ToListAsync();
-            return View(logs);
+            return View();
         }
+
+        [Authorize(Policy = "Configuracion.Logs")]
+        public async Task<ActionResult> Ajax()
+        {
+            var logs = await db.Log.OrderByDescending(n => n.Fecha)//.Take(1000)
+                .Select(n => new {
+                    n.Id,
+                    n.Usuario,
+                    n.Modelo,
+                    n.Fecha,
+                    n.Accion
+                }).ToListAsync();
+            return Json(logs);
+        }
+
 
         [Authorize(Policy = "Configuracion.Logs")]
         public async Task<ActionResult> Details(int Id)
         {
             LogModel log = await db.Log.FindAsync(Id);
             if (log == null) { return NotFound(); }
-            ViewBag.Old = log.ValAnterior==null?"": JsonConvert.SerializeObject(JsonConvert.DeserializeObject(log.ValAnterior), Formatting.Indented);
+            ViewBag.Old = log.ValAnterior==null? "" : JsonConvert.SerializeObject(JsonConvert.DeserializeObject(log.ValAnterior), Formatting.Indented);
             ViewBag.New = log.ValNuevo == null ? "" : JsonConvert.SerializeObject(JsonConvert.DeserializeObject(log.ValNuevo), Formatting.Indented);
             return View(log);
         }
