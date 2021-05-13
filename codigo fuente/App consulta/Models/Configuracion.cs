@@ -71,6 +71,12 @@ namespace App_consulta.Models
         [Display(Name = "Asset UID")]
         public string KoboAssetUid { get; set; }
 
+        [Display(Name = "Attachment URL")]
+        public string KoboAttachment { get; set; }
+
+        [Display(Name = "Attachment User")]
+        public string KoboUsername { get; set; }
+
         [Display(Name = "Params Map")]
         public string KoboParamsMap { get; set; }
 

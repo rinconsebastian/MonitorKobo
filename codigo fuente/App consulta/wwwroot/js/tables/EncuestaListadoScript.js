@@ -76,7 +76,7 @@ var funcLE = {
             columns: [
           
                 {
-                    dataField: "id",
+                    dataField: "user",
                     caption: "Encuestador",
                     alignment: "center",
                     visible: showDNI,
@@ -124,7 +124,7 @@ var funcLE = {
             ],
             summary: {
                 totalItems: [{
-                    column: "id",
+                    column: "user",
                     summaryType: "count",
                     showInColumn: "locationCode",
                     displayFormat: "Total: {0}",
@@ -161,7 +161,7 @@ var funcLE = {
             showValidation = myShowValidation;
         }
 
-        source = root + "Kobo/ListadoAjax/?code=" + code;
+        source = root + "Kobo/ListadoEncuestas/?code=" + code;
 
         funcLE.instanceDataGrid();
     }

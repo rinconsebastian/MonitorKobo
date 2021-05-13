@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
@@ -30,8 +31,10 @@ namespace App_consulta.Controllers
             _env = env;
         }
 
+        //get info for load json file
+
         [Authorize(Policy = "Encuestador.Ver")]
-        public async Task<ActionResult> ListadoAjax(String code = null)
+        public async Task<ActionResult> ListadoEncuestas(String code = null)
         {
             var resp = new List<EncuestaDataModel>();
 
@@ -54,7 +57,7 @@ namespace App_consulta.Controllers
                 if(data.Count > 0)
                 {
                     //Filtra los datos
-                    var dataFiltered = code != null ? data.Where(n => n.Id == code).ToList(): data;                        
+                    var dataFiltered = code != null ? data.Where(n => n.User == code).ToList(): data;                        
 
                     if(dataFiltered.Count > 0)
                     {
@@ -74,7 +77,8 @@ namespace App_consulta.Controllers
                         {
                             var encuesta = new EncuestaDataModel
                             {
-                                Id = item.Id,
+                                IdKobo = item.IdKobo,
+                                User = item.User,
                                 LocationCode = item.LocationCode,
                                 Datetime = item.Datetime,
                                 Mun = item.LocationCode,
@@ -112,25 +116,123 @@ namespace App_consulta.Controllers
             return text;
         }
 
-        [HttpGet]
-        public ActionResult GetParams(String id = "id", String location = "location", String datetime = "datetime", String validation = "validation")
+        //Load formalizacion
+
+        [Authorize(Policy = "Formalizacion.validar")]
+        public async Task<String> LoadFormalizacion(String idKobo)
         {
-            var data = new EncuestaMap
+            //Carga los datos de conexión desde la configuración 
+            var config = await db.Configuracion.FirstOrDefaultAsync();
+            var configFormalizacion = await db.FormalizationConfig.Where(n => n.Field != "" && n.Value != "").ToListAsync();
+
+            var fields = JsonConvert.SerializeObject(configFormalizacion.Select(n => n.Value).ToArray() );
+            var query = JsonConvert.SerializeObject(new { _id = idKobo });
+
+            var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUid + "/submissions/?format=json" +
+                "&query="+ HttpUtility.UrlEncode(query) +
+                "&fields=" + HttpUtility.UrlEncode(fields);
+
+            dynamic result = null;
+            var error = "";
+            try
             {
-                Id = id,
-                LocationCode = location,
-                Datetime = datetime,
-                Validation = validation
-            };
-            return Json(data);
+
+                //Consulta la información
+                var client = new HttpClient();
+                client.DefaultRequestHeaders.Add("Authorization", "Token " + config.KoboApiToken);
+                HttpResponseMessage response = await client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                dynamic data = JsonConvert.DeserializeObject(responseBody);
+                //Valida que se cargaran resultados
+                if (data == null) { return "ERROR: No fue posible recuperar la información"; }
+                result = data[0];
+            }
+            catch (HttpRequestException e)
+            {
+                error = "ERROR: " + e.Message;
+            }
+
+            if(result != null)
+            {
+                //Mapea los resultados
+                var formalizacion = new Formalization()
+                {
+                    Estado = Formalization.ESTADO_BORRADOR
+                };
+
+                //folder para los adjunto
+
+                var _path = Path.Combine(_env.ContentRootPath, "Storage", "Formalizacion", idKobo);
+                var _relative = Path.Combine("Formalizacion", idKobo);
+                var remoteUri = config.KoboAttachment + config.KoboUsername + "/attachments/";
+
+                if (!Directory.Exists(_path))
+                {
+                    Directory.CreateDirectory(_path);
+                }
+                var imageErrors = false;
+
+                var map = configFormalizacion.ToDictionary(n => n.Field, n => n.Value);
+
+                var oType = typeof(Formalization);
+                foreach (var oProperty in oType.GetProperties())
+                {
+                    var name = oProperty.Name;
+
+                    if (map.ContainsKey(name))
+                    {
+                        var fieldName = map[name];
+                        var value = (String)result[fieldName];
+
+                        //Si es una campo de imagen descarga el adjunto
+                        if (name.StartsWith("Img") && value != null && value != "")
+                        {
+                            var filePath = DownloadFile(remoteUri, value, _path, _relative, config.KoboApiToken);
+                            if(filePath == "")
+                            {
+                                imageErrors = true;
+                                break;
+                            }
+                            value = filePath;
+                        }
+                        oProperty.SetValue(formalizacion, value, null);
+                    }
+                }
+              
+                if(imageErrors)
+                {
+                    return "ERROR: No fue posible cargar los archivos adjuntos";
+                }
+
+                try
+                {
+                    db.Formalization.Add(formalizacion);
+                    await db.SaveChangesAsync();
+                }
+                catch(Exception e)
+                {
+                    error = "ERROR: " + e.InnerException.Message;
+                }
+            }
+            else
+            {
+                error = "ERROR: No se encuentran resultados.";
+            }
+
+            return error;
         }
+
+        //Update json kobo file
 
         private async Task<String> UpdateDataFile()
         {
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var mapParams = JsonConvert.DeserializeObject<EncuestaMap>(config.KoboParamsMap);
-            var fields= JsonConvert.SerializeObject(new string[] { mapParams.Id, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation });
+            var fields= JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation });
             var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUid + "/submissions/?format=json&fields=" + HttpUtility.UrlEncode(fields);
 
        
@@ -158,7 +260,8 @@ namespace App_consulta.Controllers
                 {
                     encuestas.Add(new EncuestaMap()
                     {
-                        Id = (String)result[mapParams.Id],
+                        IdKobo = (String)result[mapParams.IdKobo],
+                        User = (String)result[mapParams.User],
                         LocationCode = (String)result[mapParams.LocationCode],
                         Datetime = (String)result[mapParams.Datetime],
                         Validation = (String)result[mapParams.Validation],
@@ -273,6 +376,28 @@ namespace App_consulta.Controllers
                 return true;
             }
             return false;
+        }
+
+        private string DownloadFile(string remoteUri, string fileName, string path, string relative, String token)
+        {
+            var relativePath = "";
+
+            try
+            {
+                string myStringWebResource = remoteUri + fileName;
+                WebClient myWebClient = new WebClient();
+                myWebClient.Headers.Add("User-Agent: Other");
+                myWebClient.Headers.Add(HttpRequestHeader.Authorization, "token  " + token);
+                var fullPath = Path.Combine(path, fileName);
+                myWebClient.DownloadFile(myStringWebResource, fullPath);
+
+                relativePath = Path.Combine(relative, fileName);
+            }
+            catch (Exception e) {
+                var a = e.Message;
+            }
+
+            return relativePath;
         }
     }
 }

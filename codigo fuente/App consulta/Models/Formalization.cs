@@ -25,15 +25,15 @@ namespace App_consulta.Models
         public string NumeroRegistro { get; set; }
 
         [Display(Name = "Nombre y apellidos")]
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Name { get; set; }
 
         [Display(Name = "Fecha solicitud")]
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string FechaSolicitud { get; set; }
 
         [Display(Name = "Cédula")]
-        [Required]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Cedula { get; set; }
 
 
