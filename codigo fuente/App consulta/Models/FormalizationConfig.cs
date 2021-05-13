@@ -14,16 +14,16 @@ namespace App_consulta.Models
         [Key]
         public int Id { get; set; }
 
-        [Display(Name = "Nombre")]
-        [Required]
+        [Display(Name = "Descripción")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Name { get; set; }
 
-        [Display(Name = "Campo DB")]
-        [Required]
+        [Display(Name = "Nombre DB")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Field { get; set; }
 
-        [Display(Name = "Campo Kobo")]
-        [Required]
+        [Display(Name = "Nombre Kobo")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Value { get; set; }
     }
 }
