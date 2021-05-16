@@ -31,96 +31,29 @@ namespace App_consulta.Controllers
             _env = env;
         }
 
-        //get info for load json file
-
-        [Authorize(Policy = "Encuestador.Ver")]
-        public async Task<ActionResult> ListadoEncuestas(String code = null)
+        //Listados de encuestas
+        [Authorize(Policy = "Encuestas.Usuario")]
+        public async Task<ActionResult> ListadoEncuestasUsuario(String code)
         {
-            var resp = new List<EncuestaDataModel>();
-
-            //Valida la consulta y los permisos
-            var verInforme = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Informes.Encuestadores" && c.Value == "1"));
-            if (code == null && !verInforme) { return Json(resp); }
-
-            //Consulta el archivo y valida que tenga datos.
-            var text = "";
-            try
-            {
-                var _path = Path.Combine(_env.ContentRootPath, "Storage");
-                text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
-            }
-            catch (Exception){}
-
-            if(text != "")
-            {
-                var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
-                if(data.Count > 0)
-                {
-                    //Filtra los datos
-                    var dataFiltered = code != null ? data.Where(n => n.User == code).ToList(): data;                        
-
-                    if(dataFiltered.Count > 0)
-                    {
-                        var codesLocation = dataFiltered.Select(n => n.LocationCode).Distinct().ToList();
-                        var locations = await db.Location.Where(n => codesLocation.Contains(n.Code.ToString()))
-                            .Select(n => new
-                            {
-                                Code = n.Code.ToString(),
-                                Mun = n.Name,
-                                Dep = n.LocationParent != null ? n.LocationParent.Name : ""
-                            }).ToDictionaryAsync(n => n.Code, n => n);
-
-                        //Permisos de columnas
-                        var verValidacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
-
-                        foreach (var item in dataFiltered)
-                        {
-                            var encuesta = new EncuestaDataModel
-                            {
-                                IdKobo = item.IdKobo,
-                                User = item.User,
-                                LocationCode = item.LocationCode,
-                                Datetime = item.Datetime,
-                                Mun = item.LocationCode,
-                                Dep = "",
-                                Validation = verValidacion ? item.Validation != null && item.Validation != "" : false
-                            };
-                            //Completa los municipios y departamentos
-                            if (locations.ContainsKey(item.LocationCode))
-                            {
-                                var aux = locations[item.LocationCode];
-                                encuesta.Mun = aux.Mun;
-                                encuesta.Dep = aux.Dep;
-                            }
-                            resp.Add(encuesta);
-                        }
-                    }
-                    
-                }
-                
-            }
-
+            var resp = await GetListadoEncuestas(code);
             return Json(resp);
         }
 
-        public String GetDatetimeData()
+        [Authorize(Policy = "Encuestas.Listado")]
+        public async Task<ActionResult> ListadoEncuestas()
         {
-            var text = "";
-            try
-            {
-                var _path = Path.Combine(_env.ContentRootPath, "Storage");
-                DateTime creation = System.IO.File.GetCreationTime(Path.Combine(_path, "data.json"));
-                text = creation.ToString("f"); 
-            }
-            catch (Exception) { }
-            return text;
+            var resp = await GetListadoEncuestas();
+            return Json(resp);
         }
+
 
         //Load formalizacion
 
-        [Authorize(Policy = "Formalizacion.validar")]
-        public async Task<String> LoadFormalizacion(String idKobo)
+        [Authorize(Policy = "Formalizacion.Validar")]
+        public async Task<RespuestaAccion> LoadFormalizacion(string idKobo)
         {
+            var r = new RespuestaAccion();
+
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var configFormalizacion = await db.FormalizationConfig.Where(n => n.Field != "" && n.Value != "").ToListAsync();
@@ -133,7 +66,7 @@ namespace App_consulta.Controllers
                 "&fields=" + HttpUtility.UrlEncode(fields);
 
             dynamic result = null;
-            var error = "";
+            
             try
             {
 
@@ -147,13 +80,10 @@ namespace App_consulta.Controllers
 
                 dynamic data = JsonConvert.DeserializeObject(responseBody);
                 //Valida que se cargaran resultados
-                if (data == null) { return "ERROR: No fue posible recuperar la información"; }
+                if (data == null) { r.Message = "ERROR: No fue posible recuperar la información"; return r ; }
                 result = data[0];
             }
-            catch (HttpRequestException e)
-            {
-                error = "ERROR: " + e.Message;
-            }
+            catch (HttpRequestException e){r.Message = e.Message; return r; }
 
             if(result != null)
             {
@@ -202,31 +132,109 @@ namespace App_consulta.Controllers
                     }
                 }
               
-                if(imageErrors)
-                {
-                    return "ERROR: No fue posible cargar los archivos adjuntos";
-                }
+                if(imageErrors){r.Message = "ERROR: No fue posible cargar los archivos adjuntos"; return r; }
 
                 try
                 {
                     db.Formalization.Add(formalizacion);
                     await db.SaveChangesAsync();
-                }
-                catch(Exception e)
-                {
-                    error = "ERROR: " + e.InnerException.Message;
-                }
+                    r.Url = "Formalizacion/Edit/" + formalizacion.Id;
+                    r.Success = true;
+                } catch(Exception e){r.Message = e.InnerException.Message; return r;}
             }
             else
             {
-                error = "ERROR: No se encuentran resultados.";
+                r.Message = "ERROR: No se encuentran resultados."; return r;
             }
 
-            return error;
+            return r;
         }
 
-        //Update json kobo file
+        //Actualizar archivo de encuestas
+        [Authorize(Policy = "Encuestas.Actualizar")]
+        public async Task<ActionResult> ActualizarManual()
+        {
+            var error = "";
+            var fecha = DateTime.Now.ToString("r");
+            var resp = await UpdateDataFile();
+            var accion = "[" + fecha + "] " + resp;
 
+            var _path = Path.Combine(_env.ContentRootPath, "Storage");
+            var archivo = _path + "/Logs.txt";
+            try
+            {
+                if (!System.IO.File.Exists(archivo))
+                {
+                    using (StreamWriter sw = System.IO.File.CreateText(archivo))
+                    {
+                        sw.WriteLine(accion);
+                    }
+                }
+                else
+                {
+                    using (StreamWriter sw = System.IO.File.AppendText(archivo))
+                    {
+                        sw.WriteLine(accion);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                error = e.Message;
+            }
+            ViewBag.Error = error;
+            ViewBag.Accion = accion;
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<bool> Auto(string auth)
+        {
+            if (auth == "#51kS7.Jms22")
+            {
+                var fecha = DateTime.Now.ToString("r");
+                var resp = await UpdateDataFile();
+                var accion = "[" + fecha + "] " + resp;
+
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
+                var archivo = _path + "/Logs.txt";
+                try
+                {
+                    if (!System.IO.File.Exists(archivo))
+                    {
+                        using (StreamWriter sw = System.IO.File.CreateText(archivo))
+                        {
+                            sw.WriteLine(accion);
+                        }
+                    }
+                    else
+                    {
+                        using (StreamWriter sw = System.IO.File.AppendText(archivo))
+                        {
+                            sw.WriteLine(accion);
+                        }
+                    }
+                }
+                catch (Exception) { }
+                return true;
+            }
+            return false;
+        }
+
+        public String GetDatetimeData()
+        {
+            var text = "";
+            try
+            {
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
+                DateTime creation = System.IO.File.GetCreationTime(Path.Combine(_path, "data.json"));
+                text = creation.ToString("f");
+            }
+            catch (Exception) { }
+            return text;
+        }
+
+        //Extra
         private async Task<String> UpdateDataFile()
         {
             //Carga los datos de conexión desde la configuración 
@@ -309,74 +317,86 @@ namespace App_consulta.Controllers
             return error;
         }
 
-        [Authorize(Policy = "Kobo.Actualizar")]
-        public async Task<ActionResult> ActualizarManual()
+        private async Task<List<EncuestaDataModel>> GetListadoEncuestas(String code = null)
         {
-            var error = "";
-            var fecha = DateTime.Now.ToString("r");
-            var resp = await UpdateDataFile();
-            var accion = "[" + fecha + "] " + resp;
+            var resp = new List<EncuestaDataModel>();
 
-            var _path = Path.Combine(_env.ContentRootPath, "Storage");
-            var archivo = _path + "/Logs.txt";
+            //Consulta el archivo y valida que tenga datos.
+            var text = "";
             try
             {
-                if (!System.IO.File.Exists(archivo))
-                {
-                    using (StreamWriter sw = System.IO.File.CreateText(archivo))
-                    {
-                        sw.WriteLine(accion);
-                    }
-                }
-                else
-                {
-                    using (StreamWriter sw = System.IO.File.AppendText(archivo))
-                    {
-                        sw.WriteLine(accion);
-                    }
-                }
-            }
-            catch (Exception e) {
-                error = e.Message;
-            }
-            ViewBag.Error = error;
-            ViewBag.Accion = accion;
-            return View();
-        }
-
-        [HttpGet]
-        public async Task<bool> Auto(string auth)
-        {
-            if (auth == "#51kS7.Jms22" )
-            {
-                var fecha = DateTime.Now.ToString("r");
-                var resp = await UpdateDataFile();
-                var accion = "[" + fecha + "] "+ resp;
-
                 var _path = Path.Combine(_env.ContentRootPath, "Storage");
-                var archivo = _path + "/Logs.txt";
-                try
-                {
-                    if (!System.IO.File.Exists(archivo))
-                    {
-                        using (StreamWriter sw = System.IO.File.CreateText(archivo))
-                        {
-                            sw.WriteLine(accion);
-                        }
-                    }
-                    else
-                    {
-                        using (StreamWriter sw = System.IO.File.AppendText(archivo))
-                        {
-                            sw.WriteLine(accion);
-                        }
-                    }
-                }
-                catch (Exception){}
-                return true;
+                text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
             }
-            return false;
+            catch (Exception) { }
+
+            if (text != "")
+            {
+                var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
+                if (data.Count > 0)
+                {
+                    //Filtra los datos
+                    var dataFiltered = code != null ? data.Where(n => n.User == code).ToList() : data;
+
+                    if (dataFiltered.Count > 0)
+                    {
+                        var codesLocation = dataFiltered.Select(n => n.LocationCode).Distinct().ToList();
+                        var locations = await db.Location.Where(n => codesLocation.Contains(n.Code.ToString()))
+                            .Select(n => new
+                            {
+                                Code = n.Code.ToString(),
+                                Mun = n.Name,
+                                Dep = n.LocationParent != null ? n.LocationParent.Name : ""
+                            }).ToDictionaryAsync(n => n.Code, n => n);
+
+                        var idsKobo = dataFiltered.Select(n => n.IdKobo).ToList();
+                        var formalizaciones = await db.Formalization.Where(n => idsKobo.Contains(n.IdKobo))
+                            .Select(n => new
+                            {
+                                n.IdKobo,
+                                n.Id
+                            }).ToDictionaryAsync(n => n.IdKobo, n => n.Id);
+
+
+                        //Permisos de columnas
+                        var verValidacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
+
+                        foreach (var item in dataFiltered)
+                        {
+                            var encuesta = new EncuestaDataModel
+                            {
+                                IdKobo = item.IdKobo,
+                                User = item.User,
+                                LocationCode = item.LocationCode,
+                                Datetime = item.Datetime,
+                                Mun = item.LocationCode,
+                                Dep = "",
+                                Validation = verValidacion ? item.Validation != null && item.Validation != "" : false
+                            };
+                            //Completa los municipios y departamentos
+                            if (locations.ContainsKey(item.LocationCode))
+                            {
+                                var aux = locations[item.LocationCode];
+                                encuesta.Mun = aux.Mun;
+                                encuesta.Dep = aux.Dep;
+                            }
+                            //Completa las formalizaciones
+                            if (formalizaciones.ContainsKey(item.IdKobo))
+                            {
+                                encuesta.FormalizacionId = formalizaciones[item.IdKobo];
+                            }
+                            resp.Add(encuesta);
+                        }
+                    }
+
+                }
+
+            }
+
+            return resp;
         }
+
+
 
         private string DownloadFile(string remoteUri, string fileName, string path, string relative, String token)
         {

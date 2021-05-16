@@ -6,7 +6,7 @@
     var permisoRol = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar" && c.Value == "1"));
     var permisoUsuario = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar" && c.Value == "1"));
     var permisoLogs = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs" && c.Value == "1"));
-    var actualizarDatos = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Kobo.Actualizar" && c.Value == "1"));
+    var actualizarDatos = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Actualizar" && c.Value == "1"));
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item">

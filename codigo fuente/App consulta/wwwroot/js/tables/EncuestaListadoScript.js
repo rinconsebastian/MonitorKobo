@@ -5,6 +5,7 @@ var source = "";
 
 var showDNI = false;
 var showValidation = false;
+var loadValidation = false;
 var code = "";
 //*********************************** funcLE ******************************************
 
@@ -74,7 +75,7 @@ var funcLE = {
                 visible: true
             },
             columns: [
-          
+
                 {
                     dataField: "user",
                     caption: "Encuestador",
@@ -106,14 +107,26 @@ var funcLE = {
 
                 },
                 {
-                    dataField: "validation",
+                    
                     caption: "Formalización",
                     visible: showValidation,
                     alignment: "center",
                     width: '20%',
                     cellTemplate: function (container, options) {
+
+                        var idKobo = options.data.idKobo;
                         var val = options.data.validation;
-                        var contenido = val ? "Si": "No";
+                        var formId = options.data.formalizacionId;
+
+                        var contenido = "No";
+                        if (formId != 0) {
+                            contenido = '<a href="' + root + 'Formalizacion/Details/' + formId + '" title="Detalles" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
+                            if (loadValidation) {
+                                contenido += '<a href="' + root + 'Formalizacion/Edit/' + formId + '" title="Editar " class="btn btn-outline-warning btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
+                            }
+                        } else if (val && loadValidation) {
+                            contenido = '<button class="btn btn-outline-success btn-xs ml-1 load-formlz" data-id="' + idKobo + '" title="Cargar datos"><i class="fas fa-download"></i></button>';
+                        }
 
                         $("<div class='preventSelection'>")
                             .append(contenido)
@@ -131,7 +144,7 @@ var funcLE = {
                 }],
 
             },
-           
+
             onToolbarPreparing: function (e) {
                 var dataGrid = e.component;
                 e.toolbarOptions.items.unshift(
@@ -149,6 +162,43 @@ var funcLE = {
         }).dxDataGrid('instance');
     },
 
+    loadFormalizacion: function () {
+        $('body').on('click', '.load-formlz', function (e) {
+            var idKobo = $(this).data('id');
+
+            $(this).find('i').removeClass('fa-download');
+            $(this).find('i').addClass('fa-cog fa-spin');
+            $(this).attr('disabled', 'disabled');
+
+            var fullurl = root + "Formalizacion/Cargar/";
+            
+            $.post(fullurl, { idKobo: idKobo }).
+                done(function (data) {
+                    $(this).find('i').addClass('fa-download');
+                    $(this).find('i').removeClass('fa-cog fa-spin');
+                    $(this).removeAttr('disabled');
+                    if (data != null) {
+                        if (data.success) {
+                            if (data.url != null) {
+                                window.location.href = root + data.url;
+                            } else {
+                                funcGenerico.mostrarMensaje(data.message, "success");
+                            }
+                        } else {
+                            funcGenerico.mostrarMensaje(data.Message, "error");
+                        }
+                    } else {
+                        funcGenerico.mostrarMensaje("Error en la respuesta del servidor.", "error");
+                    }
+                }).fail(function (data) {
+                    $(this).find('i').addClass('fa-download');
+                    $(this).find('i').removeClass('fa-cog fa-spin');
+                    $(this).removeAttr('disabled');
+                    funcGenerico.mostrarMensaje("Error al solicitar la operación.", "error");
+                });
+        });
+    },
+
     init: function () {
         // Carga las variables de configuración.
         root = $('#Root').val();
@@ -160,10 +210,19 @@ var funcLE = {
         if (typeof myShowValidation !== "undefined") {
             showValidation = myShowValidation;
         }
-
-        source = root + "Kobo/ListadoEncuestas/?code=" + code;
+        if (typeof myLoadValidation !== "undefined") {
+            loadValidation = myLoadValidation;
+        }
+       
+        if (code != "") {
+            source = root + "Kobo/ListadoEncuestasUsuario/?code=" + code;
+        } else {
+            source = root + "Kobo/ListadoEncuestas";
+        }
+        
 
         funcLE.instanceDataGrid();
+        funcLE.loadFormalizacion();
     }
 };
 

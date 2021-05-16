@@ -34,12 +34,14 @@
             <partial name="_MenuHeaderPartial" />
         </div>
     </nav>
-   
+
     <div class="container bodyccs  @(ViewBag.ClaseContainer) ">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+    <div id="toastGenerico"></div>
+    <div id="toastGenericoReload"></div>
     @Html.Hidden("Root", Url.Content("~/"))
 
     <partial name="_footerPartial" />

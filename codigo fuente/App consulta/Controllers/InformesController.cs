@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,7 @@ namespace App_consulta.Controllers
         }
 
 
-        [Authorize(Policy = "Informes.Encuestadores")]
+        [Authorize(Policy = "Encuestas.Listado")]
         public ActionResult Encuestados()
         {
             var kobo = new KoboController(db, userManager, _env);
@@ -36,5 +37,7 @@ namespace App_consulta.Controllers
             ViewBag.DataTime = kobo.GetDatetimeData();
             return View();
         }
+
+
     }
 }

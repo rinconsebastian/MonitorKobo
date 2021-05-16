@@ -3,6 +3,8 @@
     ViewData["Title"] = "Panel de control";
     ViewData["Subtitle"] = "Roles";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    var orden = 0;
 }
 <h4>Editar rol</h4>
 <form id="formIndicador" asp-action="Edit" method="post">
@@ -26,7 +28,10 @@
             <div class="row">
                 @foreach (PermisoDataModel p in ViewBag.Permisos)
                 {
-
+                    if (orden != p.orden)
+                    {
+                        <div class="col-sm-12"><hr class="my-1" /></div>
+                    }
 
                     <div class="col-sm-6">
                         <div class="custom-control custom-switch">
@@ -43,6 +48,7 @@
 
                         </div>
                     </div>
+                    orden = p.orden;
                 }
             </div>
         </div>

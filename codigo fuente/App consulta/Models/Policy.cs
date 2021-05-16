@@ -19,5 +19,7 @@ namespace App_consulta.Models
         [Required]
         [Display(Name = "Claim")]
         public string claim { get; set; }
+
+        public int group { get; set; }
     }
 }

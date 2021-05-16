@@ -20,5 +20,6 @@ namespace App_consulta.Models
         public string Mun { get; set; }
         public string Datetime { get; set; }
         public bool Validation { get; set; }
+        public int FormalizacionId { get; set; }
     }
 }

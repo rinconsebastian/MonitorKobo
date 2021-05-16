@@ -113,7 +113,7 @@ var funcLogs = {
                     cellTemplate: function (container, options) {
 
                         var idEnc = options.data.id;
-                        var contenido = '<a href="/Logs/Details/' + idEnc + '" title="Detalles" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
+                        var contenido = '<a href="' + root +'Logs/Details/' + idEnc + '" title="Detalles" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
 
                         $("<div class='preventSelection'>")
                             .append(contenido)

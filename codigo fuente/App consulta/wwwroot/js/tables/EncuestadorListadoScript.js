@@ -139,12 +139,12 @@ var funcLE = {
 
                         var idEnc = options.data.id;
                         var nombre = options.data.nombre;
-                        var contenido = '<a href="/Encuestador/Details/' + idEnc + '" title="Detalles encuestador ' + nombre + '" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
+                        var contenido =  '<a href="' + root + 'Encuestador/Details/' + idEnc + '" title="Detalles encuestador ' + nombre + '" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
                         if (showEditar) {
-                            contenido += '<a href="/Encuestador/Edit/' + idEnc + '" title="Editar encuestador ' + nombre + '" class="btn btn-outline-success btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
+                            contenido += '<a href="' + root + 'Encuestador/Edit/' + idEnc + '" title="Editar encuestador ' + nombre + '" class="btn btn-outline-success btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
                         }
                         if (showDelete) {
-                            contenido += '<a href="/Encuestador/Delete/' + idEnc + '" title="Borrar encuestador ' + nombre + '" class="btn btn-outline-danger btn-xs ml-1" ><i class="fas fa-trash"></i></a>'
+                            contenido += '<a href="' + root + 'Encuestador/Delete/' + idEnc + '" title="Borrar encuestador ' + nombre + '" class="btn btn-outline-danger btn-xs ml-1" ><i class="fas fa-trash"></i></a>'
                         }
 
                         $("<div class='preventSelection'>")

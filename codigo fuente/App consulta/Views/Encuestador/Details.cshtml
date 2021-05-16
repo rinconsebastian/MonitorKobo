@@ -8,13 +8,17 @@
 
     var permisoEditar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar" && c.Value == "1"));
     var permisoAdministrar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" && c.Value == "1"));
+
+    var verEncuestas = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Usuario" && c.Value == "1"));
+
     var verFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
+    var validarFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar" && c.Value == "1"));
 
 }
 @Html.Hidden("code", code)
 
 <div class="row mt-4">
-    <div class="col-12 col-sm-5">
+    <div class="col-12 col-sm-5 @(verEncuestas ? "" : "mx-auto")">
         <div class="card  border-info ">
             <div class="card-body">
                 <h4 class="text-center text-uppercase">@Model.Name</h4>
@@ -106,27 +110,35 @@
             }
         </div>
     </div>
-    <div class="col-12 col-sm-7">
-        <div class="card">
-            <div class="card-body">
-                <div id="gridContainer" class="row-lm aux-selection">
+    @if (verEncuestas)
+    {
+        <div class="col-12 col-sm-7">
+            <div class="card">
+                <div class="card-body">
+                    <div id="gridContainer" class="row-lm aux-selection">
+
+                    </div>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="font-weight-light mb-0 small">
+                        Actualizado el <i>@ViewBag.DataTime</i>
+                    </p>
 
                 </div>
             </div>
-            <div class="card-footer text-center">
-                <p class="font-weight-light mb-0 small">
-                    Actualizado el <i>@ViewBag.DataTime</i>
-                </p>
-
-            </div>
         </div>
-    </div>
+    }
 </div>
-
 @section Scripts {
-    <script type="text/javascript" src="~/lib/jquery/moment.js"></script>
-    <script>
-        var myShowValidation =@(verFormalizacion ? "true": "false");
-    </script>
-    <script type="text/javascript" src="~/js/tables/EncuestaListadoScript.js"></script>
+    @if (verEncuestas)
+    {
+        <script type="text/javascript" src="~/lib/jquery/moment.js"></script>
+        <script>
+        var myShowValidation =@(verFormalizacion ? "true" : "false");
+        var myLoadValidation =@(validarFormalizacion ? "true" : "false");
+        </script>
+
+        <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
+        <script type="text/javascript" src="~/js/tables/EncuestaListadoScript.js"></script>
+    }
 }

@@ -222,14 +222,15 @@ namespace App_consulta.Controllers
         private async Task<List<PermisoDataModel>> GetPermisosByRol(string idRol)
         {
             //Consulta las policies y los permisos actuales del rol
-            var policies = await db.Policy.ToDictionaryAsync(n => n.claim, n => n.nombre);
+            var policies = await db.Policy.ToDictionaryAsync(n => n.claim, n => n);
             var claims = new List<String>();
             var permisos = await db.RoleClaims.Where(n => n.RoleId == idRol)
                 .Select(n => new PermisoDataModel
                 {
                     id = n.Id,
                     valor = n.ClaimValue,
-                    texto = n.ClaimType
+                    texto = n.ClaimType,
+                    orden = 0
                 })
                 .ToListAsync();
             //Recorre los permisos y busca los textos dentro de las policies
@@ -238,8 +239,9 @@ namespace App_consulta.Controllers
                 if (policies.ContainsKey(per.texto))
                 {
                     claims.Add(per.texto);
-                    per.texto = policies[per.texto];
-                    
+                    var polAux = policies[per.texto];
+                    per.texto = polAux.nombre;
+                    per.orden = polAux.group;
                 }
             }
             //Consulta las policies que no tengan permiso asociado y las agrega
@@ -249,11 +251,12 @@ namespace App_consulta.Controllers
                 permisos.Add(new PermisoDataModel() {
                     valor = "0",
                     texto = claim.nombre,
-                    policy = claim.id
+                    policy = claim.id,
+                    orden = claim.group
                 });
             }
 
-            return permisos;
+            return permisos.OrderBy(n => n.orden).ToList();
         }
 
     }

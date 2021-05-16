@@ -15,29 +15,30 @@
                 <a class="nav-link text-dark" asp-area="" asp-controller="Configuracions" asp-action="Index2">Configuracion</a>
             </li>
         }
-        @if (User.HasClaim(c =>
-(c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver" && c.Value == "1") ||
-(c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar" && c.Value == "1") ||
-(c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" && c.Value == "1")
-))
+        @if (User.HasClaim(c =>(c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver" && c.Value == "1")))
         {
             <li class="nav-item">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Encuestador" asp-action="Index">Encuestadores</a>
             </li>
         }
         @{
-            var informeEncuestador = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Informes.Encuestadores" && c.Value == "1"));
-            var showInformes = informeEncuestador;
-            if (showInformes)
+            var infoEncuestas = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Listado" && c.Value == "1"));
+            var infoFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Listado" && c.Value == "1"));
+            
+            if (infoEncuestas || infoFormalizacion)
             {
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Informes
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        @if (informeEncuestador)
+                        @if (infoEncuestas)
                         {
-                            <a class="dropdown-item" asp-area="" asp-controller="Informes" asp-action="Encuestados">Encuestados</a>
+                            <a class="dropdown-item" asp-area="" asp-controller="Informes" asp-action="Encuestados">Encuestas</a>
+                        }
+                        @if (infoFormalizacion)
+                        {
+                            <a class="dropdown-item" asp-area="" asp-controller="Formalizacion" asp-action="index">Formalización</a>
                         }
                     </div>
                 </li>
