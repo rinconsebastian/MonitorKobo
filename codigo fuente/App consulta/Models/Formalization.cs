@@ -77,5 +77,33 @@ namespace App_consulta.Models
 
         [Display(Name = "Estado")]
         public int Estado { get; set; }
+
+        [Display(Name = "Coordinación")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public int IdResponsable { get; set; }
+        [ForeignKey("IdResponsable")]
+        public virtual Responsable Responsable { get; set; }
+
+        [Display(Name = "Creado por")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public string IdCreateByUser { get; set; }
+        [ForeignKey("IdCreateByUser")]
+        public virtual ApplicationUser CreateByUser { get; set; }
+
+        [Display(Name = "Última edición por")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public string IdLastEditByUser { get; set; }
+        [ForeignKey("IdLastEditByUser")]
+        public virtual ApplicationUser LastEditByUser { get; set; }
+
+        [Display(Name = "Fecha creación")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public DateTime CreateDate { get; set; }
+
+        [Display(Name = "Fecha última edición")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public DateTime LastEditDate { get; set; }
+
+
     }
 }

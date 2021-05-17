@@ -50,7 +50,7 @@ namespace App_consulta.Controllers
         //Load formalizacion
 
         [Authorize(Policy = "Formalizacion.Validar")]
-        public async Task<RespuestaAccion> LoadFormalizacion(string idKobo)
+        public async Task<RespuestaAccion> LoadFormalizacion(string idKobo, string identity = null )
         {
             var r = new RespuestaAccion();
 
@@ -87,10 +87,18 @@ namespace App_consulta.Controllers
 
             if(result != null)
             {
+                var username = identity != null ? identity : User.Identity.Name;
+                var user = await userManager.FindByNameAsync(username);
+         
                 //Mapea los resultados
                 var formalizacion = new Formalization()
                 {
-                    Estado = Formalization.ESTADO_BORRADOR
+                    Estado = Formalization.ESTADO_BORRADOR,
+                    CreateDate = DateTime.Now,
+                    LastEditDate = DateTime.Now,
+                    IdResponsable = user.IDDependencia,
+                    IdCreateByUser = user.Id,
+                    IdLastEditByUser = user.Id
                 };
 
                 //folder para los adjunto
