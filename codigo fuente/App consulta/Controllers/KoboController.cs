@@ -1,5 +1,6 @@
 ﻿using App_consulta.Data;
 using App_consulta.Models;
+using App_consulta.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -142,13 +143,19 @@ namespace App_consulta.Controllers
               
                 if(imageErrors){r.Message = "ERROR: No fue posible cargar los archivos adjuntos"; return r; }
 
+                var log = new Logger(db);
                 try
                 {
                     db.Formalization.Add(formalizacion);
                     await db.SaveChangesAsync();
                     r.Url = "Formalizacion/Edit/" + formalizacion.Id;
                     r.Success = true;
-                } catch(Exception e){r.Message = e.InnerException.Message; return r;}
+
+                    var registro = new RegistroLog { Usuario = identity, Accion = "Create", Modelo = "Formalization", ValNuevo = formalizacion };
+                    await log.Registrar(registro, typeof(Formalization));
+
+                }
+                catch (Exception e){r.Message = e.InnerException.Message; return r;}
             }
             else
             {
@@ -392,7 +399,7 @@ namespace App_consulta.Controllers
                             if (formalizaciones.ContainsKey(item.IdKobo))
                             {
                                 encuesta.FormalizacionId = formalizaciones[item.IdKobo];
-                            }
+                            }                         
                             resp.Add(encuesta);
                         }
                     }
@@ -405,6 +412,32 @@ namespace App_consulta.Controllers
         }
 
 
+        public Dictionary<String, int> GetTotalEncuestas()
+        {
+            var resp = new Dictionary<String, int>();
+
+            //Consulta el archivo y valida que tenga datos.
+            var text = "";
+            try
+            {
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
+                text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
+            }
+            catch (Exception) { }
+
+            if (text != "")
+            {
+                var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
+                if (data.Count > 0)
+                {
+                    resp = data.GroupBy(n => n.User).ToDictionary(g => g.Key, g => g.Count());
+
+                }
+
+            }
+
+            return resp;
+        }
 
         private string DownloadFile(string remoteUri, string fileName, string path, string relative, String token)
         {

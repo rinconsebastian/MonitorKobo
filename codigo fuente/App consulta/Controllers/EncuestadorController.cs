@@ -48,7 +48,7 @@ namespace App_consulta.Controllers
             var respRelacionado = await GetResponsablesbyIdParent(user.IDDependencia, 1,3);
 
             var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable))
-                .Select(n => new {
+                .Select(n => new EncuestadorDataModel {
                     ID = n.Id,
                     Cedula = n.DNI,
                     Nombre = n.Name,
@@ -56,9 +56,21 @@ namespace App_consulta.Controllers
                     Departamento = (n.Location != null && n.Location.LocationParent != null) ? n.Location.LocationParent.Name : "",
                     Coordinacion = n.Responsable != null ? n.Responsable.Nombre : "",
                     Telefono = n.PhoneNumber,
-                    n.Email,
+                    Email = n.Email,
                     NumeroEncuestas = 0
                 }).ToListAsync();
+
+            var kobo = new KoboController(db, userManager, _env);
+            var totales = kobo.GetTotalEncuestas();
+
+            foreach(var enc in encuestadores)
+            {
+                var idUser = enc.Cedula.ToString();
+                if (totales.ContainsKey(idUser))
+                {
+                    enc.NumeroEncuestas = totales[idUser];
+                }
+            }
             return Json(encuestadores);
         }
 
@@ -220,7 +232,7 @@ namespace App_consulta.Controllers
         }
 
 
-        private async Task<List<int>> GetResponsablesbyIdParent(int idParent, int level, int maxLevel)
+        public async Task<List<int>> GetResponsablesbyIdParent(int idParent, int level, int maxLevel)
         {
             var resp = new List<int> { idParent };
             if (level == maxLevel) { return resp; }
