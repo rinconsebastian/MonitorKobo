@@ -92,8 +92,10 @@ namespace App_consulta
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar", "1"));
                 options.AddPolicy("Formalizacion.Validar", policy =>
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar", "1"));
-                options.AddPolicy("Formalizacion.Formalizacion", policy =>
+                options.AddPolicy("Formalizacion.Listado", policy =>
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Listado", "1"));
+                options.AddPolicy("Formalizacion.Imprimir", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir", "1"));
             });
 
 

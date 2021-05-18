@@ -1227,3 +1227,16 @@ input, select, textarea {
     max-width: 100%;
     max-height: 260px;
 }
+
+.img-detail-formlz {
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.img-detail-large {
+    max-height: 90vh;
+    max-width: 100%;
+}
+
