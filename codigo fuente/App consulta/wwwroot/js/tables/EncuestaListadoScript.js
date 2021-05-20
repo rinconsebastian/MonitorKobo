@@ -185,7 +185,7 @@ var funcLE = {
                                 funcGenerico.mostrarMensaje(data.message, "success");
                             }
                         } else {
-                            funcGenerico.mostrarMensaje(data.Message, "error");
+                            funcGenerico.mostrarMensaje(data.message, "error");
                         }
                     } else {
                         funcGenerico.mostrarMensaje("Error en la respuesta del servidor.", "error");

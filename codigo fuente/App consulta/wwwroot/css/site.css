@@ -1223,11 +1223,16 @@ input, select, textarea {
     border-radius: .2rem;
 }
 
+
+/*##################################### GENERAL #####################################*/
+
+/* Home */
 .img-home {
     max-width: 100%;
     max-height: 260px;
 }
 
+/* Detalles formalización */
 .img-detail-formlz {
     height: 200px;
     width: 200px;
@@ -1240,3 +1245,28 @@ input, select, textarea {
     max-width: 100%;
 }
 
+/* Edición imagenes */
+
+.img-edit {
+    max-height: 60vh;
+    max-width: 100%;
+}
+.preview {
+    background-color: lightgray;
+    color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+    width: 100%;
+}
+
+.range-image label {
+    height: 38px;
+    line-height: 38px;
+}
+
+.range-image input {
+    height: 38px;
+    margin-left: 10px;
+}

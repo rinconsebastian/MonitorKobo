@@ -1,0 +1,321 @@
+﻿@model App_consulta.Models.Formalization
+
+@{
+    ViewData["Title"] = "Panel de control";
+    ViewData["Subtitle"] = "Formalización";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var permisoEditar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar" && c.Value == "1"));
+    var permisoAdmin = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" && c.Value == "1"));
+
+    var title = permisoEditar ? "Editar" : "Validar";
+
+    var listaCoordinacion = (SelectList)ViewBag.Coordinaciones;
+    var listaEstados = (SelectList)ViewBag.Estados;
+
+    var time = DateTime.Now.ToString("u");
+}
+@Html.Hidden("PathStorage", @Url.Action("ViewImage", "Formalizacion"))
+<div class="card w-75 mt-4 mx-auto d-print-none">
+    <div class="card-body">
+        <h4 class="my-2">@title formalización @Model.NumeroRegistro</h4>
+        <hr />
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab1" aria-selected="true">General</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab5" aria-selected="false">Pescador</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab4" aria-selected="false">Cédula</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab2" aria-selected="false"> Solicitud</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab3" aria-selected="false">Certificación</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="tab-1">
+
+                <div class="row">
+                    <div class="col-12 col-sm-8 offset-sm-2 p-4">
+                        <form asp-action="Edit" method="post">
+                            @Html.AntiForgeryToken()
+                            <input asp-for="Id" type="hidden" />
+                            <div asp-validation-summary="All" class="small text-danger"></div>
+
+                            <div class="form-group row">
+                                <label asp-for="Cedula" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    @if (permisoEditar)
+                                    {
+                                        <input asp-for="Cedula" class="form-control" required />
+                                        <span asp-validation-for="Cedula" class="form-text small text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Cedula" class="form-control-plaintext font-weight-light" readonly />
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label asp-for="Name" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    @if (permisoEditar)
+                                    {
+                                        <input asp-for="Name" class="form-control" required />
+                                        <span asp-validation-for="Name" class="form-text small text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Name" class="form-control-plaintext font-weight-light" readonly />
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label asp-for="NombreAsociacion" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    @if (permisoEditar)
+                                    {
+                                        <input asp-for="NombreAsociacion" class="form-control" required />
+                                        <span asp-validation-for="NombreAsociacion" class="form-text small text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="NombreAsociacion" class="form-control-plaintext font-weight-light" readonly />
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label asp-for="Departamento" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    <input asp-for="Departamento" class="form-control-plaintext font-weight-light" readonly />
+                                    <span asp-validation-for="Departamento" class="form-text small text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label asp-for="Municipio" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    <input asp-for="Municipio" class="form-control-plaintext font-weight-light" readonly />
+                                    <span asp-validation-for="Municipio" class="form-text small text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label asp-for="AreaPesca" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    @if (permisoEditar)
+                                    {
+                                        <input asp-for="AreaPesca" class="form-control" required />
+                                        <span asp-validation-for="AreaPesca" class="form-text small text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="AreaPesca" class="form-control-plaintext font-weight-light" readonly />
+                                    }
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label asp-for="ArtesPesca" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    @if (permisoEditar)
+                                    {
+                                        <input asp-for="ArtesPesca" class="form-control" required />
+                                        <span asp-validation-for="ArtesPesca" class="form-text small text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="ArtesPesca" class="form-control-plaintext font-weight-light" readonly />
+                                    }
+                                </div>
+                            </div>
+                            <hr />
+                            @if (permisoAdmin)
+                            {
+
+                                <div class="form-group row">
+                                    <label asp-for="IdResponsable" class="col-md-4 col-form-label"></label>
+                                    <div class="col-md-8">
+                                        <select asp-for="IdResponsable" asp-items="@listaCoordinacion" class="form-control" required>
+                                            <option value="">Seleccione una opción</option>
+                                        </select>
+                                        <span asp-validation-for="IdResponsable" class="form-text small text-danger"></span>
+                                    </div>
+                                </div>
+                            }
+                            <div class="form-group row">
+                                <label asp-for="Estado" class="col-md-4 col-form-label"></label>
+                                <div class="col-md-8">
+                                    <select asp-for="Estado" asp-items="@listaEstados" class="form-control" required>
+                                        <option value="">Seleccione una opción</option>
+                                    </select>
+                                    <span asp-validation-for="Estado" class="form-text small text-danger"></span>
+                                </div>
+                            </div>
+
+                            <hr />
+                            <div class="form-group row">
+                                <div class="col-sm-4 offset-4">
+                                    <input type="submit" value="Guardar" class="btn btn-outline-primary btn-block" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-5" role="tabpanel" aria-labelledby="tab-5">
+                <div class="text-center py-4 px-1">
+                    <img id="img-pescador" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgPescador })&time=@time" alt="Foto pescador" />
+                    <br />
+                    <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-pescador" 
+                            data-filename="@Model.ImgPescador">
+                        <i class="fas fa-photo-video"></i> Editar
+                    </button>
+
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="tab-2">
+                <div class="text-center py-4 px-1">
+                    <img id="img-solicitud"  class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgSolicitudCarnet })&time=@time" alt="Foto Solicitud" />
+                    <br />
+                    <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-solicitud" 
+                            data-filename="@Model.ImgSolicitudCarnet">
+                        <i class="fas fa-photo-video"></i> Editar
+                    </button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="tab-3">
+                <div class="text-center py-4 px-1">
+                    <img id="img-certificado" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCertificacion })&time=@time" alt="Foto certificación" />
+                    <br />
+                    <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-certificado" 
+                            data-filename="@Model.ImgCertificacion">
+                        <i class="fas fa-photo-video"></i> Editar
+                    </button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="tab-4">
+                <div class="row">
+                    <div class="col-12 col-sm-6 text-center py-4 px-1">
+                        <img id="img-cedula-a" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaAnverso })&time=@time" alt="Foto cédula" />
+                        <br />
+                        <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-cedula-a" 
+                                data-filename="@Model.ImgCedulaAnverso">
+                            <i class="fas fa-photo-video"></i> Editar
+                        </button>
+                    </div>
+                    <div class="col-12 col-sm-6 text-center py-4 px-1">
+                        <img id="img-cedula-r" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaReverso })&time=@time" alt="Foto cédula reverso" />
+                        <br />
+                        <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-cedula-r" 
+                                data-filename="@Model.ImgCedulaReverso">
+                            <i class="fas fa-photo-video"></i> Editar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="col-sm-4 offset-sm-4">
+            <button onclick="goBack()" class="btn btn btn-outline-dark btn-block">Volver</button>
+        </div>
+    </div>
+</div>
+
+<div id="modalEditImage" class="modal fade  d-print-none"  tabindex="-1" role="dialog"
+     aria-labelledby="modalEditImageLabel" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <img class="img-edit" src="" alt="Picture" id="image">
+                        <div class="my-4">
+                            
+                           
+                        </div>
+
+                    </div>
+                    <div class="col-12 col-sm-6 px-5 text-center">
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="result" style="min-height: 60vh"><div class="preview">VISTA PREVIA</div></div>
+                            </div>
+                            <div id="uploadingInfo" class="small"></div>
+                        </div>
+                    </div>
+                </div>
+           
+                <div class="row">
+                    <div class="col-12 col-sm-5">
+                        <div class="row">
+                            <div class="col-10 col-sm-4 d-flex range-image" title="Brillo">
+                                <label for="formControlRange" class="text-warning"><i class="fas fa-sun"></i></label>
+                                <input type="range" class="form-control-range filter-color w-75" min="1" max="500" value="100" id="brightness">
+                            </div>
+                            <div class="col-12 col-sm-4 d-flex range-image" title="Contraste">
+                                <label for="formControlRange" class="text-dark"><i class="fas fa-adjust"></i></label>
+                                <input type="range" class="form-control-range filter-color" min="1" max="500" value="100" id="contrast">
+                            </div>
+                            <div class="col-12 col-sm-4 d-flex range-image" title="Saturación">
+                                <label for="formControlRange" class="text-info"><i class="fas fa-tint"></i></label>
+                                <input type="range" class="form-control-range filter-color" min="1" max="500" value="100" id="saturate">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-3">
+                        <div class="row mb-3">
+                            <div class="col-12 text-center">
+                                <button type="button" class="btn btn-outline-dark btn-rotar btn-img" data-option="-90" title="Rotate a la izquierda" disabled>
+                                    <i class="fa fa-undo-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-dark btn-rotar btn-img" data-option="90" title="Rotate a la derecha" disabled>
+                                    <i class="fa fa-redo-alt"></i>
+                                </button>
+
+                                <button type="button" class="btn btn-outline-success btn-recortar btn-img" title="Aplicar" disabled>
+                                    <i class="fa fa-check"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger btn-reset btn-img" title="Limpiar" disabled>
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-2 ">
+                        <form id="formUpload" asp-action="UpdateImage" asp-controller="Formalizacion" enctype="multipart/form-data" method="post">
+                            @Html.Hidden("filename", "", new { id = "inputFilename" })
+                            <button type="submit" class="btn btn-outline-info btn-save btn-block" title="Guardar cambios" disabled>
+                                <i class="fa fa-upload"></i> Guardar
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-6 col-sm-2">
+                        <button type="button" class="btn btn-outline-danger btn-block" data-dismiss="modal">Salir</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="~/lib/cropper/cropper.css" />
+}
+@section Scripts{
+    <script type="text/javascript" src="~/lib/cropper/cropper.js"></script>
+    <script type="text/javascript" src="~/js/tables/EditImageScript.js"></script>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+}

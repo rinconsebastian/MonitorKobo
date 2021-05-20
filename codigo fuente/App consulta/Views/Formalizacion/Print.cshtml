@@ -5,7 +5,7 @@
     ViewData["Subtitle"] = "";
     Layout = "~/Views/Shared/_LayoutPrint.cshtml";
 
-
+    var time = DateTime.Now.ToString("u");
 }
 
 <div class="row my-4 d-print-none ">
@@ -28,7 +28,7 @@
                             <tbody>
                                 <tr>
                                     <td rowspan="4" class="text-center">
-                                        <img class="img-mini" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador })" alt="Foto pescador" />
+                                        <img class="img-mini" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador })&time=@time" alt="Foto pescador" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -94,7 +94,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgSolicitudCarnet })" alt="Image Documento Original" />
+                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgSolicitudCarnet })&time=@time" alt="Image Documento Original" />
                     </td>
                 </tr>
             </tbody>
@@ -139,10 +139,10 @@
                 </tr>
                 <tr>
                     <td colspan="2" rowspan="3" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador })" alt="Fotografía Pescador Artesanal" />
+                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador })&time=@time" alt="Fotografía Pescador Artesanal" />
                     </td>
                     <td colspan="2" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaAnverso })" alt="Image Cédula del pescador (Anverso)" />
+                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaAnverso })&time=@time" alt="Image Cédula del pescador (Anverso)" />
                     </td>
                 </tr>
                 <tr>
@@ -150,7 +150,7 @@
                 </tr>
                 <tr>
                     <td colspan="2" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaReverso })" alt="Image Cédula del pescador (Reverso)" />
+                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaReverso })&time=@time" alt="Image Cédula del pescador (Reverso)" />
                     </td>
                 </tr>
             </tbody>
@@ -192,7 +192,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCertificacion })" alt="Image Documento Original" />
+                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCertificacion })&time=@time" alt="Image Documento Original" />
                     </td>
                 </tr>
             </tbody>

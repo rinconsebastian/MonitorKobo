@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace App_consulta.Models
@@ -82,18 +83,21 @@ namespace App_consulta.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public int IdResponsable { get; set; }
         [ForeignKey("IdResponsable")]
+        [JsonIgnore]
         public virtual Responsable Responsable { get; set; }
 
         [Display(Name = "Creado por")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string IdCreateByUser { get; set; }
         [ForeignKey("IdCreateByUser")]
+        [JsonIgnore]
         public virtual ApplicationUser CreateByUser { get; set; }
 
         [Display(Name = "Última edición por")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string IdLastEditByUser { get; set; }
         [ForeignKey("IdLastEditByUser")]
+        [JsonIgnore]
         public virtual ApplicationUser LastEditByUser { get; set; }
 
         [Display(Name = "Fecha creación")]
