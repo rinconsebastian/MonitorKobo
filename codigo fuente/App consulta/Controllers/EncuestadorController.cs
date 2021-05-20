@@ -47,8 +47,14 @@ namespace App_consulta.Controllers
             var user = await userManager.FindByNameAsync(User.Identity.Name);
             var respRelacionado = await GetResponsablesbyIdParent(user.IDDependencia, 1,3);
 
-            var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable))
-                .Select(n => new {
+            KoboController kobo = new KoboController(db, userManager, _env);
+
+
+
+
+
+            var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable)).
+                Select(n => new EncuestadorViewModel{
                     ID = n.Id,
                     Cedula = n.DNI,
                     Nombre = n.Name,
@@ -56,9 +62,16 @@ namespace App_consulta.Controllers
                     Departamento = (n.Location != null && n.Location.LocationParent != null) ? n.Location.LocationParent.Name : "",
                     Coordinacion = n.Responsable != null ? n.Responsable.Nombre : "",
                     Telefono = n.PhoneNumber,
-                    n.Email,
-                    NumeroEncuestas = 0
+                    Email = n.Email,
+                    NumeroEncuestas =0
                 }).ToListAsync();
+
+            foreach(var encuestador in encuestadores)
+            {
+                encuestador.NumeroEncuestas = kobo.TotalEncuestador(encuestador.Cedula.ToString());
+            }
+
+
             return Json(encuestadores);
         }
 
@@ -290,6 +303,9 @@ namespace App_consulta.Controllers
             }).OrderBy(n => n.Name).ToListAsync();
             return Json(locations);
         }
+
+
+        
 
     }
 }
