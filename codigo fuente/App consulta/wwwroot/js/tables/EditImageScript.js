@@ -9,6 +9,8 @@ var filter;
 var pathStorage = "";
 
 var currentImg;
+
+var img;
 //*********************************** funcImg ******************************************
 
 var funcImg = {
@@ -26,13 +28,18 @@ var funcImg = {
     },
     loadRecortar: function () {
         $('body').on('click', '.btn-recortar', function (e) {
+            funcImg.updateFilter();
 
-            var canvas = cropper.getCroppedCanvas();
-            var  ctx = canvas.getContext('2d');
-            ctx.filter = filter;
+            var canvas = cropper.getCroppedCanvas({
+                maxWidth: 4096,
+                maxHeight: 4096,
+                fillColor: '#fff',
+                imageSmoothingEnabled: false,
+                imageSmoothingQuality: 'high'
+            });
+            var croppedImageDataURL = canvas.toDataURL("image/jpg");
+            img.src = croppedImageDataURL;
 
-            var croppedImageDataURL = canvas.toDataURL("image/png");
-            result.html($('<img>').attr('src', croppedImageDataURL).addClass('img-edit'));
             $('.btn-save').removeAttr('disabled');
 
         });
@@ -40,10 +47,7 @@ var funcImg = {
     loadReset: function () {
         $('body').on('click', '.btn-reset', function (e) {
             funcImg.cleanResult();
-            $('#brightness').val(100);
-            $('#contrast').val(100);
-            $('#saturate').val(100);
-            funcImg.updateFilter();
+            funcImg.resetFilter();
             cropper.reset();
         });
     },
@@ -71,16 +75,9 @@ var funcImg = {
             e.preventDefault();
             var formulario = $(this).closest('form');
 
-            cropper.getCroppedCanvas({
-                maxWidth: 4096,
-                maxHeight: 4096,
-                fillColor: '#fff',
-                imageSmoothingEnabled: false,
-                imageSmoothingQuality: 'high'
-            });
-
-            cropper.getCroppedCanvas().toBlob((blob) => {
-
+            var canvas = document.querySelector("canvas");
+            canvas.toBlob((blob) => {
+                
                 var formData = new FormData(formulario[0]);
                 var filename = $('#inputFilename').val();
 
@@ -101,6 +98,7 @@ var funcImg = {
                                 var d = new Date();
                                 $("#" + currentImg).attr("src", pathStorage + filename + "&time=" + d.getTime());
                                 $('#modalEditImage').modal('hide');
+                                funcGenerico.mostrarMensaje("Imagen actualizada correctamente", "success");
                                 cropper.destroy();
                             } else {
                                 $('#uploadingInfo').html('<div class="text-danger">' + data.message + '</div>');
@@ -129,14 +127,34 @@ var funcImg = {
 
             $('#image').attr('src', pathStorage + filename + "&time=" + d.getTime());
             $('#inputFilename').val(filename);
-            funcImg.loadCropper();
             funcImg.cleanResult();
+            funcImg.resetFilter();
+            funcImg.loadCropper();
             $('#modalEditImage').modal('show');
         });
         $('#modalEditImage').on('hidden.bs.modal', function (e) {
             cropper.destroy();
             funcImg.changeStateBtns(false);
         })
+    },
+    //Load image canvas
+    draw: function () {
+        var canvas = document.querySelector("canvas"),
+            ctx = canvas.getContext("2d");
+        
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        if (typeof ctx.filter !== "undefined") {
+            ctx.filter = filter != "" ? filter : "none";
+            ctx.drawImage(this, 0, 0);
+        }
+        else {
+            ctx.drawImage(this, 0, 0);
+        }
+        var croppedImageDataURL = canvas.toDataURL("image/jpg");
+        result.html($('<img>').attr('src', croppedImageDataURL).addClass('img-edit'));
+
     },
     //Extra
     updateFilter: function () {
@@ -147,9 +165,16 @@ var funcImg = {
         filter = "brightness(" + brightness + "%) " + "contrast(" + contrast + "%) " + " saturate(" + saturate + "%)";
 
         $(".cropper-container.cropper-bg").css("filter", filter);
-        //$("#result").css("filter", filter);
+        //$("#result img").css("filter", filter);
 
     },
+    resetFilter: function () {
+        $('#brightness').val(100);
+        $('#contrast').val(100);
+        $('#saturate').val(100);
+        funcImg.updateFilter();
+    },
+    
     changeStateBtns: function (state) {
         
         if (state) {
@@ -178,6 +203,11 @@ var funcImg = {
         funcImg.loadSave();
         funcImg.loadColor();
         funcImg.loadShowModal();
+
+        //Load image
+        img = new Image();
+        img.crossOrigin = "";
+        img.onload = funcImg.draw;
     }
 };
 
@@ -187,5 +217,31 @@ $(function () {
 });
 
 
+/*
+ * 
 
+        var img = new Image();
+        img.crossOrigin = "";
+        img.onload = draw;
+        img.src = "https://i.imgur.com/2jjLqzk.jpg";
+
+        function draw() {
+            var canvas = document.querySelector("canvas"),
+                ctx = canvas.getContext("2d");
+
+            //canvas.width = this.width;
+            //canvas.height = this.height;
+
+            // filter
+            if (typeof ctx.filter !== "undefined") {
+                ctx.filter = filter;
+                ctx.drawImage(this, 0, 0);
+            }
+            else {
+                ctx.drawImage(this, 0, 0);
+                // TODO: manually apply filter here.
+            }
+
+            document.querySelector("imgResult").src = canvas.toDataURL();
+        } */
 

@@ -246,7 +246,11 @@
                     <div class="col-12 col-sm-6 px-5 text-center">
                         <div class="card">
                             <div class="card-body">
-                                <div id="result" style="min-height: 60vh"><div class="preview">VISTA PREVIA</div></div>
+                                <canvas style="display:none" ></canvas>
+                                <div id="result" style="min-height: 60vh">
+                                    <div class="preview">VISTA PREVIA</div>
+                                    <img id="imgResult" class="img-edit" />
+                                </div>
                             </div>
                             <div id="uploadingInfo" class="small"></div>
                         </div>
@@ -312,6 +316,7 @@
 }
 @section Scripts{
     <script type="text/javascript" src="~/lib/cropper/cropper.js"></script>
+    <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
     <script type="text/javascript" src="~/js/tables/EditImageScript.js"></script>
     <script>
         function goBack() {
