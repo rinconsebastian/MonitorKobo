@@ -59,13 +59,13 @@ namespace App_consulta.Controllers
                     if(dataFiltered.Count > 0)
                     {
                         var codesLocation = dataFiltered.Select(n => n.LocationCode).Distinct().ToList();
-                        var locations = await db.Location.Where(n => codesLocation.Contains(n.Code.ToString()))
+                        var locations = await db.Location.Where(n => codesLocation.Contains(n.Code2))
                             .Select(n => new
                             {
-                                Code = n.Code.ToString(),
+                                Code2 = n.Code2,
                                 Mun = n.Name,
                                 Dep = n.LocationParent != null ? n.LocationParent.Name : ""
-                            }).ToDictionaryAsync(n => n.Code, n => n);
+                            }).ToDictionaryAsync(n => n.Code2, n => n);
 
                         //Permisos de columnas
                         var verValidacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
@@ -273,6 +273,43 @@ namespace App_consulta.Controllers
                 return true;
             }
             return false;
+        }
+
+
+        public int TotalEncuestador(String code )
+        {
+            int resp = 0;
+
+           
+            //Consulta el archivo y valida que tenga datos.
+            var text = "";
+            try
+            {
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
+                text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
+            }
+            catch (Exception) { }
+
+            if (text != "")
+            {
+                var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
+                if (data.Count > 0)
+                {
+                    //Filtra los datos
+                    var dataFiltered = code != null ? data.Where(n => n.Id == code).ToList() : data;
+
+                    if (dataFiltered.Count > 0)
+                    {
+                        resp = dataFiltered.Count;
+
+
+                    }
+
+                }
+
+            }
+
+            return resp;
         }
     }
 }

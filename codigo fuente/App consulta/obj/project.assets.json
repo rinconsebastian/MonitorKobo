@@ -9474,26 +9474,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {}
+    "/Users/sebastian/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\App consulta.csproj",
+      "projectUniqueName": "/Users/sebastian/Documents/GitHub/MonitorKobo/codigo fuente/App consulta/App consulta.csproj",
       "projectName": "App consulta",
-      "projectPath": "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\App consulta.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "D:\\Documents\\GitHub\\MonitorKobo\\codigo fuente\\App consulta\\obj\\",
+      "projectPath": "/Users/sebastian/Documents/GitHub/MonitorKobo/codigo fuente/App consulta/App consulta.csproj",
+      "packagesPath": "/Users/sebastian/.nuget/packages/",
+      "outputPath": "/Users/sebastian/Documents/GitHub/MonitorKobo/codigo fuente/App consulta/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/sebastian/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -9569,7 +9567,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.203/RuntimeIdentifierGraph.json"
       }
     }
   }

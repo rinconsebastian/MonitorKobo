@@ -27,8 +27,9 @@ namespace App_consulta.Models
         [Required]
         public int Code { get; set; }
 
-        [Display(Name = "Código")]
-        [Required]
+
+        [Display(Name = "Código2")]
+		[Required]
         public string Code2 { get; set; }
 
         [Required]
