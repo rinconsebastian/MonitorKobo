@@ -356,13 +356,13 @@ namespace App_consulta.Controllers
                     if (dataFiltered.Count > 0)
                     {
                         var codesLocation = dataFiltered.Select(n => n.LocationCode).Distinct().ToList();
-                        var locations = await db.Location.Where(n => codesLocation.Contains(n.Code.ToString()))
+                        var locations = await db.Location.Where(n => codesLocation.Contains(n.Code2))
                             .Select(n => new
                             {
-                                Code = n.Code.ToString(),
+                                Code2 = n.Code2,
                                 Mun = n.Name,
                                 Dep = n.LocationParent != null ? n.LocationParent.Name : ""
-                            }).ToDictionaryAsync(n => n.Code, n => n);
+                            }).ToDictionaryAsync(n => n.Code2, n => n);
 
                         var idsKobo = dataFiltered.Select(n => n.IdKobo).ToList();
                         var formalizaciones = await db.Formalization.Where(n => idsKobo.Contains(n.IdKobo))
@@ -459,6 +459,43 @@ namespace App_consulta.Controllers
             }
 
             return relativePath;
+        }
+
+
+        public int TotalEncuestador(String code )
+        {
+            int resp = 0;
+
+           
+            //Consulta el archivo y valida que tenga datos.
+            var text = "";
+            try
+            {
+                var _path = Path.Combine(_env.ContentRootPath, "Storage");
+                text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
+            }
+            catch (Exception) { }
+
+            if (text != "")
+            {
+                var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
+                if (data.Count > 0)
+                {
+                    //Filtra los datos
+                    var dataFiltered = code != null ? data.Where(n => n.Id == code).ToList() : data;
+
+                    if (dataFiltered.Count > 0)
+                    {
+                        resp = dataFiltered.Count;
+
+
+                    }
+
+                }
+
+            }
+
+            return resp;
         }
     }
 }

@@ -11,7 +11,7 @@ var showDelete = false;
 var funcLE = {
 
 
-    instanceDataGrid: function () {
+    instanceDataGrid: function() {
         dataGrid = $("#gridContainer").dxDataGrid({
             dataSource: source,
             selection: {
@@ -48,8 +48,17 @@ var funcLE = {
                 enabled: true
             },
             wordWrapEnabled: false,
-            rowAlternationEnabled: false,
+            columnHidingEnabled: true,
+            rowAlternationEnabled: true,
             showRowLines: true,
+            grouping: {
+                contextMenuEnabled: true,
+                expandMode: "rowClick"
+            },
+            groupPanel: {
+                emptyPanelText: "haga click derecho en una columna para agruparla",
+                visible: true
+            },
             pager: {
                 showPageSizeSelector: true,
                 allowedPageSizes: [10, 20, 50, 100, 1000]
@@ -59,7 +68,7 @@ var funcLE = {
             },
             allowColumnReordering: false,
             allowColumnResizing: true,
-            columnAutoWidth: true,
+            columnAutoWidth: false,
             showBorders: true,
             filterRow: {
                 visible: true,
@@ -79,67 +88,75 @@ var funcLE = {
                     dataField: "cedula",
                     caption: "Cedula",
                     alignment: "center",
-                    width: '9%'
+                    width: '100',
+                    hidingPriority: 8
                 },
                 {
                     dataField: "nombre",
                     caption: "Nombre",
                     alignment: "center",
-                    width: '17%'
+                    width: '180',
+                    hidingPriority: 7
                 },
+                {
+                    dataField: "departamento",
+                    caption: "Depto.",
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 4
+
+
+                },
+
                 {
                     dataField: "municipio",
                     caption: "Municipio",
                     alignment: "center",
-                    width: '17%',
-                    cellTemplate: function (container, options) {
-                        var dep = options.data.departamento;
-                        var mun = options.data.municipio;
-
-                        var contenido = mun + ' (' + dep + ')';
-
-                        $("<div class='preventSelection'>")
-                            .append(contenido)
-                            .appendTo(container);
-                    }
+                    width: '120',
+                    hidingPriority: 5
 
                 },
                 {
                     dataField: "coordinacion",
                     caption: "Coordinación",
                     alignment: "center",
-                    width: '17%'
+                    width: '120',
+                    hidingPriority: 3
                 },
                 {
                     dataField: "telefono",
                     caption: "Teléfono",
                     alignment: "center",
-                    width: '10%'
+                    width: '120',
+                    hidingPriority: 2
                 },
                 {
                     dataField: "email",
                     caption: "Correo electrónico",
                     alignment: "center",
-                    width: '10%'
+                    width: '120',
+                    hidingPriority: 1
                 },
                 {
                     dataField: "numeroEncuestas",
-                    caption: "Numero de encuestas",
+                    caption: "Nº encuestas",
                     alignment: "center",
-                    width: '10%'
+                    width: '100',
+                    hidingPriority: 6
                 },
 
                 {
                     dataField: "Opciones",
+                    hidingPriority: 9,
                     caption: "Opciones",
                     alignment: "left",
                     allowHeaderFiltering: false,
-                    width: '10%',
-                    cellTemplate: function (container, options) {
+                    width: '80',
+                    cellTemplate: function(container, options) {
 
                         var idEnc = options.data.id;
                         var nombre = options.data.nombre;
-                        var contenido =  '<a href="' + root + 'Encuestador/Details/' + idEnc + '" title="Detalles encuestador ' + nombre + '" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
+                        var contenido = '<a href="' + root + 'Encuestador/Details/' + idEnc + '" title="Detalles encuestador ' + nombre + '" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
                         if (showEditar) {
                             contenido += '<a href="' + root + 'Encuestador/Edit/' + idEnc + '" title="Editar encuestador ' + nombre + '" class="btn btn-outline-success btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
                         }
@@ -164,24 +181,23 @@ var funcLE = {
 
             },
 
-            onToolbarPreparing: function (e) {
+            onToolbarPreparing: function(e) {
                 var dataGrid = e.component;
-                e.toolbarOptions.items.unshift(
-                    {
-                        location: "after",
-                        widget: "dxButton",
-                        options: {
-                            icon: "refresh",
-                            onClick: function () {
-                                dataGrid.refresh();
-                            }
+                e.toolbarOptions.items.unshift({
+                    location: "after",
+                    widget: "dxButton",
+                    options: {
+                        icon: "refresh",
+                        onClick: function() {
+                            dataGrid.refresh();
                         }
-                    });
+                    }
+                });
             }
         }).dxDataGrid('instance');
     },
 
-    init: function () {
+    init: function() {
         // Carga las variables de configuración.
         root = $('#Root').val();
         source = root + "Encuestador/ListAjax/";
@@ -194,7 +210,7 @@ var funcLE = {
 };
 
 //************************************** ON READY **********************************************
-$(function () {
+$(function() {
 
     DevExpress.localization.locale("es-US");
     funcLE.init();

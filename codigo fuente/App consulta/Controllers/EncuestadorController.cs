@@ -47,8 +47,14 @@ namespace App_consulta.Controllers
             var user = await userManager.FindByNameAsync(User.Identity.Name);
             var respRelacionado = await GetResponsablesbyIdParent(user.IDDependencia, 1,3);
 
-            var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable))
-                .Select(n => new EncuestadorDataModel {
+            KoboController kobo = new KoboController(db, userManager, _env);
+
+
+
+
+
+            var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable)).
+                Select(n => new EncuestadorViewModel{
                     ID = n.Id,
                     Cedula = n.DNI,
                     Nombre = n.Name,
@@ -96,8 +102,24 @@ namespace App_consulta.Controllers
         [Authorize(Policy = "Encuestador.Editar")]
         public async Task<ActionResult> Create()
         {
+
+
+
+            ResponsablesController controlResponsable = new ResponsablesController(db);
+
+
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var ids = controlResponsable.GetAllIdsFromResponsable(user.IDDependencia);
+
+
+
+
             ViewBag.Departamentos = new SelectList(await db.Location.Where(n => n.IdLevel== 2).OrderBy(n => n.Name).ToListAsync(), "Id", "Name");
-            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => n.Nombre.StartsWith("[CDR]")).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre");
+
+
+
+
+            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n=> ids.Contains(n.Id)).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre",ids.FirstOrDefault());
             return View();
         }
 
@@ -107,9 +129,11 @@ namespace App_consulta.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Pollster encuestador)
         {
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+
             if (ModelState.IsValid)
             {
-                var user = await userManager.FindByNameAsync(User.Identity.Name);
+               
                 //Si no define la coordinación (dependencia) encargada se usa la del usuario actual
                 if (encuestador.IdResponsable == 0) { encuestador.IdResponsable = user.IDDependencia; }
 
@@ -124,8 +148,13 @@ namespace App_consulta.Controllers
                 return RedirectToAction("Details", new { id = encuestador.Id });
             }
 
+
+            ResponsablesController controlResponsable = new ResponsablesController(db);
+                        
+            var ids = controlResponsable.GetAllIdsFromResponsable(user.IDDependencia);
+
             ViewBag.Departamentos = new SelectList(await db.Location.Where(n => n.IdLevel == 2).OrderBy(n => n.Name).ToListAsync(), "Id", "Name");
-            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => n.Nombre.StartsWith("[CDR]")).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre");
+            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => ids.Contains(n.Id)).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre", encuestador.IdResponsable);
             return View(encuestador);
         }
 
@@ -133,9 +162,12 @@ namespace App_consulta.Controllers
         [Authorize(Policy = "Encuestador.Editar")]
         public async Task<ActionResult> Edit(int id)
         {
+            ResponsablesController controlResponsable = new ResponsablesController(db);
             //Valida que el usuario tenga permisos sobre el encuestador
             var user = await userManager.FindByNameAsync(User.Identity.Name);
             var respRelacionado = await GetResponsablesbyIdParent(user.IDDependencia, 1, 3);
+
+            var ids = controlResponsable.GetAllIdsFromResponsable(user.IDDependencia);
 
             Pollster encuestador = await db.Pollster.Where(n => n.Id == id && respRelacionado.Contains(n.IdResponsable)).FirstOrDefaultAsync();
             if (encuestador == null) { return NotFound(); }
@@ -146,7 +178,7 @@ namespace App_consulta.Controllers
             }
             ViewBag.Departamentos = new SelectList(await db.Location.Where(n => n.IdLevel == 2).OrderBy(n => n.Name).ToListAsync(), "Id", "Name", encuestador.IdLocationParent);
             ViewBag.Municipios = new SelectList(await db.Location.Where(n => n.IdLevel == 3 && n.IdParent == encuestador.IdLocationParent).OrderBy(n => n.Name).ToListAsync(), "Id", "Name", encuestador.IdLocation);
-            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => n.Nombre.StartsWith("[CDR]")).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre", encuestador.IdResponsable);
+            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => ids.Contains(n.Id)).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre", encuestador.IdResponsable);
 
             return View(encuestador);
 
@@ -185,9 +217,12 @@ namespace App_consulta.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Details", new { id = original.Id });
             }
+            ResponsablesController controlResponsable = new ResponsablesController(db);
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var ids = controlResponsable.GetAllIdsFromResponsable(user.IDDependencia);
 
             ViewBag.Departamentos = new SelectList(await db.Location.Where(n => n.IdLevel == 2).OrderBy(n => n.Name).ToListAsync(), "Id", "Name", encuestador.IdLocation);
-            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => n.Nombre.StartsWith("[CDR]")).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre", encuestador.IdResponsable);
+            ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => ids.Contains(n.Id)).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre", encuestador.IdResponsable);
             return View(encuestador);
         }
 
@@ -273,6 +308,9 @@ namespace App_consulta.Controllers
             }).OrderBy(n => n.Name).ToListAsync();
             return Json(locations);
         }
+
+
+        
 
     }
 }

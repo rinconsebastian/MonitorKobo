@@ -49,8 +49,17 @@ var funcLE = {
                 enabled: true
             },
             wordWrapEnabled: false,
-            rowAlternationEnabled: false,
+            rowAlternationEnabled: true,
+            columnHidingEnabled: true,
             showRowLines: true,
+            grouping: {
+                contextMenuEnabled: true,
+                expandMode: "rowClick"
+            },
+            groupPanel: {
+                emptyPanelText: "haga click derecho en una columna para agruparla",
+                visible: true
+            },
             pager: {
                 showPageSizeSelector: true,
                 allowedPageSizes: [10, 20, 50, 100, 1000]
@@ -60,7 +69,7 @@ var funcLE = {
             },
             allowColumnReordering: false,
             allowColumnResizing: true,
-            columnAutoWidth: true,
+            columnAutoWidth: false,
             showBorders: true,
             filterRow: {
                 visible: true,
@@ -81,29 +90,32 @@ var funcLE = {
                     caption: "Encuestador",
                     alignment: "center",
                     visible: showDNI,
-                    width: '20%'
+                    width: '100',
+                    hidingPriority: 5
                 },
                 {
                     dataField: "datetime",
                     caption: "Fecha",
                     alignment: "center",
-                    width: '40%'
+                    width: '150',
+                    hidingPriority: 3
                 },
                 {
-                    dataField: "locationCode",
+                    dataField: "dep",
+                    caption: "Depto.",
+                    alignment: "center",
+                    width: '120',
+                    hidingPriority: 2
+                    
+
+                },
+                {
+                    dataField: "mun",
                     caption: "Municipio",
                     alignment: "center",
-                    width: '60%',
-                    cellTemplate: function (container, options) {
-                        var dep = options.data.dep;
-                        var mun = options.data.mun;
-
-                        var contenido = mun + ' (' + dep + ')';
-
-                        $("<div class='preventSelection'>")
-                            .append(contenido)
-                            .appendTo(container);
-                    }
+                    width: '120',
+                    hidingPriority: 4
+                   
 
                 },
                 {
@@ -111,7 +123,8 @@ var funcLE = {
                     caption: "Formalización",
                     visible: showValidation,
                     alignment: "center",
-                    width: '20%',
+                    hidingPriority: 1,
+                    width: '100',
                     cellTemplate: function (container, options) {
 
                         var idKobo = options.data.idKobo;
@@ -139,7 +152,7 @@ var funcLE = {
                 totalItems: [{
                     column: "user",
                     summaryType: "count",
-                    showInColumn: "locationCode",
+                    showInColumn: "mun",
                     displayFormat: "Total: {0}",
                 }],
 

@@ -3,14 +3,16 @@ using System;
 using App_consulta.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210515153419_codigo2")]
+    partial class codigo2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -175,16 +177,10 @@ namespace App_consulta.Migrations
                     b.Property<string>("KoboAssetUid")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("KoboAttachment")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("KoboKpiUrl")
                         .HasColumnType("longtext");
 
                     b.Property<string>("KoboParamsMap")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("KoboUsername")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Logo")
@@ -231,231 +227,6 @@ namespace App_consulta.Migrations
                             colorTextoPrincipal = "#00000",
                             contacto = "rinconsebastian@gmail.com",
                             libre = true
-                        });
-                });
-
-            modelBuilder.Entity("App_consulta.Models.Formalization", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("AreaPesca")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ArtesPesca")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Cedula")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Departamento")
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("Estado")
-                        .HasColumnType("int");
-
-                    b.Property<string>("FechaSolicitud")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IdCreateByUser")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("IdKobo")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("IdLastEditByUser")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<int>("IdResponsable")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ImgCedulaAnverso")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImgCedulaReverso")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImgCertificacion")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImgFirmaDigital")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImgPescador")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImgSolicitudCarnet")
-                        .HasColumnType("longtext");
-
-                    b.Property<DateTime>("LastEditDate")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Municipio")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("NombreAsociacion")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("NumeroRegistro")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IdCreateByUser");
-
-                    b.HasIndex("IdLastEditByUser");
-
-                    b.HasIndex("IdResponsable");
-
-                    b.ToTable("Formalization");
-                });
-
-            modelBuilder.Entity("App_consulta.Models.FormalizationConfig", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Field")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FormalizationConfig");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Field = "IdKobo",
-                            Name = "Id Kobo",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Field = "NumeroRegistro",
-                            Name = "Número registro",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Field = "Name",
-                            Name = "Nombre y apellidos",
-                            Value = ""
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Field = "FechaSolicitud",
-                            Name = "Fecha solicitud",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Field = "Cedula",
-                            Name = "Cédula pescador",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Field = "Departamento",
-                            Name = "Departamento",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Field = "Municipio",
-                            Name = "Municipio",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Field = "AreaPesca",
-                            Name = "Área de pesca",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Field = "ArtesPesca",
-                            Name = "Artes de pesca",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Field = "NombreAsociacion",
-                            Name = "Nombre asociación",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Field = "ImgPescador",
-                            Name = "Foto pescador",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Field = "ImgSolicitudCarnet",
-                            Name = "Foto solicitud carnet",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Field = "ImgCertificacion",
-                            Name = "Foto certificación",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Field = "ImgCedulaAnverso",
-                            Name = "Foto cédula (anverso)",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Field = "ImgCedulaReverso",
-                            Name = "Foto cédula (reverso)",
-                            Value = "_id"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Field = "ImgFirmaDigital",
-                            Name = "Firma digital",
-                            Value = "_id"
                         });
                 });
 
@@ -545,9 +316,6 @@ namespace App_consulta.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("group")
-                        .HasColumnType("int");
-
                     b.Property<string>("nombre")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -561,120 +329,85 @@ namespace App_consulta.Migrations
                         {
                             id = 1,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General",
-                            group = 1,
                             nombre = "Ver Configuración general"
                         },
                         new
                         {
                             id = 2,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Responsable",
-                            group = 1,
                             nombre = "Configuración dependencia"
                         },
                         new
                         {
                             id = 3,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Responsable.Editar",
-                            group = 2,
                             nombre = "Editar dependencias"
                         },
                         new
                         {
                             id = 4,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar",
-                            group = 2,
                             nombre = "Editar roles"
                         },
                         new
                         {
                             id = 5,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar",
-                            group = 2,
                             nombre = "Editar usuarios"
                         },
                         new
                         {
                             id = 6,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs",
-                            group = 2,
                             nombre = "Ver registro actividad"
-                        },
-                        new
-                        {
-                            id = 8,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver",
-                            group = 3,
-                            nombre = "Ver encuestador"
                         },
                         new
                         {
                             id = 7,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar",
-                            group = 3,
                             nombre = "Editar encuestador"
+                        },
+                        new
+                        {
+                            id = 8,
+                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver",
+                            nombre = "Ver encuestador"
                         },
                         new
                         {
                             id = 9,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar",
-                            group = 3,
                             nombre = "Administrar encuestador"
                         },
                         new
                         {
                             id = 10,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Actualizar",
-                            group = 4,
+                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Kobo.Actualizar",
                             nombre = "Actualizar encuestas"
                         },
                         new
                         {
                             id = 11,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Listado",
-                            group = 4,
-                            nombre = "Informe encuestas"
-                        },
-                        new
-                        {
-                            id = 16,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Usuario",
-                            group = 4,
-                            nombre = "Ver encuestas por usuario"
+                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Informes.Encuestadores",
+                            nombre = "Ver Informe Encuestadores"
                         },
                         new
                         {
                             id = 12,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver",
-                            group = 5,
                             nombre = "Ver formalización"
                         },
                         new
                         {
                             id = 13,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar",
-                            group = 5,
                             nombre = "Editar formalización"
                         },
                         new
                         {
                             id = 14,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar",
-                            group = 5,
                             nombre = "Validar formalización"
-                        },
-                        new
-                        {
-                            id = 15,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Listado",
-                            group = 5,
-                            nombre = "Informe formalización"
-                        },
-                        new
-                        {
-                            id = 17,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir",
-                            group = 5,
-                            nombre = "Imprimir formalización"
                         });
                 });
 
@@ -933,33 +666,6 @@ namespace App_consulta.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("App_consulta.Models.Formalization", b =>
-                {
-                    b.HasOne("App_consulta.Models.ApplicationUser", "CreateByUser")
-                        .WithMany()
-                        .HasForeignKey("IdCreateByUser")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("App_consulta.Models.ApplicationUser", "LastEditByUser")
-                        .WithMany()
-                        .HasForeignKey("IdLastEditByUser")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("App_consulta.Models.Responsable", "Responsable")
-                        .WithMany()
-                        .HasForeignKey("IdResponsable")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreateByUser");
-
-                    b.Navigation("LastEditByUser");
-
-                    b.Navigation("Responsable");
                 });
 
             modelBuilder.Entity("App_consulta.Models.Location", b =>
