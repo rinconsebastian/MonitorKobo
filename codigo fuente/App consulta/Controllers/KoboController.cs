@@ -25,7 +25,11 @@ namespace App_consulta.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IWebHostEnvironment _env;
 
-        public KoboController(ApplicationDbContext context,UserManager<ApplicationUser> _userManager, IWebHostEnvironment env)
+        public KoboController(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> _userManager,
+            IWebHostEnvironment env
+            )
         {
             db = context;
             userManager = _userManager;
@@ -462,40 +466,5 @@ namespace App_consulta.Controllers
         }
 
 
-        public int TotalEncuestador(String code )
-        {
-            int resp = 0;
-
-           
-            //Consulta el archivo y valida que tenga datos.
-            var text = "";
-            try
-            {
-                var _path = Path.Combine(_env.ContentRootPath, "Storage");
-                text = System.IO.File.ReadAllText(Path.Combine(_path, "data.json"));
-            }
-            catch (Exception) { }
-
-            if (text != "")
-            {
-                var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
-                if (data.Count > 0)
-                {
-                    //Filtra los datos
-                    var dataFiltered = code != null ? data.Where(n => n.Id == code).ToList() : data;
-
-                    if (dataFiltered.Count > 0)
-                    {
-                        resp = dataFiltered.Count;
-
-
-                    }
-
-                }
-
-            }
-
-            return resp;
-        }
     }
 }

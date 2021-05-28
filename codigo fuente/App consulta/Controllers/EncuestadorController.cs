@@ -49,10 +49,6 @@ namespace App_consulta.Controllers
 
             KoboController kobo = new KoboController(db, userManager, _env);
 
-
-
-
-
             var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable)).
                 Select(n => new EncuestadorViewModel{
                     ID = n.Id,
@@ -66,7 +62,6 @@ namespace App_consulta.Controllers
                     NumeroEncuestas = 0
                 }).ToListAsync();
 
-            var kobo = new KoboController(db, userManager, _env);
             var totales = kobo.GetTotalEncuestas();
 
             foreach(var enc in encuestadores)
