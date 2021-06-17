@@ -39,14 +39,14 @@ namespace App_consulta.Controllers
         [Authorize(Policy = "Configuracion.Logs")]
         public async Task<ActionResult> Ajax()
         {
-            var logs = await db.Log.OrderByDescending(n => n.Fecha)//.Take(1000)
+            var logs = await db.Log//.Take(1000)
                 .Select(n => new {
                     n.Id,
                     n.Usuario,
                     n.Modelo,
                     n.Fecha,
                     n.Accion
-                }).ToListAsync();
+                }).OrderByDescending(n => n.Fecha).ToListAsync();
             return Json(logs);
         }
 

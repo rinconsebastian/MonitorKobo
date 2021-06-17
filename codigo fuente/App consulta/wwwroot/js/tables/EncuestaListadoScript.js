@@ -49,7 +49,7 @@ var funcLE = {
                 enabled: true
             },
             wordWrapEnabled: false,
-            rowAlternationEnabled: true,
+            rowAlternationEnabled: false,
             columnHidingEnabled: true,
             showRowLines: true,
             grouping: {
@@ -90,51 +90,65 @@ var funcLE = {
                     caption: "Encuestador",
                     alignment: "center",
                     visible: showDNI,
-                    width: '100',
-                    hidingPriority: 5
+                    width: '150',
+                    hidingPriority: 3
                 },
                 {
                     dataField: "datetime",
                     caption: "Fecha",
                     alignment: "center",
+                    width: '200',
+                    hidingPriority: 7
+                },
+                {
+                    dataField: "dni",
+                    caption: "Cedula",
+                    visible: showDNI,
+                    alignment: "center",
                     width: '150',
-                    hidingPriority: 3
+                    hidingPriority: 2
+                },
+              
+                {
+                    dataField: "mun",
+                    caption: "Municipio",
+                    alignment: "center",
+                    width: '150',
+                    hidingPriority: 6
                 },
                 {
                     dataField: "dep",
                     caption: "Depto.",
                     alignment: "center",
                     width: '120',
-                    hidingPriority: 2
-                    
-
-                },
-                {
-                    dataField: "mun",
-                    caption: "Municipio",
-                    alignment: "center",
-                    width: '120',
                     hidingPriority: 4
-                   
-
+                },
+                {
+                    dataField: "status",
+                    caption: "Formalización",
+                    visible: (showValidation && showDNI),
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 1
                 },
                 {
                     
-                    caption: "Formalización",
+                    caption: "Opciones",
                     visible: showValidation,
                     alignment: "center",
-                    hidingPriority: 1,
+                    hidingPriority: 5,
                     width: '100',
                     cellTemplate: function (container, options) {
 
                         var idKobo = options.data.idKobo;
                         var val = options.data.validation;
                         var formId = options.data.formalizacionId;
+                        var status = options.data.formalizacionEstado;
 
                         var contenido = "No";
                         if (formId != 0) {
                             contenido = '<a href="' + root + 'Formalizacion/Details/' + formId + '" title="Detalles" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
-                            if (loadValidation) {
+                            if (loadValidation && status == 1) {
                                 contenido += '<a href="' + root + 'Formalizacion/Edit/' + formId + '" title="Editar " class="btn btn-outline-warning btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
                             }
                         } else if (val && loadValidation) {
@@ -146,7 +160,8 @@ var funcLE = {
                             .appendTo(container);
                     }
 
-                }
+                },
+                
             ],
             summary: {
                 totalItems: [{
@@ -171,6 +186,16 @@ var funcLE = {
                             }
                         }
                     });
+            },
+            onRowPrepared: function (e) {
+                if (e.rowType === "data") {
+                    if (e.data.status == "Pend.") {
+                        e.rowElement.css('background-color', '#ffe6de');
+                    } else if (e.data.status == "Si") {
+                        e.rowElement.css('background-color', '#d7ffd1');
+                    }
+                }
+
             }
         }).dxDataGrid('instance');
     },

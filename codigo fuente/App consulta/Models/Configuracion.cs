@@ -68,8 +68,11 @@ namespace App_consulta.Models
         [Display(Name = "Api Token")]
         public string KoboApiToken { get; set; }
 
-        [Display(Name = "Asset UID")]
+        [Display(Name = "Asset UID (Caracterización)")]
         public string KoboAssetUid { get; set; }
+
+        [Display(Name = "Asset UID (Asociaciones)")]
+        public string KoboAssetUidAssociation { get; set; }
 
         [Display(Name = "Attachment URL")]
         public string KoboAttachment { get; set; }
@@ -79,6 +82,9 @@ namespace App_consulta.Models
 
         [Display(Name = "Params Map")]
         public string KoboParamsMap { get; set; }
+
+        [Display(Name = "Params Map (Asociaciones)")]
+        public string KoboParamsMapAssociation { get; set; }
 
     }
 }

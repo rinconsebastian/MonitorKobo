@@ -1,5 +1,6 @@
 ﻿using App_consulta.Data;
 using App_consulta.Models;
+using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -25,16 +26,20 @@ namespace App_consulta.Services
         {
             await Task.Run(() => {
 
-                var anterior = registro.ValAnterior != null ? JsonSerializer.Serialize(registro.ValAnterior) : "";
-                var nuevo = registro.ValNuevo != null ? JsonSerializer.Serialize(registro.ValNuevo) : "";
+                var anterior = registro.ValAnterior != null ? JsonConvert.SerializeObject(registro.ValAnterior) : "";
+                var nuevo = registro.ValNuevo != null ? JsonConvert.SerializeObject(registro.ValNuevo) : "";
 
                 if(oType != null && anterior != "" && nuevo != "")
                 {
                     var arrAnterior = new Dictionary<String, String>();
                     var arrNuevo = new Dictionary<String, String>();
 
-                    foreach (var oProperty in oType.GetProperties())
+                    var props = oType.GetProperties()
+                        .Where(pi => !Attribute.IsDefined(pi, typeof(JsonIgnoreAttribute))).ToArray();
+
+                    foreach (var oProperty in props)
                     {
+
                         var oOldValue = oProperty.GetValue(registro.ValAnterior, null);
                         var oNewValue = oProperty.GetValue(registro.ValNuevo, null);
                         
@@ -47,8 +52,8 @@ namespace App_consulta.Services
                             arrNuevo.Add(oProperty.Name, sNewValue);
                         }
                     }
-                    anterior = arrAnterior.Count > 0 ? JsonSerializer.Serialize(arrAnterior) : "";
-                    nuevo = arrNuevo.Count > 0 ? JsonSerializer.Serialize(arrNuevo) : "";
+                    anterior = arrAnterior.Count > 0 ? JsonConvert.SerializeObject(arrAnterior) : "";
+                    nuevo = arrNuevo.Count > 0 ? JsonConvert.SerializeObject(arrNuevo) : "";
                 }
                 if(anterior != "" || nuevo != "")
                 {

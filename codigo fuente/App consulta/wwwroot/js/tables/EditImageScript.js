@@ -19,6 +19,20 @@ var funcImg = {
         $('body').on('click', '.btn-rotar', function (e) {
             var degree = $(this).data('option');
             cropper.rotate(degree);
+            funcImg.updateRotate(true);
+
+        });
+    },
+    loadZoom: function () {
+        $('body').on('click', '.btn-zoom', function (e) {
+            var val = $(this).data('option');
+            if (val == "1") {
+                cropper.zoom(0.1);
+            } else {
+                cropper.zoom(-0.1)
+            }
+            console.log(e.type, e.detail.ratio);
+
         });
     },
     loadColor: function () {
@@ -44,11 +58,20 @@ var funcImg = {
 
         });
     },
+    loadRotate: function () {
+        $('body').on('change', '#angle', function (e) {
+            var angle = $('#angle').val();
+            cropper.rotateTo(angle);
+            funcImg.updateRotate(false);
+        });
+    },
     loadReset: function () {
         $('body').on('click', '.btn-reset', function (e) {
             funcImg.cleanResult();
             funcImg.resetFilter();
             cropper.reset();
+            funcImg.updateRotate(true);
+            
         });
     },
     //Save
@@ -60,8 +83,8 @@ var funcImg = {
             autoCropArea: 1,
             movable: false,
             scalable: false,
-            zoomable: false,
-            zoomOnWheel: true,
+            zoomable: true,
+            zoomOnWheel: false,
            toggleDragModeOnDblclick: false,
            autoCrop: false,
            ready() {
@@ -130,6 +153,7 @@ var funcImg = {
             funcImg.cleanResult();
             funcImg.resetFilter();
             funcImg.loadCropper();
+            funcImg.updateRotate(true);
             $('#modalEditImage').modal('show');
         });
         $('#modalEditImage').on('hidden.bs.modal', function (e) {
@@ -174,6 +198,13 @@ var funcImg = {
         $('#saturate').val(100);
         funcImg.updateFilter();
     },
+    updateRotate: function (bar) {
+        var rotate = cropper.getData().rotate;
+        if (bar) {
+            $('#angle').val(rotate)
+        }
+        $('#dataRotate').html(rotate + "°") ;
+    },
     
     changeStateBtns: function (state) {
         
@@ -198,6 +229,8 @@ var funcImg = {
 
         //funcImg.loadCropper();
         funcImg.loadRotar();
+        funcImg.loadRotate();
+        funcImg.loadZoom();
         funcImg.loadRecortar();
         funcImg.loadReset();
         funcImg.loadSave();

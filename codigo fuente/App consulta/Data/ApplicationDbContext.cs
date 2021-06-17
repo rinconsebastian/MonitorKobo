@@ -153,6 +153,7 @@ namespace App_consulta.Data
                 new FormalizationConfig() { Id =14, Name="Foto cédula (anverso)", Field = "ImgCedulaAnverso", Value = "_id"},
                 new FormalizationConfig() { Id =15, Name="Foto cédula (reverso)", Field = "ImgCedulaReverso", Value = "_id"},
                 new FormalizationConfig() { Id =16, Name="Firma digital", Field = "ImgFirmaDigital", Value = "_id"},
+                new FormalizationConfig() { Id =17, Name="Cedula Encuestador", Field = "Encuestador", Value = "_id"},
                 };
             modelBuilder.Entity<FormalizationConfig>().HasData(formalizacionConfigs);
 

@@ -34,10 +34,20 @@ namespace App_consulta.Controllers
         {
             var kobo = new KoboController(db, userManager, _env);
 
-            ViewBag.DataTime = kobo.GetDatetimeData();
+            ViewBag.DataTime = kobo.GetDatetimeData(KoboController.FILE_CARACTERIZACION);
+
             return View();
         }
 
+        [Authorize(Policy = "Encuestas.Listado")]
+        public ActionResult Asociaciones()
+        {
+            var kobo = new KoboController(db, userManager, _env);
+
+            ViewBag.DataTimeAssoc = kobo.GetDatetimeData(KoboController.FILE_ASOCIACION);
+
+            return View();
+        }
 
     }
 }

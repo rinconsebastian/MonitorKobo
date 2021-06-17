@@ -11,14 +11,14 @@
 @if (error == "")
 {
     <div class="alert alert-success" role="alert">
-        @accion
+        @Html.Raw(accion)
     </div>
 }
 else
 {
-    <div class="alert alert-danger" role="alert">
-        @accion
-        <br />
-        Error: @error
-    </div>
+<div class="alert alert-danger" role="alert">
+    @Html.Raw(accion)
+    <br />
+    Error: @Html.Raw(error)
+</div>
 }

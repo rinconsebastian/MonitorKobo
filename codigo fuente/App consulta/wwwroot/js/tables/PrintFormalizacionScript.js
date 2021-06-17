@@ -1,30 +1,44 @@
 ﻿//*********************************** VARIABLES ******************************************
-var root;
-
+var root_print;
+var idsPrint = [];
 //*********************************** funcLE ******************************************
 
 var funcPrint = {
-    loadPrintFormlz: function () {
-        $('body').on('click', '.btn-print-formlz', function (e) {
-            var url = $(this).attr("data-link");
-            funcPrint.showPrint(url);
-        });
-    },
-    showPrint: function (url) {
-        
-        myWindow = window.open(url, "_blank", "toolbar=no,titlebar=no,menubar=no,scrollbars=yes,resizable=no,top=0,left=386,width=1000,height=700");
+    changeState: function () {
+        if (idsPrint.length > 0) {
+            var fullurl = root_print + "Formalizacion/Imprimir/";
+            var idsParam = idsPrint.join();
+            $.post(fullurl, { ids: idsParam }).
+                done(function (data) {
+                    if (data != null) {
+                        console.log(data);
+                    } else {
+                        console.log("Error en la respuesta del servidor.");
+                    }
+                }).fail(function (data) {
+                    console.log("Error al solicitar la operación.");
+                });
+        }
     },
     init: function () {
         // Carga las variables de configuración.
-        root = $('#Root').val();
-        funcPrint.loadPrintFormlz();
+        root_print = $('#Root').val();
+
+        if (typeof myIdsPrint !== "undefined") {
+            idsPrint = myIdsPrint;
+        }
     }
 };
 
 //************************************** ON READY **********************************************
 $(function () {
-
     funcPrint.init();
+
+    window.onbeforeprint = function () {
+        console.log("Print");
+        funcPrint.changeState();
+    };
+
 });
 
 

@@ -8,6 +8,7 @@ namespace App_consulta.Models
     {
         public string IdKobo { get; set; }
         public string User { get; set; }
+        public string DNI { get; set; }
         public string LocationCode { get; set; }
         public string Datetime { get; set; }
         public string Validation { get; set; }
@@ -17,25 +18,38 @@ namespace App_consulta.Models
     {
         public string IdKobo { get; set; }
         public string User { get; set; }
+        public string DNI { get; set; }
         public string LocationCode { get; set; }
         public string Dep { get; set; }
         public string Mun { get; set; }
         public string Datetime { get; set; }
         public bool Validation { get; set; }
         public int FormalizacionId { get; set; }
+        public int FormalizacionEstado { get; set; }
+
+        public string Status { get; set; }
+
     }
 
-    public class EncuestadorDataModel
+
+    public class AsociacionMap
     {
-        public int ID { get; set; }
-        public int Cedula { get; set; }
-        public string Nombre { get; set; }
-        public string Coordinacion { get; set; }
-        public string Departamento { get; set; }
-        public string Municipio { get; set; }
-        public string Telefono { get; set; }
-        public string Email { get; set; }
-        public int NumeroEncuestas { get; set; }
+        public string IdKobo { get; set; }
+        public string User { get; set; }
+        public string Name { get; set; }
+        public string LocationCode { get; set; }
+        public string Datetime { get; set; }
+    }
+
+    public class AsociacionDataModel
+    {
+        public string IdKobo { get; set; }
+        public string User { get; set; }
+        public string Name { get; set; }
+        public string LocationCode { get; set; }
+        public string Dep { get; set; }
+        public string Mun { get; set; }
+        public string Datetime { get; set; }
     }
 
 

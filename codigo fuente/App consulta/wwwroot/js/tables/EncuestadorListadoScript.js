@@ -89,14 +89,14 @@ var funcLE = {
                     caption: "Cedula",
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 8
+                    hidingPriority: 9
                 },
                 {
                     dataField: "nombre",
                     caption: "Nombre",
                     alignment: "center",
                     width: '180',
-                    hidingPriority: 7
+                    hidingPriority: 8
                 },
                 {
                     dataField: "departamento",
@@ -139,15 +139,21 @@ var funcLE = {
                 },
                 {
                     dataField: "numeroEncuestas",
-                    caption: "Nº encuestas",
+                    caption: "Nº caract.",
                     alignment: "center",
-                    width: '100',
+                    width: '50',
                     hidingPriority: 6
                 },
-
+                {
+                    dataField: "numeroAsociaciones",
+                    caption: "Nº asocia",
+                    alignment: "center",
+                    width: '50',
+                    hidingPriority: 7
+                },
                 {
                     dataField: "Opciones",
-                    hidingPriority: 9,
+                    hidingPriority: 10,
                     caption: "Opciones",
                     alignment: "left",
                     allowHeaderFiltering: false,

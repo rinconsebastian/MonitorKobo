@@ -6,6 +6,8 @@
     Layout = "~/Views/Shared/_LayoutPrint.cshtml";
 
     var time = DateTime.Now.ToString("u");
+
+    var disabled = Model.Count() > 0 ? "" : "disabled";
 }
 
 <div class="row my-4 d-print-none ">
@@ -16,7 +18,7 @@
                 <hr />
                 <div class="row mb-4">
                     <div class=" col-4 offset-4">
-                        <button onclick="window.print();" class="btn btn-lg btn-block btn-success"><i class="fas fa-print"></i> IMPRIMIR </button>
+                        <button onclick="window.print();" @disabled class="btn btn-lg btn-block btn-success"><i class="fas fa-print"></i> IMPRIMIR </button>
                     </div>
                 </div>
 
@@ -28,7 +30,7 @@
                             <tbody>
                                 <tr>
                                     <td rowspan="4" class="text-center">
-                                        <img class="img-mini" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador })&time=@time" alt="Foto pescador" />
+                                        <img class="img-mini" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador, time = time })" alt="Foto pescador" />
                                     </td>
                                 </tr>
                                 <tr>
@@ -61,7 +63,7 @@
 
 @foreach (var formalz in Model)
 {
-    
+
     <div class="page-f d-none d-print-block">
         @await Html.PartialAsync("_FormalizacionPartial")
         <p class="font-weight-bold text-center">INFORMACIÓN GENERAL</p>
@@ -94,7 +96,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgSolicitudCarnet })&time=@time" alt="Image Documento Original" />
+                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgSolicitudCarnet, time = time })" alt="Image Documento Original" />
                     </td>
                 </tr>
             </tbody>
@@ -139,10 +141,10 @@
                 </tr>
                 <tr>
                     <td colspan="2" rowspan="3" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador })&time=@time" alt="Fotografía Pescador Artesanal" />
+                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador, time = time })" alt="Fotografía Pescador Artesanal" />
                     </td>
                     <td colspan="2" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaAnverso })&time=@time" alt="Image Cédula del pescador (Anverso)" />
+                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaAnverso, time = time })" alt="Image Cédula del pescador (Anverso)" />
                     </td>
                 </tr>
                 <tr>
@@ -150,7 +152,7 @@
                 </tr>
                 <tr>
                     <td colspan="2" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaReverso })&time=@time" alt="Image Cédula del pescador (Reverso)" />
+                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaReverso, time = time })" alt="Image Cédula del pescador (Reverso)" />
                     </td>
                 </tr>
             </tbody>
@@ -192,7 +194,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCertificacion })&time=@time" alt="Image Documento Original" />
+                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCertificacion, time = time })" alt="Image Documento Original" />
                     </td>
                 </tr>
             </tbody>
@@ -203,4 +205,10 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/site-f.css" />
+}
+@section Scripts{
+    <script>
+        var myIdsPrint = @Html.Raw(ViewBag.Ids);
+    </script>
+    <script type="text/javascript" src="~/js/tables/PrintFormalizacionScript.js"></script>
 }

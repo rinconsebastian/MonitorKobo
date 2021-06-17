@@ -3,14 +3,16 @@ using System;
 using App_consulta.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210615111016_asociacion")]
+    partial class asociacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,9 +187,6 @@ namespace App_consulta.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("KoboParamsMap")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("KoboParamsMapAssociation")
                         .HasColumnType("longtext");
 
                     b.Property<string>("KoboUsername")

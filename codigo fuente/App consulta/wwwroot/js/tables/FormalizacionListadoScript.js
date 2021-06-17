@@ -3,8 +3,8 @@ var root;
 var dataGrid;
 var source = "";
 
-var showEditar = false;
 var ShowValidar = false;
+
 
 //*********************************** funcForm ******************************************
 
@@ -79,19 +79,22 @@ var funcForm = {
                     dataField: "cedula",
                     caption: "Cedula",
                     alignment: "center",
-                    width: '9%'
+                    width: '100',
+                    hidingPriority: 2,
                 },
                 {
                     dataField: "nombre",
                     caption: "Nombre",
                     alignment: "center",
-                    width: '17%'
+                    width: '200',
+                    hidingPriority: 3,
                 },
                 {
                     dataField: "municipio",
                     caption: "Municipio",
                     alignment: "center",
-                    width: '17%',
+                    width: '200',
+                    hidingPriority: 4,
                     cellTemplate: function (container, options) {
                         var dep = options.data.departamento;
                         var mun = options.data.municipio;
@@ -104,23 +107,68 @@ var funcForm = {
                     }
 
                 },
-                
+                {
+                    dataField: "coordinacion",
+                    caption: "Coordinación",
+                    alignment: "center",
+                    width: '200',
+                    hidingPriority: 5
+                },
+                {
+                    dataField: "fecha",
+                    caption: "Fecha",
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 7
+                },
+                {
+                    dataField: "nombreEstado",
+                    caption: "Estado",
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 6,
+                    cellTemplate: function (container, options) {
+                        var nombre = options.data.nombreEstado;
+                        var color = "";
+                        switch (options.data.estado) {
+                            case 1:
+                                color = "bg-warning text-dark";
+                                break;
+                            case 2:
+                                color = "bg-success text-white";
+                                break;
+                            case 3:
+                                color = "bg-danger text-white";
+                                break;
+                            case 4:
+                                color = "bg-info text-white";
+                                break;
+                        }
+                        contenido = '<h6 class="mb-0"><span class="badge ' + color + '">' + nombre + '</span></h6>';
+                        $("<div class='preventSelection'>")
+                            .append(contenido)
+                            .appendTo(container);
+                    }
+                },
 
                 {
                     dataField: "Opciones",
                     caption: "Opciones",
-                    alignment: "left",
+                    alignment: "center",
                     allowHeaderFiltering: false,
-                    width: '10%',
+                    width: '100',
+                    hidingPriority: 1,
                     cellTemplate: function (container, options) {
 
-                        var idEnc = options.data.id;
-                        var contenido = '<a href="' + root + 'Formalizacion/Details/' + idEnc + '" title="Detalles" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
-                        if (showEditar) {
-                            contenido += '<a href="' + root + 'Formalizacion/Edit/' + idEnc + '" title="Editar " class="btn btn-outline-warning btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
-                        }
-                        if (ShowValidar) {
-                            contenido += '<a href="' + root + 'Formalizacion/Edit/' + idEnc + '" title="Validar" class="btn btn-outline-success btn-xs ml-1" ><i class="far fa-thumbs-up"></i></a>'
+                        var formId = options.data.id;
+                        var status = options.data.estado;
+
+                        var contenido = "";
+                        if (formId != 0) {
+                            contenido = '<a href="' + root + 'Formalizacion/Details/' + formId + '" title="Detalles" class="btn btn-outline-info btn-xs ml-1" ><i class="fas fa-file-alt"></i></a>'
+                            if (ShowValidar && status == 1) {
+                                contenido += '<a href="' + root + 'Formalizacion/Edit/' + formId + '" title="Editar " class="btn btn-outline-warning btn-xs ml-1" ><i class="fas fa-edit"></i></a>'
+                            }
                         }
 
                         $("<div class='preventSelection'>")
@@ -162,7 +210,7 @@ var funcForm = {
         root = $('#Root').val();
         source = root + "Formalizacion/Ajax/";
 
-        showEditar = $('#ShowEdit').val() == 1;
+
         ShowValidar = $('#ShowValidate').val() == 1;
 
         funcForm.instanceDataGrid();

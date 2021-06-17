@@ -14,7 +14,6 @@
 
     var time = DateTime.Now.ToString("u");
 }
-
 <div class="row my-4  d-print-none">
     <div class="col-sm-10 mx-auto">
         <div class="card  border-dark ">
@@ -31,6 +30,9 @@
                             break;
                         case Formalization.ESTADO_CANCELADO:
                             <span class="badge bg-danger text-white float-right">Cancelado</span>
+                            break;
+                        case Formalization.ESTADO_IMPRESO:
+                            <span class="badge bg-info text-white float-right">Impreso</span>
                             break;
                     }
 
@@ -55,6 +57,13 @@
 
                         <div class="row">
                             <div class="col-12 col-sm-8  order-2 order-sm-1  p-4">
+                                @if (ViewBag.error != null)
+                                {
+                                    <div class="alert alert-warning" role="alert">
+                                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                        @ViewBag.error
+                                    </div>
+                                }
                                 <div class="form-group row">
                                     <label asp-for="Name" class="col-sm-4 col-form-label"></label>
                                     <div class="col-sm-8">
@@ -90,45 +99,45 @@
                                 </div>
                             </div>
                             <div class="col-12 col-sm-4 text-center order-1 order-sm-2">
-                                <img class="img-detail-formlz mt-4" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgPescador })&time=@time" alt="Foto pescador" />
+                                <img class="img-detail-formlz mt-4" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgPescador, time = time })" alt="Foto pescador" />
                             </div>
 
                         </div>
                     </div>
                     <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="tab-2">
                         <div class="text-center py-4 px-1">
-                            <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgSolicitudCarnet })&time=@time" alt="Foto Solicitud" />
+                            <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgSolicitudCarnet, time = time })" alt="Foto Solicitud" />
                         </div>
                     </div>
                     <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="tab-3">
                         <div class="text-center py-4 px-1">
-                            <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCertificacion })&time=@time" alt="Foto certificación" />
+                            <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCertificacion, time = time })" alt="Foto certificación" />
                         </div>
                     </div>
                     <div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="tab-4">
                         <div class="row">
                             <div class="col-12 col-sm-6 text-center py-4 px-1">
-                                <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaAnverso })&time=@time" alt="Foto cédula" />
+                                <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaAnverso, time = time })" alt="Foto cédula" />
                             </div>
                             <div class="col-12 col-sm-6 text-center py-4 px-1">
-                                <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaReverso })&time=@time" alt="Foto cédula reverso" />
+                                <img class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaReverso, time = time })" alt="Foto cédula reverso" />
                             </div>
                         </div>
                         <div class="">
-                            
+
                         </div>
                     </div>
                 </div>
                 <hr />
                 <div class="w-75 mx-auto">
                     <div class="form-group row">
-                        @if (permisoValidar)
-                            {
+                        @if (permisoValidar && Model.Estado == Formalization.ESTADO_BORRADOR)
+                        {
                             <div class="col text-center ">
                                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-block">@btnEditar</a>
                             </div>
                         }
-                        @if (permisoImprimir)
+                        @if (permisoImprimir && ( Model.Estado == Formalization.ESTADO_COMPLETO  || Model.Estado == Formalization.ESTADO_IMPRESO) )
                         {
                             <div class="col text-center ">
                                 <button data-link="@Url.Action("Print","Formalizacion", new { ids = Model.Id })" class="btn btn-outline-success btn-block btn-print-formlz">Imprimir</button>
@@ -148,16 +157,16 @@
                         <div class="col-12 col-sm-4">
                             @if (Model.Responsable != null)
                             {
-                            <p class="font-weight-light mb-sm-0 small">
-                                Coordinación:  <br class="d-none d-sm-block" /> <b>@Model.Responsable.Nombre</b>
-                            </p>
+                                <p class="font-weight-light mb-sm-0 small">
+                                    Coordinación:  <br class="d-none d-sm-block" /> <b>@Model.Responsable.Nombre</b>
+                                </p>
                             }
                         </div>
                         <div class="col-12 col-sm-4">
                             @if (Model.CreateByUser != null)
                             {
                                 <p class="font-weight-light mb-sm-0 small">
-                                    Cargado por: <br class="d-none d-sm-block"  /> <b>@Model.CreateByUser.Nombre @Model.CreateByUser.Apellido</b>
+                                    Cargado por: <br class="d-none d-sm-block" /> <b>@Model.CreateByUser.Nombre @Model.CreateByUser.Apellido</b>
                                     <br />
                                     <small><i>@Model.CreateDate.ToString("f")</i></small>
                                 </p>
@@ -166,11 +175,11 @@
                         <div class="col-12 col-sm-4">
                             @if (Model.LastEditByUser != null)
                             {
-                            <p class="font-weight-light mb-0 small">
-                                Última modificación por:  <br class="d-none d-sm-block" /> <b>@Model.LastEditByUser.Nombre @Model.LastEditByUser.Apellido</b>
-                                <br />
-                                <small><i>@Model.LastEditDate.ToString("f")</i></small>
-                            </p>
+                                <p class="font-weight-light mb-0 small">
+                                    Última modificación por:  <br class="d-none d-sm-block" /> <b>@Model.LastEditByUser.Nombre @Model.LastEditByUser.Apellido</b>
+                                    <br />
+                                    <small><i>@Model.LastEditDate.ToString("f")</i></small>
+                                </p>
                             }
                         </div>
                     </div>
@@ -181,7 +190,8 @@
 </div>
 
 @section Scripts{
-    <script type="text/javascript" src="~/js/tables/PrintFormalizacionScript.js"></script>
+    <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
+    <script type="text/javascript" src="~/js/tables/ValidarFormalizacionScript.js"></script>
     <script>
         function goBack() {
             window.history.back();

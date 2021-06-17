@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text.Json.Serialization;
+
 using System.Threading.Tasks;
 
 namespace App_consulta.Models
@@ -13,6 +14,7 @@ namespace App_consulta.Models
         public const int ESTADO_BORRADOR = 1;
         public const int ESTADO_COMPLETO = 2;
         public const int ESTADO_CANCELADO = 3;
+        public const int ESTADO_IMPRESO = 4;
 
 
         [Required]
@@ -108,6 +110,7 @@ namespace App_consulta.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public DateTime LastEditDate { get; set; }
 
-
+        [Display(Name = "Encuestador")]
+        public String Encuestador { get; set; }
     }
 }

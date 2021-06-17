@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using App_consulta.Services;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace App_consulta.Controllers
 {
@@ -36,13 +38,13 @@ namespace App_consulta.Controllers
 
             var formalizacion = await db.Formalization.Where(n => n.IdKobo == idKobo).FirstOrDefaultAsync();
 
-            if(formalizacion == null)
+            if (formalizacion == null)
             {
                 var kobo = new KoboController(db, userManager, _env);
                 r = await kobo.LoadFormalizacion(idKobo, User.Identity.Name);
                 return Json(r);
             }
-            
+
             r.Url = "Formalizacion/Edit/" + formalizacion.Id;
             r.Success = true;
             return Json(r);
@@ -59,7 +61,28 @@ namespace App_consulta.Controllers
         [Authorize(Policy = "Formalizacion.Listado")]
         public async Task<IActionResult> Ajax()
         {
-            var formalizaciones = await db.Formalization.ToListAsync();
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            var encuestadorControl = new EncuestadorController(db, userManager, _env);
+            var respRelacionado = await encuestadorControl.GetResponsablesbyIdParent(user.IDDependencia, 1, 3);
+
+            var formalizaciones = await db.Formalization.Where(n => respRelacionado.Contains(n.IdResponsable))
+                .Select(n => new FormalizacionViewModel()
+                {
+                    ID = n.Id,
+                    Cedula = n.Cedula,
+                    Nombre = n.Name,
+                    Departamento = n.Departamento,
+                    Municipio = n.Municipio,
+                    Fecha = n.FechaSolicitud,
+                    Estado = n.Estado,
+                    Coordinacion = n.Responsable.Nombre
+                })
+                .ToListAsync();
+            foreach (var formalizacion in formalizaciones)
+            {
+                formalizacion.NombreEstado = GetEstado(formalizacion.Estado);
+            }
+
             return Json(formalizaciones);
         }
 
@@ -74,6 +97,13 @@ namespace App_consulta.Controllers
             var formalizacion = await db.Formalization.Where(n => n.Id == id && respRelacionado.Contains(n.IdResponsable)).FirstOrDefaultAsync();
             if (formalizacion == null) { return NotFound(); }
 
+            string error = (string)HttpContext.Session.GetComplex<string>("error");
+            if (error != "")
+            {
+                ViewBag.error = error;
+                HttpContext.Session.Remove("error");
+            }
+
             return View(formalizacion);
         }
 
@@ -81,6 +111,7 @@ namespace App_consulta.Controllers
         public async Task<ActionResult> Print(int[] ids)
         {
             var formalizaciones = await db.Formalization.Where(n => ids.Contains(n.Id)).ToListAsync();
+            ViewBag.Ids = JsonConvert.SerializeObject(ids);
             return View(formalizaciones);
         }
 
@@ -96,13 +127,25 @@ namespace App_consulta.Controllers
 
             var formalizacion = await db.Formalization.Where(n => n.Id == id && respRelacionado.Contains(n.IdResponsable)).FirstOrDefaultAsync();
             if (formalizacion == null) { return NotFound(); }
+            if (formalizacion.Estado != Formalization.ESTADO_BORRADOR)
+            {
+                return RedirectToAction("Details", new { id = formalizacion.Id });
+            }
+
+            string error = (string)HttpContext.Session.GetComplex<string>("error");
+            if (error != "")
+            {
+                ViewBag.error = error;
+                HttpContext.Session.Remove("error");
+            }
 
             ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => n.Nombre.StartsWith("[CDR]")).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre", formalizacion.IdResponsable);
 
             var estados = new Dictionary<int, string>{
                 {  Formalization.ESTADO_BORRADOR, "Borrador" },
                 {  Formalization.ESTADO_COMPLETO, "Completo" },
-                {  Formalization.ESTADO_CANCELADO, "Cancelado" }
+                {  Formalization.ESTADO_CANCELADO, "Cancelado" },
+                {  Formalization.ESTADO_IMPRESO, "Impreso" }
             };
 
             ViewBag.Estados = new SelectList(estados, "Key", "Value", formalizacion.Estado);
@@ -111,11 +154,88 @@ namespace App_consulta.Controllers
 
         }
 
-       
+        [Authorize(Policy = "Formalizacion.Validar")]
+        [HttpPost]
+        public async Task<RespuestaAccion> CambiarEstado(int id, int estado)
+        {
+            var r = new RespuestaAccion();
+            var formalizacion = await db.Formalization.FindAsync(id);
+            if (formalizacion == null) { r.Message = "Formalización no registrada."; return r; }
+
+            try
+            {
+                var anterior = await db.Formalization.AsNoTracking().Where(n => n.Id == formalizacion.Id).FirstOrDefaultAsync();
+
+                formalizacion.Estado = estado;
+                var user = await userManager.FindByNameAsync(User.Identity.Name);
+                formalizacion.LastEditDate = DateTime.Now;
+                formalizacion.LastEditByUser = user;
+
+                db.Entry(formalizacion).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+
+                var log = new Logger(db);
+                var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "ChangeStatus", Modelo = "Formalization", ValAnterior = anterior, ValNuevo = formalizacion };
+                await log.Registrar(registro, typeof(Formalization));
+
+                //var nombreEstado = GetEstado(estado).ToUpper();
+                //r.Message = "El estado de la formalización fue cambiado ha " + nombreEstado + " correctamente.";
+                r.Success = true;            
+            }
+            catch (Exception e)
+            {
+                r.Message = e.Message;
+            }
+
+
+            return r;
+        }
+
+        [Authorize(Policy = "Formalizacion.Imprimir")]
+        [HttpPost]
+        public async Task<int> Imprimir(string ids)
+        {
+            var success = 0;
+
+            if(ids == "") { return success; }
+            var idsList = ids.Split(',').Select(n => Convert.ToInt32(n)).ToList();
+
+
+            var formalizaciones = await db.Formalization.Where(n => idsList.Contains(n.Id) && n.Estado != Formalization.ESTADO_IMPRESO).ToListAsync();
+            var anteriores = await db.Formalization.AsNoTracking().Where(n => idsList.Contains(n.Id) && n.Estado != Formalization.ESTADO_IMPRESO).ToListAsync();
+
+            foreach (var formalizacion in formalizaciones)
+            {
+                try
+                {
+                    var anterior = anteriores.Where(n => n.Id == formalizacion.Id).FirstOrDefault();
+
+                    formalizacion.Estado = Formalization.ESTADO_IMPRESO;
+
+                    var user = await userManager.FindByNameAsync(User.Identity.Name);
+                    formalizacion.LastEditDate = DateTime.Now;
+                    formalizacion.LastEditByUser = user;
+
+                    db.Entry(formalizacion).State = EntityState.Modified;
+                    await db.SaveChangesAsync();
+
+                    var log = new Logger(db);
+                    var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "Print", Modelo = "Formalization", ValAnterior = anterior, ValNuevo = formalizacion };
+                    await log.Registrar(registro, typeof(Formalization));
+
+                    success++;
+                }
+                catch (Exception) { }
+            }
+
+
+            return success;
+        }
+
         [Authorize(Policy = "Formalizacion.Validar")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit( FormalizacionPostModel formalizacion)
+        public async Task<ActionResult> Edit(FormalizacionPostModel formalizacion)
         {
             var original = await db.Formalization.FindAsync(formalizacion.Id);
             if (original == null)
@@ -128,18 +248,20 @@ namespace App_consulta.Controllers
                 if (permisoEditar)
                 {
                     original.Name = formalizacion.Name;
-                    original.Cedula= formalizacion.Cedula;
+                    original.Cedula = formalizacion.Cedula;
                     original.NombreAsociacion = formalizacion.NombreAsociacion;
-                    original.AreaPesca= formalizacion.AreaPesca;
+                    original.AreaPesca = formalizacion.AreaPesca;
                     original.ArtesPesca = formalizacion.ArtesPesca;
                 }
-
-                original.Estado = formalizacion.Estado;
-
+                if(formalizacion.Estado > 0) { 
+                    original.Estado = formalizacion.Estado;
+                }
                 if (formalizacion.IdResponsable > 0)
                 {
                     original.IdResponsable = formalizacion.IdResponsable;
                 }
+
+                var anterior = await db.Formalization.AsNoTracking().Where(n => n.Id == formalizacion.Id).FirstOrDefaultAsync();
 
                 var user = await userManager.FindByNameAsync(User.Identity.Name);
                 original.LastEditDate = DateTime.Now;
@@ -147,25 +269,35 @@ namespace App_consulta.Controllers
 
                 db.Entry(original).State = EntityState.Modified;
                 await db.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = formalizacion.Id });
+
+
+
+                var log = new Logger(db);
+                var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "Edit", Modelo = "Formalization", ValAnterior = anterior, ValNuevo = original };
+                await log.Registrar(registro, typeof(Formalization));
+
+                HttpContext.Session.SetComplex("error", "Los datos fueron actualizados correctamente.");
+
+                return RedirectToAction("Edit", new { id = formalizacion.Id });
             }
-            
+
             ViewBag.Coordinaciones = new SelectList(await db.Responsable.Where(n => n.Nombre.StartsWith("[CDR]")).OrderBy(n => n.Nombre).ToListAsync(), "Id", "Nombre", formalizacion.IdResponsable);
 
             var estados = new Dictionary<int, string>{
                 {  Formalization.ESTADO_BORRADOR, "Borrador" },
                 {  Formalization.ESTADO_COMPLETO, "Completo" },
-                {  Formalization.ESTADO_CANCELADO, "Cancelado" }
+                {  Formalization.ESTADO_CANCELADO, "Cancelado" },
+                {  Formalization.ESTADO_IMPRESO, "Impreso" }
             };
 
             ViewBag.Estados = new SelectList(estados, "Key", "Value", formalizacion.Estado);
 
             return View(formalizacion);
         }
-       
+
 
         [HttpGet]
-        public FileStreamResult ViewImage(string filename)
+        public FileStreamResult ViewImage(string filename = "noFound.jpg")
         {
             var permiso = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
             if (!permiso) { filename = "lock.jpg"; }
@@ -207,6 +339,27 @@ namespace App_consulta.Controllers
             }
             else { r.Message = "Error: El archivo no es válido."; }
             return Json(r);
+        }
+
+        private string GetEstado(int s)
+        {
+            var r = s.ToString();
+            switch (s)
+            {
+                case Formalization.ESTADO_BORRADOR:
+                    r = "Borrador";
+                    break;
+                case Formalization.ESTADO_COMPLETO:
+                    r = "Completo";
+                    break;
+                case Formalization.ESTADO_CANCELADO:
+                    r = "Cancelado";
+                    break;
+                case Formalization.ESTADO_IMPRESO:
+                    r = "Impreso";
+                    break;
+            }
+            return r;
         }
     }
 }
