@@ -203,7 +203,7 @@ var funcLE = {
     loadFormalizacion: function () {
         $('body').on('click', '.load-formlz', function (e) {
             var idKobo = $(this).data('id');
-
+            var btn = $(this);
             $(this).find('i').removeClass('fa-download');
             $(this).find('i').addClass('fa-cog fa-spin');
             $(this).attr('disabled', 'disabled');
@@ -212,9 +212,9 @@ var funcLE = {
             
             $.post(fullurl, { idKobo: idKobo }).
                 done(function (data) {
-                    $(this).find('i').addClass('fa-download');
-                    $(this).find('i').removeClass('fa-cog fa-spin');
-                    $(this).removeAttr('disabled');
+                    btn.find('i').addClass('fa-download');
+                    btn.find('i').removeClass('fa-cog fa-spin');
+                    btn.removeAttr('disabled');
                     if (data != null) {
                         if (data.success) {
                             if (data.url != null) {
