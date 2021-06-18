@@ -22,66 +22,68 @@ namespace App_consulta.Services
 
         }
 
-        public async Task Registrar(RegistroLog registro,Type oType = null)
+        public async Task<string> Registrar(RegistroLog registro,Type oType = null)
         {
-            await Task.Run(() => {
+            // await Task.Run(() => {});
 
-                var anterior = registro.ValAnterior != null ? JsonConvert.SerializeObject(registro.ValAnterior) : "";
-                var nuevo = registro.ValNuevo != null ? JsonConvert.SerializeObject(registro.ValNuevo) : "";
+            var error = "";
 
-                if(oType != null && anterior != "" && nuevo != "")
+            var anterior = registro.ValAnterior != null ? JsonConvert.SerializeObject(registro.ValAnterior) : "";
+            var nuevo = registro.ValNuevo != null ? JsonConvert.SerializeObject(registro.ValNuevo) : "";
+
+            if (oType != null && anterior != "" && nuevo != "")
+            {
+                var arrAnterior = new Dictionary<String, String>();
+                var arrNuevo = new Dictionary<String, String>();
+
+                var props = oType.GetProperties()
+                    .Where(pi => !Attribute.IsDefined(pi, typeof(JsonIgnoreAttribute))).ToArray();
+
+                foreach (var oProperty in props)
                 {
-                    var arrAnterior = new Dictionary<String, String>();
-                    var arrNuevo = new Dictionary<String, String>();
 
-                    var props = oType.GetProperties()
-                        .Where(pi => !Attribute.IsDefined(pi, typeof(JsonIgnoreAttribute))).ToArray();
+                    var oOldValue = oProperty.GetValue(registro.ValAnterior, null);
+                    var oNewValue = oProperty.GetValue(registro.ValNuevo, null);
 
-                    foreach (var oProperty in props)
+                    if (!object.Equals(oOldValue, oNewValue))
                     {
+                        var sOldValue = oOldValue == null ? "null" : oOldValue.ToString();
+                        var sNewValue = oNewValue == null ? "null" : oNewValue.ToString();
 
-                        var oOldValue = oProperty.GetValue(registro.ValAnterior, null);
-                        var oNewValue = oProperty.GetValue(registro.ValNuevo, null);
-                        
-                        if (!object.Equals(oOldValue, oNewValue))
-                        {
-                            var sOldValue = oOldValue == null ? "null" : oOldValue.ToString();
-                            var sNewValue = oNewValue == null ? "null" : oNewValue.ToString();
-
-                            arrAnterior.Add(oProperty.Name, sOldValue);
-                            arrNuevo.Add(oProperty.Name, sNewValue);
-                        }
-                    }
-                    anterior = arrAnterior.Count > 0 ? JsonConvert.SerializeObject(arrAnterior) : "";
-                    nuevo = arrNuevo.Count > 0 ? JsonConvert.SerializeObject(arrNuevo) : "";
-                }
-                if(anterior != "" || nuevo != "")
-                {
-                    try
-                    {
-                        LogModel logn = new LogModel
-                        {
-
-                            Usuario = registro.Usuario,
-                            Fecha = DateTime.Now,
-                            Accion = registro.Accion,
-                            Modelo = registro.Modelo,
-                            ValAnterior = anterior,
-                            ValNuevo = nuevo
-                        };
-
-                        db.Add(logn);
-                        db.SaveChangesAsync();
-                    }
-                    catch (Exception e)
-                    {
-                        var n = e;
+                        arrAnterior.Add(oProperty.Name, sOldValue);
+                        arrNuevo.Add(oProperty.Name, sNewValue);
                     }
                 }
+                anterior = arrAnterior.Count > 0 ? JsonConvert.SerializeObject(arrAnterior) : "";
+                nuevo = arrNuevo.Count > 0 ? JsonConvert.SerializeObject(arrNuevo) : "";
+            }
+            if (anterior != "" || nuevo != "")
+            {
+                try
+                {
+                    LogModel logn = new LogModel
+                    {
 
-            });
+                        Usuario = registro.Usuario,
+                        Fecha = DateTime.Now,
+                        Accion = registro.Accion,
+                        Modelo = registro.Modelo,
+                        ValAnterior = anterior,
+                        ValNuevo = nuevo
+                    };
+
+                    db.Add(logn);
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+                    error = e.Message;
+                }
+            }
+
+            return error;
         }
-
+        
 
 
     }

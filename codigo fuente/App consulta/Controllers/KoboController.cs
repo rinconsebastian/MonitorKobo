@@ -180,6 +180,14 @@ namespace App_consulta.Controllers
                 var log = new Logger(db);
                 try
                 {
+                    //Departamento 
+                    var municipio = await db.Location.Where(n => n.Code2 == formalizacion.Municipio).FirstOrDefaultAsync();
+                    if(municipio != null)
+                    {
+                        formalizacion.Municipio = municipio.Name;
+                        formalizacion.Departamento = municipio.LocationParent != null ? municipio.LocationParent.Name : formalizacion.Departamento;
+                    }
+
                     db.Formalization.Add(formalizacion);
                     await db.SaveChangesAsync();
                     r.Url = "Formalizacion/Edit/" + formalizacion.Id;
