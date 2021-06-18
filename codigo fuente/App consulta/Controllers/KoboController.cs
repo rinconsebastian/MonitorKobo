@@ -611,9 +611,11 @@ namespace App_consulta.Controllers
             if (text != "")
             {
                 var data = JsonConvert.DeserializeObject<List<EncuestaMap>>(text);
+                
                 if (data.Count > 0)
                 {
-                    resp = data.GroupBy(n => n.User).ToDictionary(g => g.Key, g => g.Count());
+                    var dataAux = data.Where(n => n.User != null).ToList();
+                    resp = dataAux.GroupBy(n => n.User).ToDictionary(g => g.Key, g => g.Count());
 
                 }
 
@@ -639,7 +641,8 @@ namespace App_consulta.Controllers
                 var data = JsonConvert.DeserializeObject<List<AsociacionMap>>(text);
                 if (data.Count > 0)
                 {
-                    resp = data.GroupBy(n => n.User).ToDictionary(g => g.Key, g => g.Count());
+                    var dataAux = data.Where(n => n.User != null).ToList();
+                    resp = dataAux.GroupBy(n => n.User).ToDictionary(g => g.Key, g => g.Count());
 
                 }
 
