@@ -1,11 +1,13 @@
 ﻿
 @{
-    ViewData["Title"] = "Informes";
-    ViewData["Subtitle"] = "Asociaciones";
+    ViewData["Title"] = "Informe asociaciones";
+    ViewData["Subtitle"] = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    var permisoExportar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado" && c.Value == "1"));
 }
 @Html.Hidden("code", "")
+@Html.Hidden("showExport", (permisoExportar ? 1 : 0))
 
 <div class="row mt-4">
     <div class="col-12 ">

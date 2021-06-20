@@ -1,13 +1,16 @@
 ﻿
 @{
-    ViewData["Title"] = "Informes";
-    ViewData["Subtitle"] = "Encuestadores";
+    ViewData["Title"] = "Informe encuestadores";
+    ViewData["Subtitle"] = "";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var verFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
     var validarFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar" && c.Value == "1"));
+
+    var permisoExportar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado" && c.Value == "1"));
 }
 @Html.Hidden("code", "")
+@Html.Hidden("showExport", (permisoExportar ? 1 : 0))
 
 <div class="row mt-4">
     <div class="col-12 ">

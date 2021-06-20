@@ -464,9 +464,20 @@ namespace App_consulta.Controllers
                     var user = await userManager.FindByNameAsync(User.Identity.Name);
                     var encuestadorControl = new EncuestadorController(db, userManager, _env);
                     var respRelacionado = await encuestadorControl.GetResponsablesbyIdParent(user.IDDependencia, 1, 3);
-                    var cedulasValidas = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable)).Select(n => n.DNI.ToString()).ToListAsync();
 
-                    var dataFiltered = code != null ? data.Where(n => n.User == code).ToList() : data.Where(n => cedulasValidas.Contains(n.User)).ToList();
+                    var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable))
+                        .Select(n => new {
+                            cedula = n.DNI.ToString(),
+                            nombre = n.Name
+                        }).ToListAsync();
+
+                    var nombresEncuestadores = encuestadores.ToDictionary(n => n.cedula, n => n.nombre);
+                    var cedulasEncuestadores = encuestadores.Select(n => n.cedula).ToList();
+
+                    //Valida que las encuestas tengan datos
+                    data = data.Where(n => n.DNI != null && n.LocationCode != null).ToList();
+                    //Filtra las encuestas de acuerdo a los encuestadores validos
+                    var dataFiltered = code != null ? data.Where(n => n.User == code).ToList() : data.Where(n => cedulasEncuestadores.Contains(n.User)).ToList();
 
                     if (dataFiltered.Count > 0)
                     {
@@ -494,10 +505,12 @@ namespace App_consulta.Controllers
 
                         foreach (var item in dataFiltered)
                         {
+                            var nombreEncuestador = nombresEncuestadores.ContainsKey(item.User) ? nombresEncuestadores[item.User] : "";
                             var encuesta = new EncuestaDataModel
                             {
                                 IdKobo = item.IdKobo,
                                 User = item.User,
+                                UserName = nombreEncuestador,
                                 DNI = item.DNI,
                                 LocationCode = item.LocationCode,
                                 Datetime = item.Datetime,
@@ -554,9 +567,18 @@ namespace App_consulta.Controllers
                     var user = await userManager.FindByNameAsync(User.Identity.Name);
                     var encuestadorControl = new EncuestadorController(db, userManager, _env);
                     var respRelacionado = await encuestadorControl.GetResponsablesbyIdParent(user.IDDependencia, 1, 3);
-                    var cedulasValidas = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable)).Select(n => n.DNI.ToString()).ToListAsync();
 
-                    var dataFiltered = code != null ? data.Where(n => n.User == code).ToList() : data.Where(n => cedulasValidas.Contains(n.User)).ToList();
+                    var encuestadores = await db.Pollster.Where(n => respRelacionado.Contains(n.IdResponsable))
+                       .Select(n => new {
+                           cedula = n.DNI.ToString(),
+                           nombre = n.Name
+                       }).ToListAsync();
+
+                    var nombresEncuestadores = encuestadores.ToDictionary(n => n.cedula, n => n.nombre);
+                    var cedulasEncuestadores = encuestadores.Select(n => n.cedula).ToList();
+
+
+                    var dataFiltered = code != null ? data.Where(n => n.User == code).ToList() : data.Where(n => cedulasEncuestadores.Contains(n.User)).ToList();
 
                     if (dataFiltered.Count > 0)
                     {
@@ -573,10 +595,13 @@ namespace App_consulta.Controllers
                     
                         foreach (var item in dataFiltered)
                         {
+                            var nombreEncuestador = nombresEncuestadores.ContainsKey(item.User) ? nombresEncuestadores[item.User] : "";
+
                             var asociacion = new AsociacionDataModel
                             {
                                 IdKobo = item.IdKobo,
                                 User = item.User,
+                                UserName = nombreEncuestador,
                                 LocationCode = item.LocationCode,
                                 Datetime = item.Datetime,
                                 Mun = item.LocationCode,

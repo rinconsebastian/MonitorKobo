@@ -21,7 +21,7 @@ var funcLogs = {
             export: {
                 enabled: false,
                 fileName: "Listado_encuestadores_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
-                allowExportSelectedData: true
+                allowExportSelectedData: false
             },
 
             stateStoring: {

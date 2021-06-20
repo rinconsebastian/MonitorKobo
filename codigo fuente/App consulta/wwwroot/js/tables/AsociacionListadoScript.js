@@ -3,6 +3,7 @@ var root_A;
 var dataGrid_A;
 var source_A = "";
 
+var showExport = false;
 var showDNI_A = false;
 var code_A = "";
 //*********************************** funcAsoc ******************************************
@@ -18,9 +19,9 @@ var funcAsoc = {
             },
             noDataText: "No hay datos disponibles.",
             export: {
-                enabled: false,
-                fileName: "Listado_encuestas_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
-                allowExportSelectedData: true
+                enabled: showExport,
+                fileName: "Listado_asociaciones_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
+                allowExportSelectedData: false
             },
 
             stateStoring: {
@@ -82,47 +83,72 @@ var funcAsoc = {
             columns: [
 
                 {
-                    dataField: "user",
-                    caption: "Encuestador",
+                    dataField: "name",
+                    caption: "Nombre\r\nAsociación",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
-                    visible: showDNI_A,
-                    width: '150',
-                    hidingPriority: 1
+                    width: '250',
+                    hidingPriority: 6
+                },
+                {
+                    dataField: "mun",
+                    caption: "Muninicipio",
+                    alignment: "center",
+                    width: '120',
+                    hidingPriority: 4
+                },
+                {
+                    dataField: "dep",
+                    caption: "Departamento",
+                    alignment: "center",
+                    width: '120',
+                    hidingPriority: 2
                 },
                 {
                     dataField: "datetime",
                     caption: "Fecha",
                     alignment: "center",
-                    width: '200',
-                    hidingPriority: 5
+                    width: '100',
+                    hidingPriority: 5,
+                    dataType: "date",
+                    calculateFilterExpression: function (value, selectedFilterOperations, target) {
+                        if (target === "headerFilter" && value === "weekends") {
+                            return [[getOrderDay, "=", 0], "or", [getOrderDay, "=", 6]];
+                        }
+                        return this.defaultCalculateFilterExpression.apply(this, arguments);
+                    }
                 },
                 {
-                    dataField: "name",
-                    caption: "Nombre",
+                    dataField: "user",
+                    caption: "Cedula\r\nEncuestador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
-                    width: '250',
+                    visible: showDNI_A,
+                    width: '150',
                     hidingPriority: 3
                 },
                 {
-                    dataField: "dep",
-                    caption: "Depto.",
+                    dataField: "userName",
+                    caption: "Nombre\r\nEncuestador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
+                    visible: showDNI_A,
                     width: '200',
-                    hidingPriority: 2
+                    hidingPriority: 1
                 },
-                {
-                    dataField: "mun",
-                    caption: "Municipio",
-                    alignment: "center",
-                    width: '200',
-                    hidingPriority: 4
-                }
+                
             ],
             summary: {
                 totalItems: [{
                     column: "user",
                     summaryType: "count",
-                    showInColumn: "mun",
+                    showInColumn: "name",
                     displayFormat: "Total: {0}",
                 }],
 
@@ -150,6 +176,7 @@ var funcAsoc = {
         // Carga las variables de configuración.
         root_A = $('#Root').val();
         code_A = $('#code').val();
+        showExport = $('#showExport').val() == 1;
 
         if (typeof myShowDni !== "undefined") {
             showDNI_A = myShowDni;
@@ -175,7 +202,9 @@ var funcAsoc = {
 
 
 
-
+function getOrderDay(rowData) {
+    return (new Date(rowData.OrderDate)).getDay();
+}
 
 
 

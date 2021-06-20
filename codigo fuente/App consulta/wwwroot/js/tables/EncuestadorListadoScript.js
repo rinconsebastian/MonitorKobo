@@ -3,6 +3,7 @@ var root;
 var dataGrid;
 var source = "";
 
+var showExport = false;
 var showEditar = false;
 var showDelete = false;
 
@@ -21,9 +22,17 @@ var funcLE = {
             },
             noDataText: "No hay datos disponibles.",
             export: {
-                enabled: false,
+                enabled: showExport,
                 fileName: "Listado_encuestadores_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
-                allowExportSelectedData: true
+                allowExportSelectedData: false
+            },
+            onExporting: function (e) {
+                e.component.beginUpdate();
+                e.component.columnOption("Opciones", "visible", false);
+            },
+            onExported: function (e) {
+                e.component.columnOption("Opciones", "visible", true);
+                e.component.endUpdate();
             },
 
             stateStoring: {
@@ -95,40 +104,37 @@ var funcLE = {
                     dataField: "nombre",
                     caption: "Nombre",
                     alignment: "center",
-                    width: '180',
+                    width: '220',
                     hidingPriority: 8
                 },
-                {
-                    dataField: "departamento",
-                    caption: "Depto.",
-                    alignment: "center",
-                    width: '100',
-                    hidingPriority: 4
-
-
-                },
-
                 {
                     dataField: "municipio",
                     caption: "Municipio",
                     alignment: "center",
-                    width: '120',
-                    hidingPriority: 5
+                    width: '130',
+                    hidingPriority: 3
 
                 },
+                {
+                    dataField: "departamento",
+                    caption: "Departamento",
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 2
+                },                
                 {
                     dataField: "coordinacion",
                     caption: "Coordinación",
                     alignment: "center",
-                    width: '120',
-                    hidingPriority: 3
+                    width: '150',
+                    hidingPriority: 5
                 },
                 {
                     dataField: "telefono",
                     caption: "Teléfono",
                     alignment: "center",
                     width: '120',
-                    hidingPriority: 2
+                    hidingPriority: 4
                 },
                 {
                     dataField: "email",
@@ -139,16 +145,22 @@ var funcLE = {
                 },
                 {
                     dataField: "numeroEncuestas",
-                    caption: "Nº caract.",
+                    caption: "Nº\r\nCaracterizaciones",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
-                    width: '50',
+                    width: '100',
                     hidingPriority: 6
                 },
                 {
                     dataField: "numeroAsociaciones",
-                    caption: "Nº asocia",
+                    caption: "Nº\r\nAsociaciones",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
-                    width: '50',
+                    width: '100',
                     hidingPriority: 7
                 },
                 {
@@ -207,6 +219,7 @@ var funcLE = {
         // Carga las variables de configuración.
         root = $('#Root').val();
         source = root + "Encuestador/ListAjax/";
+        showExport = $('#showExport').val() == 1;
 
         showEditar = $('#ShowEdit').val() == 1;
         showDelete = $('#ShowDelete').val() == 1;

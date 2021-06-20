@@ -3,6 +3,7 @@ var root;
 var dataGrid;
 var source = "";
 
+var showExport = false;
 var showDNI = false;
 var showValidation = false;
 var loadValidation = false;
@@ -22,9 +23,35 @@ var funcLE = {
             },
             noDataText: "No hay datos disponibles.",
             export: {
-                enabled: false,
-                fileName: "Listado_encuestas_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
-                allowExportSelectedData: true
+                enabled: showExport,
+                fileName: "Listado_caracterizaciones_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
+                allowExportSelectedData: false
+            },
+            onExporting: function (e) {
+                e.component.beginUpdate();
+                if (showValidation) {
+                    e.component.columnOption("Opciones", "visible", false);
+                }
+
+                if (!showDNI) {
+                    if (showValidation) {
+                        e.component.columnOption("status", "visible", true);
+                    }
+                    e.component.columnOption("user", "visible", true);
+                    e.component.columnOption("userName", "visible", true);
+                }
+                
+            },
+            onExported: function (e) {
+                if (showValidation) {
+                    e.component.columnOption("Opciones", "visible", true);
+                }
+                if (!showDNI) {
+                    e.component.columnOption("status", "visible", false);
+                    e.component.columnOption("user", "visible", false);
+                    e.component.columnOption("userName", "visible", false);
+                }
+                e.component.endUpdate();
             },
 
             stateStoring: {
@@ -86,42 +113,68 @@ var funcLE = {
             columns: [
 
                 {
-                    dataField: "user",
-                    caption: "Encuestador",
-                    alignment: "center",
-                    visible: showDNI,
-                    width: '150',
-                    hidingPriority: 3
-                },
-                {
-                    dataField: "datetime",
-                    caption: "Fecha",
-                    alignment: "center",
-                    width: '200',
-                    hidingPriority: 7
-                },
-                {
                     dataField: "dni",
-                    caption: "Cedula",
-                    visible: showDNI,
+                    caption: "Cedula\r\nPescador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
-                    width: '150',
-                    hidingPriority: 2
+                    width: '120',
+                    hidingPriority: 8
                 },
               
                 {
                     dataField: "mun",
                     caption: "Municipio",
                     alignment: "center",
-                    width: '150',
+                    width: '120',
                     hidingPriority: 6
                 },
                 {
                     dataField: "dep",
-                    caption: "Depto.",
+                    caption: "Departamento",
                     alignment: "center",
                     width: '120',
-                    hidingPriority: 4
+                    hidingPriority: 2
+                },
+               
+                {
+                    dataField: "datetime",
+                    caption: "Fecha",
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 7,
+                    dataType: "date",
+                    calculateFilterExpression: function (value, selectedFilterOperations, target) {
+                        if (target === "headerFilter" && value === "weekends") {
+                            return [[getOrderDay, "=", 0], "or", [getOrderDay, "=", 6]];
+                        }
+                        return this.defaultCalculateFilterExpression.apply(this, arguments);
+                    }
+                },
+
+                {
+                    dataField: "user",
+                    caption: "Cedula\r\nEncuestador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
+                    alignment: "center",
+                    visible: showDNI,
+                    width: '120',
+                    hidingPriority: 3
+                },
+
+                {
+                    dataField: "userName",
+                    caption: "Nombre\r\nEncuestador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
+                    alignment: "center",
+                    visible: showDNI,
+                    width: '200',
+                    hidingPriority: 1
                 },
                 {
                     dataField: "status",
@@ -129,7 +182,7 @@ var funcLE = {
                     visible: (showValidation && showDNI),
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 1
+                    hidingPriority: 4
                 },
                 {
                     
@@ -137,7 +190,7 @@ var funcLE = {
                     visible: showValidation,
                     alignment: "center",
                     hidingPriority: 5,
-                    width: '100',
+                    width: '80',
                     cellTemplate: function (container, options) {
 
                         var idKobo = options.data.idKobo;
@@ -167,7 +220,7 @@ var funcLE = {
                 totalItems: [{
                     column: "user",
                     summaryType: "count",
-                    showInColumn: "mun",
+                    showInColumn: "dni",
                     displayFormat: "Total: {0}",
                 }],
 
@@ -241,6 +294,8 @@ var funcLE = {
         // Carga las variables de configuración.
         root = $('#Root').val();
         code = $('#code').val();
+
+        showExport = $('#showExport').val() == 1;
 
         if (typeof myShowDni !== "undefined") {
             showDNI = myShowDni;

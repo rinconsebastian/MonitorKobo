@@ -18,6 +18,7 @@ namespace App_consulta.Models
     {
         public string IdKobo { get; set; }
         public string User { get; set; }
+        public string UserName { get; set; }
         public string DNI { get; set; }
         public string LocationCode { get; set; }
         public string Dep { get; set; }
@@ -45,6 +46,7 @@ namespace App_consulta.Models
     {
         public string IdKobo { get; set; }
         public string User { get; set; }
+        public string UserName { get; set; }
         public string Name { get; set; }
         public string LocationCode { get; set; }
         public string Dep { get; set; }

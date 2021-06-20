@@ -8,9 +8,11 @@
     var permisoEditar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar" && c.Value == "1"));
     var permisoAdmin = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" && c.Value == "1"));
 
+    var permisoExportar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado" && c.Value == "1"));
 }
 @Html.Hidden("ShowDelete", (permisoAdmin ? 1 : 0))
 @Html.Hidden("ShowEdit", (permisoEditar ? 1 : 0))
+@Html.Hidden("showExport", (permisoExportar ? 1 : 0))
 
 <div class="card mt-4 mx-auto">
     <div class="card-body">
@@ -36,7 +38,6 @@
 </div>
 @section Scripts {
     <script type="text/javascript" src="~/lib/jquery/moment.js"></script>
-
     <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
     <script type="text/javascript" src="~/js/tables/EncuestadorListadoScript.js"></script>
 }

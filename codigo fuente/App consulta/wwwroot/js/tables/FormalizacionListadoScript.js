@@ -3,6 +3,7 @@ var root;
 var dataGrid;
 var source = "";
 
+var showExport = false;
 var ShowValidar = false;
 
 
@@ -21,11 +22,18 @@ var funcForm = {
             },
             noDataText: "No hay datos disponibles.",
             export: {
-                enabled: false,
-                fileName: "Listado_encuestadores_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
-                allowExportSelectedData: true
+                enabled: showExport,
+                fileName: "Listado_formalizaciones_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
+                allowExportSelectedData: false
             },
-
+            onExporting: function (e) {
+                e.component.beginUpdate();
+                e.component.columnOption("Opciones", "visible", false);
+            },
+            onExported: function (e) {
+                e.component.columnOption("Opciones", "visible", true);
+                e.component.endUpdate();
+            },
             stateStoring: {
                 enabled: false,
                 type: "localStorage",
@@ -77,56 +85,65 @@ var funcForm = {
 
                 {
                     dataField: "cedula",
-                    caption: "Cedula",
+                    caption: "Cedula\r\nPescador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 2,
+                    hidingPriority: 8,
                 },
                 {
                     dataField: "nombre",
-                    caption: "Nombre",
+                    caption: "Nombre\r\nPescador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
                     alignment: "center",
-                    width: '200',
-                    hidingPriority: 3,
+                    width: '220',
+                    hidingPriority: 7,
                 },
                 {
                     dataField: "municipio",
-                    caption: "Municipio",
+                    caption: "Muninicipio",
                     alignment: "center",
-                    width: '200',
-                    hidingPriority: 4,
-                    cellTemplate: function (container, options) {
-                        var dep = options.data.departamento;
-                        var mun = options.data.municipio;
-
-                        var contenido = mun + ' (' + dep + ')';
-
-                        $("<div class='preventSelection'>")
-                            .append(contenido)
-                            .appendTo(container);
-                    }
-
+                    width: '130',
+                    hidingPriority: 6
+                },
+                {
+                    dataField: "departamento",
+                    caption: "Departamento",
+                    alignment: "center",
+                    width: '130',
+                    hidingPriority: 1
                 },
                 {
                     dataField: "coordinacion",
                     caption: "Coordinación",
                     alignment: "center",
-                    width: '200',
-                    hidingPriority: 5
+                    width: '220',
+                    hidingPriority: 4
                 },
                 {
                     dataField: "fecha",
                     caption: "Fecha",
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 7
+                    hidingPriority: 5,
+                    dataType: "date",
+                    calculateFilterExpression: function (value, selectedFilterOperations, target) {
+                        if (target === "headerFilter" && value === "weekends") {
+                            return [[getOrderDay, "=", 0], "or", [getOrderDay, "=", 6]];
+                        }
+                        return this.defaultCalculateFilterExpression.apply(this, arguments);
+                    }
                 },
                 {
                     dataField: "nombreEstado",
                     caption: "Estado",
                     alignment: "center",
-                    width: '100',
-                    hidingPriority: 6,
+                    width: '80',
+                    hidingPriority: 2,
                     cellTemplate: function (container, options) {
                         var nombre = options.data.nombreEstado;
                         var color = "";
@@ -156,8 +173,8 @@ var funcForm = {
                     caption: "Opciones",
                     alignment: "center",
                     allowHeaderFiltering: false,
-                    width: '100',
-                    hidingPriority: 1,
+                    width: '80',
+                    hidingPriority: 3,
                     cellTemplate: function (container, options) {
 
                         var formId = options.data.id;
@@ -209,7 +226,7 @@ var funcForm = {
         // Carga las variables de configuración.
         root = $('#Root').val();
         source = root + "Formalizacion/Ajax/";
-
+        showExport = $('#showExport').val() == 1;
 
         ShowValidar = $('#ShowValidate').val() == 1;
 
