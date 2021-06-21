@@ -5,7 +5,6 @@
     ViewData["Subtitle"] = "";
     Layout = "~/Views/Shared/_LayoutPrint.cshtml";
 
-    var time = DateTime.Now.ToString("u");
 
     var disabled = Model.Count() > 0 ? "" : "disabled";
 }
@@ -30,7 +29,7 @@
                             <tbody>
                                 <tr>
                                     <td rowspan="4" class="text-center">
-                                        <img class="img-mini" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador, time = time })" alt="Foto pescador" />
+                                        @await Component.InvokeAsync("Image", new { file = formalz.ImgPescador, text = "Foto pescador", css = "img-mini" })
                                     </td>
                                 </tr>
                                 <tr>
@@ -96,7 +95,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgSolicitudCarnet, time = time })" alt="Image Documento Original" />
+                        @await Component.InvokeAsync("Image", new { file = formalz.ImgSolicitudCarnet, text = "Image Documento Original", css = "img-large" })
                     </td>
                 </tr>
             </tbody>
@@ -141,10 +140,10 @@
                 </tr>
                 <tr>
                     <td colspan="2" rowspan="3" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgPescador, time = time })" alt="Fotografía Pescador Artesanal" />
+                        @await Component.InvokeAsync("Image", new { file = formalz.ImgPescador, text = "Fotografía Pescador Artesanal", css = "img-small" })
                     </td>
                     <td colspan="2" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaAnverso, time = time })" alt="Image Cédula del pescador (Anverso)" />
+                        @await Component.InvokeAsync("Image", new { file = formalz.ImgCedulaAnverso, text = "Cédula del pescador (Anverso)", css = "img-small" })
                     </td>
                 </tr>
                 <tr>
@@ -152,7 +151,7 @@
                 </tr>
                 <tr>
                     <td colspan="2" class="text-center">
-                        <img class="img-small" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCedulaReverso, time = time })" alt="Image Cédula del pescador (Reverso)" />
+                        @await Component.InvokeAsync("Image", new { file = formalz.ImgCedulaReverso, text = "Cédula del pescador (Reverso)", css = "img-small" })
                     </td>
                 </tr>
             </tbody>
@@ -194,7 +193,7 @@
                 </tr>
                 <tr>
                     <td colspan="4" class="text-center">
-                        <img class="img-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = formalz.ImgCertificacion, time = time })" alt="Image Documento Original" />
+                        @await Component.InvokeAsync("Image", new { file = formalz.ImgCertificacion, text = "Image Documento Original", css = "img-large" })
                     </td>
                 </tr>
             </tbody>

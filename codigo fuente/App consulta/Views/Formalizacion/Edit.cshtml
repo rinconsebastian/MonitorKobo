@@ -14,7 +14,6 @@
     var listaCoordinacion = (SelectList)ViewBag.Coordinaciones;
     var listaEstados = (SelectList)ViewBag.Estados;
 
-    var time = DateTime.Now.ToString("u");
 }
 @Html.Hidden("IdFormalizacion", Model.Id)
 @Html.Hidden("PathStorage", @Url.Action("ViewImage", "Formalizacion"))
@@ -220,7 +219,7 @@
             </div>
             <div class="tab-pane fade" id="tab-5" role="tabpanel" aria-labelledby="tab-5">
                 <div class="text-center py-4 px-1">
-                    <img id="img-pescador" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgPescador, time = time })" alt="Foto pescador" />
+                    @await Component.InvokeAsync("Image", new { file = Model.ImgPescador, text = "Foto pescador", css = "img-detail-large", id = "img-pescador" })
                     @if (Model.ImgPescador != null && Model.ImgPescador != "")
                     {
                         <br />
@@ -233,7 +232,7 @@
             </div>
             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="tab-2">
                 <div class="text-center py-4 px-1">
-                    <img id="img-solicitud" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgSolicitudCarnet, time = time })" alt="Foto Solicitud" />
+                    @await Component.InvokeAsync("Image", new { file = Model.ImgSolicitudCarnet, text = "Foto solicitud", css = "img-detail-large", id = "img-solicitud" })
                     @if (Model.ImgSolicitudCarnet != null && Model.ImgSolicitudCarnet != "")
                     {
                         <br />
@@ -246,7 +245,7 @@
             </div>
             <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="tab-3">
                 <div class="text-center py-4 px-1">
-                    <img id="img-certificado" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCertificacion, time = time })" alt="Foto certificación" />
+                    @await Component.InvokeAsync("Image", new { file = Model.ImgCertificacion, text = "Foto certificación", css = "img-detail-large", id = "img-certificado" })
                     @if (Model.ImgCertificacion != null && Model.ImgCertificacion != "")
                     {
                         <br />
@@ -261,7 +260,7 @@
             <div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="tab-4">
                 <div class="row">
                     <div class="col-12 col-sm-6 text-center py-4 px-1">
-                        <img id="img-cedula-a" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaAnverso, time = time })" alt="Foto cédula" />
+                        @await Component.InvokeAsync("Image", new { file = Model.ImgCedulaAnverso, text = "Foto cédula", css = "img-detail-large", id = "img-cedula-a" })
                         @if (Model.ImgCedulaAnverso != null && Model.ImgCedulaAnverso != "")
                         {
                             <br />
@@ -272,7 +271,7 @@
                         }
                     </div>
                     <div class="col-12 col-sm-6 text-center py-4 px-1">
-                        <img id="img-cedula-r" class="img-detail-large" src="@Url.Action("ViewImage", "Formalizacion", new { filename = Model.ImgCedulaReverso, time = time })" alt="Foto cédula reverso" />
+                        @await Component.InvokeAsync("Image", new { file = Model.ImgCedulaReverso, text = "Foto cédula reverso", css = "img-detail-large", id = "img-cedula-r" })
                         @if (Model.ImgCedulaReverso != null && Model.ImgCedulaReverso != "")
                         {
                             <br />
