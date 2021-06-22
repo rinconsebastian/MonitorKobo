@@ -120,7 +120,7 @@ var funcLE = {
                     caption: "Departamento",
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 2
+                    hidingPriority: 4
                 },                
                 {
                     dataField: "coordinacion",
@@ -134,7 +134,7 @@ var funcLE = {
                     caption: "Teléfono",
                     alignment: "center",
                     width: '120',
-                    hidingPriority: 4
+                    hidingPriority: 2
                 },
                 {
                     dataField: "email",
@@ -190,12 +190,24 @@ var funcLE = {
                 }
             ],
             summary: {
-                totalItems: [{
-                    column: "id",
-                    summaryType: "count",
-                    showInColumn: "cedula",
-                    displayFormat: "Total: {0}",
-                }],
+                totalItems: [
+                    {
+                        column: "id",
+                        summaryType: "count",
+                        showInColumn: "cedula",
+                        displayFormat: "Total: {0}",
+                    },
+                    {
+                        column: "numeroAsociaciones",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                    },
+                    {
+                        column: "numeroEncuestas",
+                        summaryType: "sum",
+                        displayFormat: "{0}",
+                    },
+                ],
 
             },
 
