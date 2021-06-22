@@ -25,5 +25,9 @@ namespace App_consulta.Models
         [Display(Name = "Nombre Kobo")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Value { get; set; }
+
+        [Display(Name = "Grupo")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public int Group { get; set; }
     }
 }

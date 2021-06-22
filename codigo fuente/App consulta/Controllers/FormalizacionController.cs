@@ -111,7 +111,10 @@ namespace App_consulta.Controllers
         public async Task<ActionResult> Print(int[] ids)
         {
             var formalizaciones = await db.Formalization.Where(n => ids.Contains(n.Id)).ToListAsync();
-            ViewBag.Ids = JsonConvert.SerializeObject(ids);
+            var estadosValidos = new List<int> { Formalization.ESTADO_COMPLETO, Formalization.ESTADO_IMPRESO };
+            ViewBag.EstadosValidos = estadosValidos;
+            var idsValidos = formalizaciones.Where(n => estadosValidos.Contains(n.Estado)).Select(n => n.Id).ToList();
+            ViewBag.Ids = JsonConvert.SerializeObject( idsValidos );
             return View(formalizaciones);
         }
 
@@ -176,7 +179,7 @@ namespace App_consulta.Controllers
 
                 var log = new Logger(db);
                 var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "ChangeStatus", Modelo = "Formalization", ValAnterior = anterior, ValNuevo = formalizacion };
-                await log.Registrar(registro, typeof(Formalization));
+                await log.Registrar(registro, typeof(Formalization), formalizacion.Id);
 
                 //var nombreEstado = GetEstado(estado).ToUpper();
                 //r.Message = "El estado de la formalización fue cambiado ha " + nombreEstado + " correctamente.";
@@ -221,7 +224,7 @@ namespace App_consulta.Controllers
 
                     var log = new Logger(db);
                     var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "Print", Modelo = "Formalization", ValAnterior = anterior, ValNuevo = formalizacion };
-                    await log.Registrar(registro, typeof(Formalization));
+                    await log.Registrar(registro, typeof(Formalization), formalizacion.Id);
 
                     success++;
                 }
@@ -274,7 +277,7 @@ namespace App_consulta.Controllers
 
                 var log = new Logger(db);
                 var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "Edit", Modelo = "Formalization", ValAnterior = anterior, ValNuevo = original };
-                await log.Registrar(registro, typeof(Formalization));
+                await log.Registrar(registro, typeof(Formalization), formalizacion.Id);
 
                 HttpContext.Session.SetComplex("error", "Los datos fueron actualizados correctamente.");
 

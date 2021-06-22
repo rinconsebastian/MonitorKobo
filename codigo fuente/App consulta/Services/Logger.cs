@@ -22,7 +22,7 @@ namespace App_consulta.Services
 
         }
 
-        public async Task<string> Registrar(RegistroLog registro,Type oType = null)
+        public async Task<string> Registrar(RegistroLog registro,Type oType, int id)
         {
             // await Task.Run(() => {});
 
@@ -67,7 +67,7 @@ namespace App_consulta.Services
                         Usuario = registro.Usuario,
                         Fecha = DateTime.Now,
                         Accion = registro.Accion,
-                        Modelo = registro.Modelo,
+                        Modelo = registro.Modelo + " " + id,
                         ValAnterior = anterior,
                         ValNuevo = nuevo
                     };

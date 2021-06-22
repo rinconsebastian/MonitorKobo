@@ -7,9 +7,12 @@
 
     var permisoValidar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar" && c.Value == "1"));
     var permisoExportar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado" && c.Value == "1"));
+    var permisoImprimir = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir" && c.Value == "1"));
 }
 @Html.Hidden("ShowValidate", (permisoValidar ? 1 : 0))
 @Html.Hidden("showExport", (permisoExportar ? 1 : 0))
+@Html.Hidden("showPrint", (permisoImprimir ? 1 : 0))
+@Html.Hidden("urlPrint", Url.Action("Print", "Formalizacion"))
 
 <div class="card mt-4 mx-auto">
     <div class="card-body">
@@ -29,7 +32,7 @@
 </div>
 @section Scripts {
     <script type="text/javascript" src="~/lib/jquery/moment.js"></script>
-    
+
     <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
     <script type="text/javascript" src="~/js/tables/FormalizacionListadoScript.js"></script>
 }

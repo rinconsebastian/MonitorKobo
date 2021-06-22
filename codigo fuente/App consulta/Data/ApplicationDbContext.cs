@@ -139,23 +139,26 @@ namespace App_consulta.Data
             //Permisos rol administrador
             var formalizacionConfigs = new List<FormalizationConfig>
             {
-                new FormalizationConfig() { Id = 1, Name="Id Kobo", Field = "IdKobo", Value = "_id"},
-                new FormalizationConfig() { Id = 2, Name="Número registro", Field = "NumeroRegistro", Value = "_id"},
-                new FormalizationConfig() { Id = 3, Name="Nombre y apellidos", Field = "Name", Value = ""},
-                new FormalizationConfig() { Id = 4, Name="Fecha solicitud", Field = "FechaSolicitud", Value = "_id"},
-                new FormalizationConfig() { Id = 5, Name="Cédula pescador" ,Field = "Cedula", Value = "_id"},
-                new FormalizationConfig() { Id = 6, Name="Departamento", Field = "Departamento", Value = "_id"},
-                new FormalizationConfig() { Id = 7, Name="Municipio", Field = "Municipio", Value = "_id"},
-                new FormalizationConfig() { Id = 8, Name="Área de pesca", Field = "AreaPesca", Value = "_id"},
+                new FormalizationConfig() { Id = 1, Name="Id Kobo", Field = "IdKobo", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id = 2, Name="Número registro", Field = "NumeroRegistro", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id = 3, Name="Nombre y apellidos", Field = "Name", Value = "", Group = 1},
+                new FormalizationConfig() { Id = 4, Name="Fecha solicitud", Field = "FechaSolicitud", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id = 5, Name="Cédula pescador" ,Field = "Cedula", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id = 6, Name="Departamento", Field = "Departamento", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id = 7, Name="Municipio", Field = "Municipio", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id = 8, Name="Área de pesca", Field = "AreaPesca", Value = "_id", Group = 1},
                 new FormalizationConfig() { Id = 9, Name="Artes de pesca", Field = "ArtesPesca", Value = "_id"},
-                new FormalizationConfig() { Id =10, Name="Nombre asociación", Field = "NombreAsociacion", Value = "_id"},
-                new FormalizationConfig() { Id =11, Name="Foto pescador", Field = "ImgPescador", Value = "_id"},
-                new FormalizationConfig() { Id =12, Name="Foto solicitud carnet", Field = "ImgSolicitudCarnet", Value = "_id"},
-                new FormalizationConfig() { Id =13, Name="Foto certificación", Field = "ImgCertificacion", Value = "_id"},
-                new FormalizationConfig() { Id =14, Name="Foto cédula (anverso)", Field = "ImgCedulaAnverso", Value = "_id"},
-                new FormalizationConfig() { Id =15, Name="Foto cédula (reverso)", Field = "ImgCedulaReverso", Value = "_id"},
-                new FormalizationConfig() { Id =16, Name="Firma digital", Field = "ImgFirmaDigital", Value = "_id"},
-                new FormalizationConfig() { Id =17, Name="Cedula Encuestador", Field = "Encuestador", Value = "_id"},
+                new FormalizationConfig() { Id =10, Name="Nombre asociación", Field = "NombreAsociacion", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =11, Name="Foto pescador", Field = "ImgPescador", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =12, Name="Foto solicitud carnet", Field = "ImgSolicitudCarnet", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =13, Name="Foto certificación", Field = "ImgCertificacion", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =14, Name="Foto cédula (anverso)", Field = "ImgCedulaAnverso", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =15, Name="Foto cédula (reverso)", Field = "ImgCedulaReverso", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =16, Name="Firma digital", Field = "ImgFirmaDigital", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =17, Name="Cedula Encuestador", Field = "Encuestador", Value = "_id", Group = 1},
+                new FormalizationConfig() { Id =18, Name="Zona pesca (Tipo)", Field = "zonaTipo", Value = "_id", Group = 2},
+                new FormalizationConfig() { Id =19, Name="Zona pesca (Nombre)", Field = "zonaNombre", Value = "_id", Group = 2},
+                new FormalizationConfig() { Id =20, Name="Zona pesca (Otro)", Field = "zonaOtro", Value = "_id", Group = 2},
                 };
             modelBuilder.Entity<FormalizationConfig>().HasData(formalizacionConfigs);
 
@@ -187,6 +190,7 @@ namespace App_consulta.Data
                 new FormalizationVariable() { Id = 21, Key="9", Value = "Redes de enmalle", Group = "Arte"},
                 new FormalizationVariable() { Id = 22, Key="10", Value = "Trampas/nasas", Group = "Arte"},
                 new FormalizationVariable() { Id = 23, Key="11", Value = "Trasmallo", Group = "Arte"},
+                new FormalizationVariable() { Id = 24, Key="12", Value = "Otro", Group = "Arte"},
                 };
             modelBuilder.Entity<FormalizationVariable>().HasData(variables);
 

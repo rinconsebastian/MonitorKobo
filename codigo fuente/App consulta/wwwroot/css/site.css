@@ -1278,3 +1278,8 @@ input, select, textarea {
     height: 38px;
     margin-left: 10px;
 }
+
+.td-formali-conf {
+    max-width: 50vw;
+    overflow-x: auto;
+}

@@ -119,7 +119,7 @@ namespace App_consulta.Controllers
                 await db.SaveChangesAsync();
 
                 var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "Edit", Modelo = "Configuracion", ValAnterior = original, ValNuevo = configuracion };
-                await log.Registrar(registro, typeof(Configuracion));
+                await log.Registrar(registro, typeof(Configuracion), 0);
 
                 return RedirectToAction("Index2");
             }

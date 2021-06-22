@@ -1,12 +1,22 @@
 ﻿@model IEnumerable<App_consulta.Models.Formalization>
 
 @{
-    ViewData["Title"] = "Imprimir Formalización";
+    ViewData["Title"] = "Imprimir formalizaciones";
     ViewData["Subtitle"] = "";
     Layout = "~/Views/Shared/_LayoutPrint.cshtml";
 
+    if (Model.Count() == 1)
+    {
+        ViewData["Title"] = "Formalizacion_" + Model.First().NumeroRegistro;
+    }
+    else if (Model.Count() > 1)
+    {
+        ViewData["Title"] = "Fichas formalizaciones";
+    }
 
     var disabled = Model.Count() > 0 ? "" : "disabled";
+
+    var estadosValidos = ViewBag.EstadosValidos;
 }
 
 <div class="row my-4 d-print-none ">
@@ -26,14 +36,41 @@
                 {
                     <div class="d-print-none">
                         <table class="table table-bordered table-formalz  table-sm">
-                            <tbody>
+                            <tbody class="@(!estadosValidos.Contains(formalz.Estado) ? "text-danger" : "")">
+                                @switch (formalz.Estado)
+                                {
+                                    case Formalization.ESTADO_CANCELADO:
+                                        <tr class="text-danger text-center"><td colspan="5"><b>Formalización cancelada</b>, no puede ser impresa</td></tr>
+                                        break;
+                                    case Formalization.ESTADO_BORRADOR:
+                                        <tr class="text-danger text-center"><td colspan="5"><b>Formalización en borrador</b>, no puede ser impresa</td></tr>
+                                        break;
+                                }
                                 <tr>
                                     <td rowspan="4" class="text-center">
                                         @await Component.InvokeAsync("Image", new { file = formalz.ImgPescador, text = "Foto pescador", css = "img-mini" })
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="4" class="font-weight-bold text-uppercase">@formalz.Name</td>
+                                    <td colspan="2" class="font-weight-bold text-uppercase">@formalz.Name</td>
+                                    <td class="font-weight-light">Estado</td>
+                                    <td class="text-center">
+                                        @switch (formalz.Estado)
+                                        {
+                                            case Formalization.ESTADO_BORRADOR:
+                                                <span class="badge bg-warning text-dark">Borrador</span>
+                                                break;
+                                            case Formalization.ESTADO_COMPLETO:
+                                                <span class="badge bg-success text-white">Completo</span>
+                                                break;
+                                            case Formalization.ESTADO_CANCELADO:
+                                                <span class="badge bg-danger text-white">Cancelado</span>
+                                                break;
+                                            case Formalization.ESTADO_IMPRESO:
+                                                <span class="badge bg-info text-white">Impreso</span>
+                                                break;
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="font-weight-light">Fecha de solicitud</td>
@@ -62,7 +99,10 @@
 
 @foreach (var formalz in Model)
 {
-
+    if (!estadosValidos.Contains(formalz.Estado))
+    {
+        continue;
+    }
     <div class="page-f d-none d-print-block">
         @await Html.PartialAsync("_FormalizacionPartial")
         <p class="font-weight-bold text-center">INFORMACIÓN GENERAL</p>
@@ -126,6 +166,14 @@
                     <td>@formalz.Cedula</td>
                     <td class="font-weight-bold">Municipio</td>
                     <td>@formalz.Municipio - @formalz.Departamento</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"> Área de pesca</td>
+                    <td colspan="3">@formalz.AreaPesca</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"> Artes de pesca</td>
+                    <td colspan="3">@formalz.ArtesPesca</td>
                 </tr>
                 <tr>
                     <td class="font-weight-bold"> Nombre del formato</td>

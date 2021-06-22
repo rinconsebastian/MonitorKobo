@@ -23,7 +23,21 @@ var funcAsoc = {
                 fileName: "Listado_asociaciones_" + moment().format("DD-MM-YYYY_hh-mm-ss"),
                 allowExportSelectedData: false
             },
+            onExporting: function (e) {
+                e.component.beginUpdate();
+                if (!showDNI_A) {
+                    e.component.columnOption("user", "visible", true);
+                    e.component.columnOption("userName", "visible", true);
+                }
 
+            },
+            onExported: function (e) {
+                if (!showDNI_A) {
+                    e.component.columnOption("user", "visible", false);
+                    e.component.columnOption("userName", "visible", false);
+                }
+                e.component.endUpdate();
+            },
             stateStoring: {
                 enabled: false,
                 type: "localStorage",
@@ -185,7 +199,7 @@ var funcAsoc = {
          if (code_A != "") {
              source_A = root_A + "Kobo/ListadoAsociacionesUsuario/?code=" + code_A;
         } else {
-             source_A = root_A + "Kobo/ListadoAsociacionesUsuario";
+             source_A = root_A + "Kobo/ListadoAsociaciones";
         }
 
 

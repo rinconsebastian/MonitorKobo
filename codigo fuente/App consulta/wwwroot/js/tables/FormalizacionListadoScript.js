@@ -5,18 +5,29 @@ var source = "";
 
 var showExport = false;
 var ShowValidar = false;
-
+var showPrint = false;
+var urlPrint = "";
 
 //*********************************** funcForm ******************************************
 
 var funcForm = {
-
+    imprimirMultiple: function (seleccion) {
+        if (seleccion.length > 0) {
+            var ids = $.map(seleccion, function (n, i) {
+                return n.id+"";
+            });
+            var url = urlPrint + "?ids=" + ids.join('&ids=');
+            var myWindow = window.open(url, "_blank", "toolbar=no,titlebar=no,menubar=no,scrollbars=yes,resizable=no,top=0,left=386,width=1000,height=700");
+        } else {
+            DevExpress.ui.notify("No hay formalizaciones seleccionadas.", 'warning', 3000);
+        }
+    },
 
     instanceDataGrid: function () {
         dataGrid = $("#gridContainer").dxDataGrid({
             dataSource: source,
             selection: {
-                mode: "none",
+                mode: showPrint ? "multiple" : "none",
                 showCheckBoxesMode: "always",
                 selectAllMode: "allPages"
             },
@@ -27,7 +38,7 @@ var funcForm = {
                 allowExportSelectedData: false
             },
             onExporting: function (e) {
-                e.component.beginUpdate();
+                e.component.beginUpdate();F
                 e.component.columnOption("Opciones", "visible", false);
             },
             onExported: function (e) {
@@ -217,7 +228,20 @@ var funcForm = {
                                 dataGrid.refresh();
                             }
                         }
-                    });
+                    },
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
+                            icon: "print",
+                            visible: showPrint,
+                            onClick: function () {
+                                var seleccion = dataGrid.option('selectedRowKeys');
+                                funcForm.imprimirMultiple(seleccion);
+                            }
+                        }
+                    }
+                );
             }
         }).dxDataGrid('instance');
     },
@@ -227,6 +251,8 @@ var funcForm = {
         root = $('#Root').val();
         source = root + "Formalizacion/Ajax/";
         showExport = $('#showExport').val() == 1;
+        showPrint = $('#showPrint').val() == 1;
+        urlPrint = $('#urlPrint').val();
 
         ShowValidar = $('#ShowValidate').val() == 1;
 

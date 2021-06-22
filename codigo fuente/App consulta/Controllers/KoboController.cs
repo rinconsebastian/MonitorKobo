@@ -81,7 +81,7 @@ namespace App_consulta.Controllers
 
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
-            var configFormalizacion = await db.FormalizationConfig.Where(n => n.Field != "" && n.Value != "").ToListAsync();
+            var configFormalizacion = await db.FormalizationConfig.Where(n => n.Group == 1 &&  n.Field != "" && n.Value != "").ToListAsync();
 
             var fields = JsonConvert.SerializeObject(configFormalizacion.Select(n => n.Value).ToArray() );
             var query = JsonConvert.SerializeObject(new { _id = idKobo });
@@ -139,29 +139,81 @@ namespace App_consulta.Controllers
                 }
                 var imageErrors = false;
 
+                //variables de formalizacion
+                var artes = await db.FormalizationVariable.Where(n => n.Group == "Arte")
+                    .ToDictionaryAsync(n => n.Key, n => n.Value);
+                var zonas = await db.FormalizationVariable.Where(n => n.Group == "Zona")
+                    .ToDictionaryAsync(n => n.Key, n => n.Value);
+                var configZonas = await db.FormalizationConfig.Where(n => n.Group == 2 && n.Field != "" && n.Value != "").ToListAsync();
+                var czTipo = configZonas.Where(n => n.Field == "zonaTipo").Select(n => n.Value).FirstOrDefault();
+                var czNombre = configZonas.Where(n => n.Field == "zonaNombre").Select(n => n.Value).FirstOrDefault();
+
                 var map = configFormalizacion.ToDictionary(n => n.Field, n => n.Value);
+
 
                 var oType = typeof(Formalization);
                 foreach (var oProperty in oType.GetProperties())
                 {
                     var name = oProperty.Name;
-
+                    var value = "";
                     if (map.ContainsKey(name))
                     {
                         var fieldName = map[name];
-                        var value = (String)result[fieldName];
-
-                        //Si es una campo de imagen descarga el adjunto
-                        if (name.StartsWith("Img") && value != null && value != "")
+                        if (name == "AreaPesca")
                         {
-                            var filePath = DownloadFile(remoteUri, value, _path, _relative, config.KoboApiToken);
-                            if(filePath == "")
-                            {
-                                imageErrors = true;
-                                break;
+                            var arrZona = result[fieldName];
+                            if(arrZona != null) {
+                                var listResult = new List<string>();
+                                foreach (var a in arrZona)
+                                {
+                                    var zonaAux = "";
+
+                                    var tipoZona = (String)a[czTipo];
+                                    zonaAux = tipoZona != null && tipoZona != "" ? GetValueForVariables(tipoZona, zonas) + " " : "";
+
+                                    var nombreZona = (String)a[czNombre];
+                                    zonaAux += nombreZona != null && nombreZona != "" ? "'" +nombreZona +"'" : "";
+
+                                    if (zonaAux != "")
+                                    {
+                                        listResult.Add(zonaAux);
+                                    }
+                                   
+                                }
+                                value = listResult.Count > 0 ? String.Join(", ", listResult) : "";
                             }
-                            value = filePath;
                         }
+                        else if (name == "ArtesPesca")
+                        {
+                            var auxValue = (String)result[fieldName];
+                            if(auxValue != null & auxValue != "")
+                            {
+                                var idsList = auxValue.Split(' ').ToList();
+                                var listResult = new List<string>();
+                                foreach(var idArte in idsList)
+                                {
+                                    listResult.Add(GetValueForVariables(idArte, artes));
+                                }
+                                value = listResult.Count > 0 ? String.Join(", ", listResult) : "" ;
+                            }
+                        }
+                        else
+                        {
+                            value = (String)result[fieldName];
+
+                            //Si es una campo de imagen descarga el adjunto
+                            if (name.StartsWith("Img") && value != null && value != "")
+                            {
+                                var filePath = DownloadFile(remoteUri, value, _path, _relative, config.KoboApiToken);
+                                if (filePath == "")
+                                {
+                                    imageErrors = true;
+                                    break;
+                                }
+                                value = filePath;
+                            }
+                        }
+                        
                         oProperty.SetValue(formalizacion, value == null ? "" : value, null);
                     }
                 }
@@ -194,7 +246,7 @@ namespace App_consulta.Controllers
                     r.Success = true;
 
                     var registro = new RegistroLog { Usuario = identity, Accion = "Create", Modelo = "Formalization", ValNuevo = formalizacion };
-                    await log.Registrar(registro, typeof(Formalization));
+                    await log.Registrar(registro, typeof(Formalization), formalizacion.Id);
 
                 }
                 catch (Exception e){r.Message = e.InnerException.Message; return r;}
@@ -204,6 +256,20 @@ namespace App_consulta.Controllers
                 r.Message = "ERROR: No se encuentran resultados."; return r;
             }
 
+            return r;
+        }
+
+        private string GetValueForVariables(string key, Dictionary<string, string> values)
+        {
+            var r = "";
+            if (values.ContainsKey(key))
+            {
+                r = values[key];
+            }
+            else
+            {
+                r = key;
+            }
             return r;
         }
 
@@ -303,40 +369,23 @@ namespace App_consulta.Controllers
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var mapParams = JsonConvert.DeserializeObject<EncuestaMap>(config.KoboParamsMap);
             var fields= JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation, mapParams.DNI });
-            var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUid + "/submissions/?format=json&fields=" + HttpUtility.UrlEncode(fields);
+            var sort = "&sort=%7B%22_id%22%3A1%7D";
+            var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUid + "/submissions/?format=json&fields=" + HttpUtility.UrlEncode(fields) + sort;
 
-       
-            String resp;
+             String resp;
 
             try
             {
 
                 //Consulta la información
-                var client = new HttpClient();
-                client.DefaultRequestHeaders.Add("Authorization", "Token " + config.KoboApiToken);
-                HttpResponseMessage response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
+                var encuestas = await GetDataFromUrl(url, config.KoboApiToken, mapParams);
 
-                string responseBody = await response.Content.ReadAsStringAsync();
-             
-                dynamic data = JsonConvert.DeserializeObject(responseBody);
-                //Valida que se cargaran resultados
-                if (data == null) { return "ERROR: No fue posible recuperar la información"; }
-
-                //Mapea los resultados
-                var encuestas = new List<EncuestaMap>();
-
-                foreach (var result in data)
+                //Consulta los siguientes 30.000 registros
+                if (encuestas.Count == 30000)
                 {
-                    encuestas.Add(new EncuestaMap()
-                    {
-                        IdKobo = (String)result[mapParams.IdKobo],
-                        User = (String)result[mapParams.User],
-                        LocationCode = (String)result[mapParams.LocationCode],
-                        Datetime = (String)result[mapParams.Datetime],
-                        Validation = (String)result[mapParams.Validation],
-                        DNI = (String)result[mapParams.DNI],
-                    });
+                    //var sort = JsonConvert.SerializeObject(new { _id = 1 });
+                    var limit = "&start=30000";
+                    encuestas.AddRange(await GetDataFromUrl(url + limit, config.KoboApiToken, mapParams));
                 }
 
                 //Guarda la información mapeada en el archivo .json
@@ -356,6 +405,38 @@ namespace App_consulta.Controllers
                 resp = "ERROR: " + e.Message;
             }
             return resp;
+        }
+
+        private async Task<List<EncuestaMap>> GetDataFromUrl(string url, string token, EncuestaMap mapParams)
+        {
+            var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("Authorization", "Token " + token);
+            HttpResponseMessage response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            string responseBody = await response.Content.ReadAsStringAsync();
+
+            dynamic data = JsonConvert.DeserializeObject(responseBody);
+
+            //Valida que se cargaran resultados
+            var encuestas = new List<EncuestaMap>();
+            if (data == null) { return encuestas; }
+
+            
+            foreach (var result in data)
+            {
+                encuestas.Add(new EncuestaMap()
+                {
+                    IdKobo = (String)result[mapParams.IdKobo],
+                    User = (String)result[mapParams.User],
+                    LocationCode = (String)result[mapParams.LocationCode],
+                    Datetime = (String)result[mapParams.Datetime],
+                    Validation = (String)result[mapParams.Validation],
+                    DNI = (String)result[mapParams.DNI],
+                });
+            }
+
+            return encuestas;
         }
 
         private async Task<String> UpdateDataFileAssoc()
@@ -420,7 +501,7 @@ namespace App_consulta.Controllers
         }
 
 
-        private String  SaveDataFile(String data, String file)
+        private String  SaveDataFile(String data, String file, bool append = false)
         {
             var error = "";
             try
@@ -432,9 +513,16 @@ namespace App_consulta.Controllers
                    Directory.CreateDirectory(_path);
                 }
 
+                if (append)
+                {
+                    System.IO.File.AppendAllText(Path.Combine(_path, file + ".json"), data);
+                }
+                else
+                {
+                    System.IO.File.Delete(Path.Combine(_path, file + ".json"));
+                    System.IO.File.WriteAllText(Path.Combine(_path, file + ".json"), data);
+                }
                 
-                System.IO.File.Delete(Path.Combine(_path, file + ".json"));
-                System.IO.File.WriteAllText(Path.Combine(_path, file + ".json"), data);
             }
             catch (Exception e) {
                 error = e.Message;

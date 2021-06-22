@@ -45,13 +45,13 @@ var funcImg = {
             funcImg.updateFilter();
 
             var canvas = cropper.getCroppedCanvas({
-                maxWidth: 4096,
-                maxHeight: 4096,
+                maxWidth: 1280,
+                maxHeight: 1280,
                 fillColor: '#fff',
                 imageSmoothingEnabled: false,
-                imageSmoothingQuality: 'high'
+                imageSmoothingQuality: 'medium'
             });
-            var croppedImageDataURL = canvas.toDataURL("image/jpg");
+            var croppedImageDataURL = canvas.toDataURL("image/jpg", 0.5);
             img.src = croppedImageDataURL;
 
             $('.btn-save').removeAttr('disabled');
@@ -137,7 +137,7 @@ var funcImg = {
                         $('#uploadingInfo').html('<div class="text-danger">Error al cargar el archivo.</div>');
                     }
                 });
-            });
+            }, "image/jpeg"); //"image/webp"
         });
     },
     //Modal
