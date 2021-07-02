@@ -101,7 +101,7 @@ var funcForm = {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '100',
+                    width: '80',
                     hidingPriority: 8,
                 },
                 {
@@ -111,15 +111,15 @@ var funcForm = {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '220',
-                    hidingPriority: 7,
+                    width: '180',
+                    hidingPriority: 6,
                 },
                 {
                     dataField: "municipio",
                     caption: "Muninicipio",
                     alignment: "center",
                     width: '130',
-                    hidingPriority: 6
+                    hidingPriority: 5
                 },
                 {
                     dataField: "departamento",
@@ -133,14 +133,14 @@ var funcForm = {
                     caption: "Coordinación",
                     alignment: "center",
                     width: '220',
-                    hidingPriority: 4
+                    hidingPriority: 3
                 },
                 {
                     dataField: "fecha",
                     caption: "Fecha",
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 5,
+                    hidingPriority: 4,
                     dataType: "date",
                     calculateFilterExpression: function (value, selectedFilterOperations, target) {
                         if (target === "headerFilter" && value === "weekends") {
@@ -185,7 +185,7 @@ var funcForm = {
                     alignment: "center",
                     allowHeaderFiltering: false,
                     width: '80',
-                    hidingPriority: 3,
+                    hidingPriority: 7,
                     cellTemplate: function (container, options) {
 
                         var formId = options.data.id;

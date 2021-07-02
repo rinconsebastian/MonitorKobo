@@ -11,7 +11,7 @@ var funcVali = {
         myWindow.onload = function () {
             myWindow.onunload = function () {
                 if (waitClose) {
-                    window.history.back();
+                    goBack();
                 }
             };
         }
@@ -59,7 +59,7 @@ var funcVali = {
                                     waitClose = true;
                                     funcVali.showPrint(print);
                                 } else {
-                                    window.history.back();
+                                    goBack();
                                   // funcGenerico.mostrarMensaje(data.message, "success");
                                 }
                             } else {
@@ -93,7 +93,13 @@ $(function () {
 });
 
 
-
+function goBack() {
+    if ('referrer' in document) {
+        window.location = document.referrer;
+    } else {
+        window.history.back();
+    }
+}
 
 
 

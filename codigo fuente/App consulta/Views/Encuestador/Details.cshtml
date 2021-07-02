@@ -81,8 +81,8 @@
 
                     @if (permisoEditar)
                     {
-                        <div class="col-sm-3 offset-3">
-                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-block">Editar</a>
+                        <div class="col-sm-3 offset-lg-3">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-block mb-2">Editar</a>
                         </div>
                         <div class="col-sm-3 ">
                             <a asp-action="Index" class="btn btn btn-outline-dark btn-block">Volver</a>
@@ -90,7 +90,7 @@
                     }
                     else
                     {
-                        <div class="col-sm-4 offset-4">
+                        <div class="col-sm-4 offset-lg-4">
                             <a asp-action="Index" class="btn btn btn-outline-dark btn-block">Volver</a>
                         </div>
                     }
