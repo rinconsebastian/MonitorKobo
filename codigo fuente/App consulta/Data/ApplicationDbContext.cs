@@ -30,6 +30,8 @@ namespace App_consulta.Data
 
         public DbSet<Pollster> Pollster { get; set; }
 
+        public DbSet<RequestUser> RequestUser { get; set; }
+
         public DbSet<FormalizationConfig> FormalizationConfig { get; set; }
         public DbSet<FormalizationVariable> FormalizationVariable { get; set; }
 
@@ -67,6 +69,11 @@ namespace App_consulta.Data
 
                 new Policy() { id = 18, nombre = "Exportar listados", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado", group = 6  },
 
+                new Policy() { id = 19, nombre = "Cambiar imagenes formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Cambiar", group = 5  },
+                new Policy() { id = 20, nombre = "Restablecer imagenes formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Restablecer", group = 5  },
+
+                new Policy() { id = 21, nombre = "Crear solicitudes", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Crear", group = 7  },
+                new Policy() { id = 22, nombre = "Administrar solicitudes", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Administrar", group = 7  },
                 };
             modelBuilder.Entity<Policy>().HasData(policies);
 

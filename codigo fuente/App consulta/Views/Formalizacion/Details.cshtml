@@ -9,12 +9,15 @@
     var permisoEditar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar" && c.Value == "1"));
     var permisoImprimir = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir" && c.Value == "1"));
     var permisoAdmin = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" && c.Value == "1"));
+    
+    var permisoSolicitud = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Crear" && c.Value == "1"));
+
 
     var btnEditar = permisoEditar ? "Editar" : "Validar";
 
 }
 <div class="row my-4  d-print-none">
-    <div class="col-sm-10 mx-auto">
+    <div class="col-12 col-lg-10 mx-auto">
         <div class="card  border-dark ">
             <div class="card-body">
                 <h4 class="my-2">
@@ -55,7 +58,7 @@
                     <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="tab-1">
 
                         <div class="row">
-                            <div class="col-12 col-sm-8  order-2 order-sm-1  p-4">
+                            <div class="col-12 col-lg-8  order-2 order-lg-1  p-4">
                                 @if (ViewBag.error != null)
                                 {
                                     <div class="alert alert-warning" role="alert">
@@ -97,7 +100,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-sm-4 text-center order-1 order-sm-2">
+                            <div class="col-12 col-lg-4 text-center order-1 order-lg-2">
                                 @await Component.InvokeAsync("Image", new { file = Model.ImgPescador, text = "Foto pescador", css = "img-detail-formlz mt-4" })
                             </div>
 
@@ -132,19 +135,26 @@
                     <div class="form-group row">
                         @if (permisoValidar && Model.Estado == Formalization.ESTADO_BORRADOR)
                         {
-                            <div class="col text-center ">
+                            <div class="col-md text-center mb-2">
                                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-block">@btnEditar</a>
                             </div>
                         }
-                        @if (permisoImprimir && ( Model.Estado == Formalization.ESTADO_COMPLETO  || Model.Estado == Formalization.ESTADO_IMPRESO) )
+                        @if (permisoImprimir && (Model.Estado == Formalization.ESTADO_COMPLETO || Model.Estado == Formalization.ESTADO_IMPRESO))
                         {
-                            <div class="col text-center ">
+                            <div class="col-md text-center mb-2">
                                 <button data-link="@Url.Action("Print","Formalizacion", new { ids = Model.Id })" class="btn btn-outline-success btn-block btn-print-formlz">Imprimir</button>
                             </div>
                         }
-                        <div class="col text-center ">
+                        <div class="col-md text-center mb-2">
                             <button onclick="goBack()" class="btn btn btn-outline-dark btn-block">Volver</button>
                         </div>
+                        @if (permisoSolicitud)
+                        {
+                            <div class="col-md text-center mb-2">
+                                <a asp-controller="Solicitud" asp-action="Create" asp-route-id="@Model.Id"
+                                   class="btn btn btn-outline-success btn-block" target="_blank">Solicitar cambio</a>
+                            </div>
+                        }
                     </div>
 
                 </div>
@@ -193,7 +203,11 @@
     <script type="text/javascript" src="~/js/tables/ValidarFormalizacionScript.js"></script>
     <script>
         function goBack() {
-            window.history.back();
+            if ('referrer' in document) {
+                window.location = document.referrer;
+            } else {
+                window.history.back();
+            }
         }
     </script>
 }

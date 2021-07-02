@@ -3,14 +3,16 @@ using System;
 using App_consulta.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210630153949_Solicitudes")]
+    partial class Solicitudes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1029,9 +1031,6 @@ namespace App_consulta.Migrations
                     b.Property<bool>("AlertUser")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("File")
                         .HasColumnType("longtext");
 
@@ -1054,9 +1053,6 @@ namespace App_consulta.Migrations
 
                     b.Property<int>("State")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("ValidationDate")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 

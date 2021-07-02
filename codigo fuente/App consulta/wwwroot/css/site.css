@@ -1283,3 +1283,64 @@ input, select, textarea {
     max-width: 50vw;
     overflow-x: auto;
 }
+
+.navbar .submit-dropdown {
+    color: #212529 !important;
+    border-radius: 0!important;
+}
+
+    .navbar .submit-dropdown:hover {
+        color: #16181b !important;
+        text-decoration: none !important;
+        background-color: #f8f9fa!important;
+        text-shadow: none;
+    }
+
+    .navbar .submit-dropdown:active {
+        color: #fff !important;
+        text-decoration: none;
+        background-color: #007bff;
+    }
+
+
+@-webkit-keyframes input-shadow {
+    0%{     text-shadow: none;}
+    50% {   text-shadow: 0 0 20px white}
+    100% {  text-shadow: none;}
+}
+
+@keyframes input-shadow {
+    0% {    text-shadow: none;}
+    50% {   text-shadow: 0 0 20px white}
+    100% {  text-shadow: none;}
+}
+
+.navbar .alert-bell {
+    color: #ffd700 !important;
+    -webkit-animation: input-shadow ease-in-out 1s infinite; /* Chrome, Safari, Opera */
+    animation: input-shadow ease-in-out 1s infinite;
+}
+
+    .navbar .alert-bell:hover {
+        color: #bfa202 !important;
+    }
+
+.overflow-ellipsis {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+
+    .w-50, .w-75{
+        width: 100%!important;
+    }
+}
+
+.dx-datagrid-content .dx-datagrid-table .dx-row .dx-command-select {
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+}
