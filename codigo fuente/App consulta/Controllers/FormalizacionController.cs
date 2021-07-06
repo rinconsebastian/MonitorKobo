@@ -203,8 +203,8 @@ namespace App_consulta.Controllers
             if(ids == "") { return success; }
             var idsList = ids.Split(',').Select(n => Convert.ToInt32(n)).ToList();
 
-
-            var formalizaciones = await db.Formalization.Where(n => idsList.Contains(n.Id) && n.Estado != Formalization.ESTADO_IMPRESO).ToListAsync();
+            //&& n.Estado != Formalization.ESTADO_IMPRESO   solo marcar primera impresion
+            var formalizaciones = await db.Formalization.Where(n => idsList.Contains(n.Id) ).ToListAsync();
             var anteriores = await db.Formalization.AsNoTracking().Where(n => idsList.Contains(n.Id) && n.Estado != Formalization.ESTADO_IMPRESO).ToListAsync();
 
             foreach (var formalizacion in formalizaciones)
@@ -320,6 +320,25 @@ namespace App_consulta.Controllers
         [Authorize(Policy = "Formalizacion.Validar")]
         public async Task<IActionResult> UpdateImage(IFormFile file, string filename)
         {
+            var r = await UpdateImageGen(file, filename);
+            return Json(r);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Formalizacion.Imagen.Cambiar")]
+        public async Task<IActionResult> LoadImage(IFormFile file, string filename, string formalizacion = "", string name = "")
+        {
+            var r = await UpdateImageGen(file, filename);
+
+            var log = new Logger(db);
+            var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "LoadImage", Modelo = "Formalization " + formalizacion, ValAnterior = "", ValNuevo = name + ": " + filename };
+            await log.RegistrarDirecto(registro);
+
+            return Json(r);
+        }
+
+        private async Task<RespuestaAccion> UpdateImageGen(IFormFile file, string filename)
+        {
             var r = new RespuestaAccion();
 
             if (file != null && file.Length > 0)
@@ -341,8 +360,9 @@ namespace App_consulta.Controllers
                 else { r.Message = "Error: El archivo original no existe."; }
             }
             else { r.Message = "Error: El archivo no es válido."; }
-            return Json(r);
+            return r;
         }
+
 
         private string GetEstado(int s)
         {

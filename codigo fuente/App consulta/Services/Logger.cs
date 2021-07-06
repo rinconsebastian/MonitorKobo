@@ -83,8 +83,30 @@ namespace App_consulta.Services
 
             return error;
         }
-        
 
 
+        public async Task<string> RegistrarDirecto(RegistroLog registro)
+        {
+            var error = "";
+            try
+            {
+                LogModel logn = new LogModel
+                {
+                    Usuario = registro.Usuario,
+                    Fecha = DateTime.Now,
+                    Accion = registro.Accion,
+                    Modelo = registro.Modelo,
+                    ValAnterior = JsonConvert.SerializeObject(registro.ValAnterior),
+                    ValNuevo = JsonConvert.SerializeObject(registro.ValNuevo)
+                };
+                db.Add(logn);
+                await db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                error = e.Message;
+            }
+            return error;
+        }
     }
 }

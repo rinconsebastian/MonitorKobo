@@ -161,6 +161,126 @@ var funcImg = {
             funcImg.changeStateBtns(false);
         })
     },
+    loadShowModalImage: function () {
+        $('body').on('click', '.btn-image-reset', function (e) {
+            var filename = $(this).data('filename');
+            var name = $(this).data('name');
+            var image = $(this).data('image');
+
+            $('#img-reset-name').html(name);
+            $('#BtnConfirmReset').data("filename", filename);
+            $('#BtnConfirmReset').data("image", image);
+            $('#BtnConfirmReset').data("name", name);
+            $('#modalConfirmReset').modal('show');
+        });
+
+        $('body').on('click', '.btn-image-load', function (e) {
+            var filename = $(this).data('filename');
+            var name = $(this).data('name');
+            var image = $(this).data('image');
+
+            //Reset inputs
+            $('#fileLoad').val('');
+            $('#fileLoad').next('.custom-file-label').html('Seleccionar Archivo');
+            $('#inputFilenameLoad').val(filename);
+            $('#inputNameLoad').val(name);
+
+            $('#img-load-name').html(name);
+            $('#BtnConfirmLoad').data("image", image);
+
+            $('#modalUploadImage').modal('show');
+        });
+    },
+    loadImageChange: function () {
+        $('body').on('submit', '#formLoad', function (e) {
+
+            e.preventDefault();
+
+            var formulario = $(this).closest('form');
+            var button = $('#BtnConfirmLoad');
+
+            var filename = $('#inputFilenameLoad').val();
+            var image = button.data('image');
+            $('#loadInfo').html('Cargando <img src="' + root + 'images/ajax-loader.gif">');
+            button.find('i').addClass('fa-cog fa-spin');
+            $('.btn-modal-load').attr('disabled', 'disabled');
+
+            var formData = new FormData(formulario[0]);
+            $.ajax({
+                type: "POST",
+                url: formulario.attr('action'),
+                data: formData,
+                dataType: 'json',
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    button.find('i').removeClass('fa-cog fa-spin');
+                    $('.btn-modal-load').removeAttr('disabled');
+                    $('#loadInfo').html('');
+                    if (data != null) {
+                        if (data.success) {
+                            var d = new Date();
+                            $("#" + image).attr("src", pathStorage + filename + "&time=" + d.getTime());
+                            $('#modalUploadImage').modal('hide');
+                            funcGenerico.mostrarMensaje("Imagen se cargó correctamente", "success");
+                        } else {
+                            $('#loadInfo').html('<div class="alert alert-danger">' + data.message + '</div>');
+                        }
+                    } else {
+                        $('#loadInfo').html('<div class="alert alert-danger">Error en la respuesta del servidor.</div>');
+                    }
+                },
+                error: function (error) {
+                    button.find('i').removeClass('fa-cog fa-spin');
+                    $('.btn-modal-load').removeAttr('disabled');
+                    $('#loadInfo').html('<div class="alert alert-danger">Error al solicitar la operación.</div>');
+                }
+            });
+
+        });
+    },
+    loadImageReset: function () {
+        $('body').on('click', '#BtnConfirmReset', function (e) {
+
+            var button = $(this);
+            var filename = $(this).data('filename');
+            var image = $(this).data('image');
+            var name = $(this).data('name');
+
+            var idKobo = $('#IdKobo').val();
+            var idForm = $('#IdFormalizacion').val();
+
+            var fullurl = root + "Kobo/ResetImage/";
+
+            $('#resetInfo').html('Cargando <img src="' + root + 'images/ajax-loader.gif">');
+            button.find('i').addClass('fa-cog fa-spin');
+            $('.btn-modal-reset').attr('disabled', 'disabled');
+
+            $.post(fullurl, { filename: filename, idKobo: idKobo, formalizacion: idForm, name: name }).
+                done(function (data) {
+                    button.find('i').removeClass('fa-cog fa-spin');
+                    $('.btn-modal-reset').removeAttr('disabled');
+                    $('#resetInfo').html('');
+                    if (data != null) {
+                        if (data.success) {
+                            var d = new Date();
+                            $("#" + image).attr("src", pathStorage + filename + "&time=" + d.getTime());
+                            $('#modalConfirmReset').modal('hide');
+                            funcGenerico.mostrarMensaje("Imagen restablecida correctamente", "success");
+                        } else {
+                            $('#resetInfo').html('<div class="alert alert-danger">' + data.message + '</div>');
+                        }
+                    } else {
+                        $('#resetInfo').html('<div class="alert alert-danger">Error en la respuesta del servidor.</div>');
+                    }
+
+                }).fail(function (data) {
+                    button.find('i').removeClass('fa-cog fa-spin');
+                    $('.btn-modal-reset').removeAttr('disabled');
+                    $('#resetInfo').html('<div class="alert alert-danger">Error al solicitar la operación.</div>');
+                });
+        });
+    },
     //Load image canvas
     draw: function () {
         var canvas = document.querySelector("canvas"),
@@ -219,6 +339,16 @@ var funcImg = {
         $('.btn-save').attr('disabled','disabled');
         $('#result').html('<div class="preview">VISTA PREVIA</div>');
     },
+    showSelectionFileInput: function () {
+        $('body').on('change', 'input[type="file"].custom-file-input', function (e) {
+            if (e.target.files.length > 0) {
+                var fileName = e.target.files[0].name;
+                $(this).next('.custom-file-label').html(fileName);
+            } else {
+                $(this).next('.custom-file-label').html('Seleccionar Archivo');
+            }
+        });
+    },
     init: function () {
         // Carga las variables de configuración.
         root = $('#Root').val();
@@ -237,6 +367,12 @@ var funcImg = {
         funcImg.loadColor();
         funcImg.loadShowModal();
 
+        funcImg.loadShowModalImage();
+        funcImg.loadImageReset();
+        funcImg.loadImageChange();
+
+        funcImg.showSelectionFileInput();
+
         //Load image
         img = new Image();
         img.crossOrigin = "";
@@ -249,32 +385,4 @@ $(function () {
     funcImg.init();
 });
 
-
-/*
- * 
-
-        var img = new Image();
-        img.crossOrigin = "";
-        img.onload = draw;
-        img.src = "https://i.imgur.com/2jjLqzk.jpg";
-
-        function draw() {
-            var canvas = document.querySelector("canvas"),
-                ctx = canvas.getContext("2d");
-
-            //canvas.width = this.width;
-            //canvas.height = this.height;
-
-            // filter
-            if (typeof ctx.filter !== "undefined") {
-                ctx.filter = filter;
-                ctx.drawImage(this, 0, 0);
-            }
-            else {
-                ctx.drawImage(this, 0, 0);
-                // TODO: manually apply filter here.
-            }
-
-            document.querySelector("imgResult").src = canvas.toDataURL();
-        } */
 

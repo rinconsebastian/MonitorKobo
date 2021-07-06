@@ -56,8 +56,28 @@ namespace App_consulta.Controllers
         {
             LogModel log = await db.Log.FindAsync(Id);
             if (log == null) { return NotFound(); }
-            ViewBag.Old = log.ValAnterior==null? "" : JsonConvert.SerializeObject(JsonConvert.DeserializeObject(log.ValAnterior), Formatting.Indented);
-            ViewBag.New = log.ValNuevo == null ? "" : JsonConvert.SerializeObject(JsonConvert.DeserializeObject(log.ValNuevo), Formatting.Indented);
+            var oldVal = log.ValAnterior;
+            var newVal = log.ValNuevo;
+            try
+            {
+                if(oldVal != null && oldVal != "")
+                {
+                    oldVal = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(log.ValAnterior), Formatting.Indented);
+                }
+            }
+            catch (Exception) { }
+
+            try
+            {
+                if (newVal != null && newVal != "")
+                {
+                    newVal = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(log.ValNuevo), Formatting.Indented);
+                }
+            }
+            catch (Exception) { }
+
+            ViewBag.Old = oldVal;
+            ViewBag.New = newVal;
             return View(log);
         }
     }

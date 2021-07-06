@@ -259,6 +259,37 @@ namespace App_consulta.Controllers
             return r;
         }
 
+
+        [HttpPost]
+        [Authorize(Policy = "Formalizacion.Imagen.Restablecer")]
+        public async Task<RespuestaAccion> ResetImage(string filename, string idKobo, string formalizacion = "", string name = "")
+        {
+            var r = new RespuestaAccion();
+
+            try
+            {
+                var _fileName = Path.GetFileName(filename);
+
+                var config = await db.Configuracion.FirstOrDefaultAsync();
+                var remoteUri = config.KoboAttachment + config.KoboUsername + "/attachments/";
+                var _path = Path.Combine(_env.ContentRootPath, "Storage", "Formalizacion", idKobo);
+
+                DownloadFile(remoteUri, _fileName, _path, "", config.KoboApiToken);
+
+                r.Success = true;
+
+                var log = new Logger(db);
+                var registro = new RegistroLog { Usuario = User.Identity.Name, Accion = "ResetImage", Modelo = "Formalization " + formalizacion, ValAnterior = "", ValNuevo = name + ": " + filename };
+                await log.RegistrarDirecto(registro);
+
+            }
+            catch (Exception e)
+            {
+                r.Message = e.Message;
+            }
+        
+            return r;
+        }
         private string GetValueForVariables(string key, Dictionary<string, string> values)
         {
             var r = "";
@@ -499,7 +530,6 @@ namespace App_consulta.Controllers
             }
             return resp;
         }
-
 
         private String  SaveDataFile(String data, String file, bool append = false)
         {
