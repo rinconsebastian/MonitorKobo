@@ -67,6 +67,12 @@
                                     </div>
                                 }
                                 <div class="form-group row">
+                                    <label asp-for="Cedula" class="col-sm-4 col-form-label"></label>
+                                    <div class="col-sm-8">
+                                        <p class="form-control-plaintext font-weight-light text-uppercase">@Html.DisplayFor(model => model.Cedula)</p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label asp-for="Name" class="col-sm-4 col-form-label"></label>
                                     <div class="col-sm-8">
                                         <p class="form-control-plaintext font-weight-light text-uppercase">@Html.DisplayFor(model => model.Name)</p>
@@ -200,7 +206,7 @@
 
 @section Scripts{
     <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
-    <script type="text/javascript" src="~/js/tables/ValidarFormalizacionScript.js"></script>
+    <script type="text/javascript" src="~/js/tables/ValidarFormalizacionScript.js?v=1.0"></script>
     <script>
         function goBack() {
             if ('referrer' in document) {
