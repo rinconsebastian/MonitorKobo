@@ -19,6 +19,7 @@ namespace App_consulta.Models
     public class FormalizacionViewModel
     {
         public int ID { get; set; }
+        public string Registro { get; set; }
         public string Cedula { get; set; }
         public string Nombre { get; set; }
         public string Municipio { get; set; }

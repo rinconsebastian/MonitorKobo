@@ -69,6 +69,7 @@ namespace App_consulta.Controllers
                 .Select(n => new FormalizacionViewModel()
                 {
                     ID = n.Id,
+                    Registro = n.NumeroRegistro,
                     Cedula = n.Cedula,
                     Nombre = n.Name,
                     Departamento = n.Departamento,

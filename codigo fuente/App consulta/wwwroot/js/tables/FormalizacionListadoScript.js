@@ -93,7 +93,16 @@ var funcForm = {
                 visible: true
             },
             columns: [
-
+                {
+                    dataField: "registro",
+                    caption: "Número\r\nRegistro",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
+                    alignment: "center",
+                    width: '80',
+                    hidingPriority: 9,
+                },
                 {
                     dataField: "cedula",
                     caption: "Cedula\r\nPescador",
@@ -132,14 +141,14 @@ var funcForm = {
                     dataField: "coordinacion",
                     caption: "Coordinación",
                     alignment: "center",
-                    width: '220',
+                    width: '190',
                     hidingPriority: 3
                 },
                 {
                     dataField: "fecha",
                     caption: "Fecha",
                     alignment: "center",
-                    width: '100',
+                    width: '80',
                     hidingPriority: 4,
                     dataType: "date",
                     calculateFilterExpression: function (value, selectedFilterOperations, target) {
@@ -153,7 +162,7 @@ var funcForm = {
                     dataField: "nombreEstado",
                     caption: "Estado",
                     alignment: "center",
-                    width: '80',
+                    width: '70',
                     hidingPriority: 2,
                     cellTemplate: function (container, options) {
                         var nombre = options.data.nombreEstado;
@@ -184,7 +193,7 @@ var funcForm = {
                     caption: "Opciones",
                     alignment: "center",
                     allowHeaderFiltering: false,
-                    width: '80',
+                    width: '70',
                     hidingPriority: 7,
                     cellTemplate: function (container, options) {
 
