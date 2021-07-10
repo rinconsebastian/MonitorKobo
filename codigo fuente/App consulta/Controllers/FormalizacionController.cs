@@ -310,7 +310,12 @@ namespace App_consulta.Controllers
 
             string filepath = Path.Combine(_env.ContentRootPath, "Storage", filename);
 
-            byte[] data = System.IO.File.ReadAllBytes(filepath);
+            byte[] data = new byte[1];
+            try
+            {
+                data = System.IO.File.ReadAllBytes(filepath);
+            }
+            catch (Exception) { }
 
             Stream stream = new MemoryStream(data);
             return new FileStreamResult(stream, "image/jpeg");
@@ -348,7 +353,9 @@ namespace App_consulta.Controllers
                 if (System.IO.File.Exists(filepath))
                 {
                     System.IO.File.Delete(filepath);
-                    try
+                }
+                
+                try
                     {
                         using (var fileStream = new FileStream(filepath, FileMode.Create))
                         {
@@ -357,8 +364,7 @@ namespace App_consulta.Controllers
                         r.Success = true;
                     }
                     catch (Exception e) { r.Message = "Error: " + e.Message; }
-                }
-                else { r.Message = "Error: El archivo original no existe."; }
+               
             }
             else { r.Message = "Error: El archivo no es válido."; }
             return r;
