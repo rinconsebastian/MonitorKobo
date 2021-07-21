@@ -12,6 +12,7 @@ namespace App_consulta.Models
         public string LocationCode { get; set; }
         public string Datetime { get; set; }
         public string Validation { get; set; }
+        public string Carnet { get; set; }
     }
 
     public class EncuestaDataModel
@@ -27,7 +28,7 @@ namespace App_consulta.Models
         public bool Validation { get; set; }
         public int FormalizacionId { get; set; }
         public int FormalizacionEstado { get; set; }
-
+        public string Carnet { get; set; }
         public string Status { get; set; }
 
     }

@@ -399,7 +399,7 @@ namespace App_consulta.Controllers
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var mapParams = JsonConvert.DeserializeObject<EncuestaMap>(config.KoboParamsMap);
-            var fields= JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation, mapParams.DNI });
+            var fields= JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation, mapParams.DNI, mapParams.Carnet });
             var sort = "&sort=%7B%22_id%22%3A1%7D";
             var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUid + "/submissions/?format=json&fields=" + HttpUtility.UrlEncode(fields) + sort;
 
@@ -464,6 +464,7 @@ namespace App_consulta.Controllers
                     Datetime = (String)result[mapParams.Datetime],
                     Validation = (String)result[mapParams.Validation],
                     DNI = (String)result[mapParams.DNI],
+                    Carnet = (String)result[mapParams.Carnet],
                 });
             }
 
@@ -634,6 +635,7 @@ namespace App_consulta.Controllers
                                 Datetime = item.Datetime,
                                 Mun = item.LocationCode,
                                 Dep = "",
+                                Carnet = item.Carnet == "1" ? "Si" : (item.Carnet == "3" ? "En tramite" : "No"),
                                 Validation = verValidacion ? item.Validation != null && item.Validation != "" : false,
                                 Status = item.Validation != null && item.Validation != "" ? "Pend." : "No"
                             };

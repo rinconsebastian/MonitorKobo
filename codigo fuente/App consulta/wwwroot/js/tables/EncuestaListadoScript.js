@@ -120,7 +120,7 @@ var funcLE = {
                     },
                     alignment: "center",
                     width: '120',
-                    hidingPriority: 8
+                    hidingPriority: 9
                 },
               
                 {
@@ -128,7 +128,7 @@ var funcLE = {
                     caption: "Municipio",
                     alignment: "center",
                     width: '120',
-                    hidingPriority: 6
+                    hidingPriority: 7
                 },
                 {
                     dataField: "dep",
@@ -143,7 +143,7 @@ var funcLE = {
                     caption: "Fecha",
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 7,
+                    hidingPriority: 8,
                     dataType: "date",
                     calculateFilterExpression: function (value, selectedFilterOperations, target) {
                         if (target === "headerFilter" && value === "weekends") {
@@ -177,19 +177,27 @@ var funcLE = {
                     hidingPriority: 1
                 },
                 {
+                    dataField: "carnet",
+                    caption: "Carnet",
+                    visible: (showValidation),
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 4
+                },
+                {
                     dataField: "status",
                     caption: "Formalización",
                     visible: (showValidation && showDNI),
                     alignment: "center",
                     width: '100',
-                    hidingPriority: 4
+                    hidingPriority: 5
                 },
                 {
                     
                     caption: "Opciones",
                     visible: showValidation,
                     alignment: "center",
-                    hidingPriority: 5,
+                    hidingPriority: 6,
                     width: '80',
                     cellTemplate: function (container, options) {
 
