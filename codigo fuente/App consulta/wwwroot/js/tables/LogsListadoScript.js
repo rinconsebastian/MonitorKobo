@@ -140,6 +140,7 @@ var funcLogs = {
                         widget: "dxButton",
                         options: {
                             icon: "refresh",
+                            hint: "Actualizar",
                             onClick: function () {
                                 dataGrid.refresh();
                             }

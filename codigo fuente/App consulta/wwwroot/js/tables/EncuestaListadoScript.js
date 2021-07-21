@@ -55,7 +55,7 @@ var funcLE = {
             },
 
             stateStoring: {
-                enabled: false,
+                enabled: true,
                 type: "localStorage",
                 storageKey: "storage"
             },
@@ -84,7 +84,7 @@ var funcLE = {
                 expandMode: "rowClick"
             },
             groupPanel: {
-                emptyPanelText: "haga click derecho en una columna para agruparla",
+                emptyPanelText: "Haga clic derecho en una columna para agruparla",
                 visible: true
             },
             pager: {
@@ -242,11 +242,24 @@ var funcLE = {
                         widget: "dxButton",
                         options: {
                             icon: "refresh",
+                            hint: "Actualizar",
                             onClick: function () {
                                 dataGrid.refresh();
                             }
                         }
-                    });
+                    },
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
+                            icon: "clearformat",
+                            hint: "Borrar filtros",
+                            onClick: function () {
+                                dataGrid.state(null);
+                            }
+                        }
+                    }
+                );
             },
             onRowPrepared: function (e) {
                 if (e.rowType === "data") {

@@ -38,7 +38,7 @@ var funcForm = {
                 allowExportSelectedData: false
             },
             onExporting: function (e) {
-                e.component.beginUpdate();F
+                e.component.beginUpdate();
                 e.component.columnOption("Opciones", "visible", false);
             },
             onExported: function (e) {
@@ -46,7 +46,7 @@ var funcForm = {
                 e.component.endUpdate();
             },
             stateStoring: {
-                enabled: false,
+                enabled: true,
                 type: "localStorage",
                 storageKey: "storage"
             },
@@ -233,6 +233,7 @@ var funcForm = {
                         widget: "dxButton",
                         options: {
                             icon: "refresh",
+                            hint: "Actualizar",
                             onClick: function () {
                                 dataGrid.refresh();
                             }
@@ -242,7 +243,19 @@ var funcForm = {
                         location: "after",
                         widget: "dxButton",
                         options: {
+                            icon: "clearformat",
+                            hint: "Borrar filtros",
+                            onClick: function () {
+                                dataGrid.state(null);
+                            }
+                        }
+                    },
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
                             icon: "print",
+                            hint: "Imprimir",
                             visible: showPrint,
                             onClick: function () {
                                 var seleccion = dataGrid.option('selectedRowKeys');

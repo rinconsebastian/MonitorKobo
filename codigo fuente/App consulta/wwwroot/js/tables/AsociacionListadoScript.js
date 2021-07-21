@@ -39,7 +39,7 @@ var funcAsoc = {
                 e.component.endUpdate();
             },
             stateStoring: {
-                enabled: false,
+                enabled: true,
                 type: "localStorage",
                 storageKey: "storage"
             },
@@ -68,7 +68,7 @@ var funcAsoc = {
                 expandMode: "rowClick"
             },
             groupPanel: {
-                emptyPanelText: "haga click derecho en una columna para agruparla",
+                emptyPanelText: "Haga clic derecho en una columna para agruparla",
                 visible: true
             },
             pager: {
@@ -176,11 +176,24 @@ var funcAsoc = {
                         widget: "dxButton",
                         options: {
                             icon: "refresh",
+                            hint: "Actualizar",
                             onClick: function () {
                                 dataGrid.refresh();
                             }
                         }
-                    });
+                    },
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
+                            icon: "clearformat",
+                            hint: "Borrar filtros",
+                            onClick: function () {
+                                dataGrid.state(null);
+                            }
+                        }
+                    }
+                );
             }
         }).dxDataGrid('instance');
     },

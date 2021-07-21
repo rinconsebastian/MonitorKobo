@@ -12,7 +12,7 @@ var showDelete = false;
 var funcLE = {
 
 
-    instanceDataGrid: function() {
+    instanceDataGrid: function () {
         dataGrid = $("#gridContainer").dxDataGrid({
             dataSource: source,
             selection: {
@@ -36,7 +36,7 @@ var funcLE = {
             },
 
             stateStoring: {
-                enabled: false,
+                enabled: true,
                 type: "localStorage",
                 storageKey: "storage"
             },
@@ -65,7 +65,7 @@ var funcLE = {
                 expandMode: "rowClick"
             },
             groupPanel: {
-                emptyPanelText: "haga click derecho en una columna para agruparla",
+                emptyPanelText: "Haga clic derecho en una columna para agruparla",
                 visible: true
             },
             pager: {
@@ -98,6 +98,7 @@ var funcLE = {
                     caption: "Cedula",
                     alignment: "center",
                     width: '100',
+                    dataType: "string",
                     hidingPriority: 9
                 },
                 {
@@ -121,7 +122,7 @@ var funcLE = {
                     alignment: "center",
                     width: '100',
                     hidingPriority: 4
-                },                
+                },
                 {
                     dataField: "coordinacion",
                     caption: "Coordinación",
@@ -170,7 +171,7 @@ var funcLE = {
                     alignment: "left",
                     allowHeaderFiltering: false,
                     width: '80',
-                    cellTemplate: function(container, options) {
+                    cellTemplate: function (container, options) {
 
                         var idEnc = options.data.id;
                         var nombre = options.data.nombre;
@@ -211,23 +212,36 @@ var funcLE = {
 
             },
 
-            onToolbarPreparing: function(e) {
+            onToolbarPreparing: function (e) {
                 var dataGrid = e.component;
-                e.toolbarOptions.items.unshift({
-                    location: "after",
-                    widget: "dxButton",
-                    options: {
-                        icon: "refresh",
-                        onClick: function() {
-                            dataGrid.refresh();
+                e.toolbarOptions.items.unshift(
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
+                            icon: "refresh",
+                            hint: "Actualizar",
+                            onClick: function () {
+                                dataGrid.refresh();
+                            }
+                        },
+                    },
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
+                            icon: "clearformat",
+                            hint: "Borrar filtros",
+                            onClick: function () {
+                                dataGrid.state(null);
+                            }
                         }
-                    }
-                });
+                    });
             }
         }).dxDataGrid('instance');
     },
 
-    init: function() {
+    init: function () {
         // Carga las variables de configuración.
         root = $('#Root').val();
         source = root + "Encuestador/ListAjax/";
@@ -241,7 +255,7 @@ var funcLE = {
 };
 
 //************************************** ON READY **********************************************
-$(function() {
+$(function () {
 
     DevExpress.localization.locale("es-US");
     funcLE.init();
