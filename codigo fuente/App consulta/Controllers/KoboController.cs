@@ -608,7 +608,7 @@ namespace App_consulta.Controllers
                                 Dep = n.LocationParent != null ? n.LocationParent.Name : ""
                             }).ToDictionaryAsync(n => n.Code2, n => n);
 
-                        var idsKobo = dataFiltered.Select(n => n.IdKobo).ToList();
+                        var idsKobo = dataFiltered.Select(n => n.IdKobo).Distinct().ToList();
                         var formalizaciones = await db.Formalization.Where(n => idsKobo.Contains(n.IdKobo))
                             .Select(n => new
                             {
