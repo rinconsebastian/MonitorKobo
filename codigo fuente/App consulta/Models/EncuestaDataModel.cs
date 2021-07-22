@@ -60,24 +60,30 @@ namespace App_consulta.Models
     {
         public int Id { get; set; }
 
+        [Display(Name = "Nombre y apellidos")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Name { get; set; }
 
+        [Display(Name = "Cédula")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Cedula { get; set; }
 
+        [Display(Name = "Área de pesca")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string AreaPesca { get; set; }
 
+        [Display(Name = "Artes de pesca")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string ArtesPesca { get; set; }
 
-        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        [Display(Name = "Nombre asociación")]
         public string NombreAsociacion { get; set; }
 
+        [Display(Name = "Estado")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public int Estado { get; set; }
 
+        [Display(Name = "Coordinación")]
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public int IdResponsable { get; set; }
 

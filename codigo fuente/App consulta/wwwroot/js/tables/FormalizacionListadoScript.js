@@ -175,6 +175,7 @@ var funcForm = {
                                 color = "bg-success text-white";
                                 break;
                             case 3:
+                            case 5:
                                 color = "bg-danger text-white";
                                 break;
                             case 4:

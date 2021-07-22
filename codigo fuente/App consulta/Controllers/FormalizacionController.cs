@@ -131,7 +131,10 @@ namespace App_consulta.Controllers
 
             var formalizacion = await db.Formalization.Where(n => n.Id == id && respRelacionado.Contains(n.IdResponsable)).FirstOrDefaultAsync();
             if (formalizacion == null) { return NotFound(); }
-            if (formalizacion.Estado != Formalization.ESTADO_BORRADOR)
+
+            var permisoCancelar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Cancelar" && c.Value == "1"));
+
+            if (formalizacion.Estado != Formalization.ESTADO_BORRADOR && !permisoCancelar)
             {
                 return RedirectToAction("Details", new { id = formalizacion.Id });
             }
@@ -149,12 +152,25 @@ namespace App_consulta.Controllers
                 {  Formalization.ESTADO_BORRADOR, "Borrador" },
                 {  Formalization.ESTADO_COMPLETO, "Completo" },
                 {  Formalization.ESTADO_CANCELADO, "Cancelado" },
-                {  Formalization.ESTADO_IMPRESO, "Impreso" }
+                {  Formalization.ESTADO_IMPRESO, "Impreso" },
+                {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" }
             };
 
             ViewBag.Estados = new SelectList(estados, "Key", "Value", formalizacion.Estado);
 
-            return View(formalizacion);
+            ViewBag.Formalizacion = formalizacion;
+            var postModel = new FormalizacionPostModel() {
+                Id = formalizacion.Id,
+                AreaPesca = formalizacion.AreaPesca,
+                ArtesPesca = formalizacion.ArtesPesca,
+                Cedula = formalizacion.Cedula,
+                Estado = formalizacion.Estado,
+                IdResponsable = formalizacion.IdResponsable,
+                Name = formalizacion.Name,
+                NombreAsociacion = formalizacion.NombreAsociacion
+            };
+
+            return View(postModel);
 
         }
 
@@ -291,12 +307,27 @@ namespace App_consulta.Controllers
                 {  Formalization.ESTADO_BORRADOR, "Borrador" },
                 {  Formalization.ESTADO_COMPLETO, "Completo" },
                 {  Formalization.ESTADO_CANCELADO, "Cancelado" },
-                {  Formalization.ESTADO_IMPRESO, "Impreso" }
+                {  Formalization.ESTADO_IMPRESO, "Impreso" },
+                {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" }
+
             };
 
             ViewBag.Estados = new SelectList(estados, "Key", "Value", formalizacion.Estado);
 
-            return View(formalizacion);
+            ViewBag.Formalizacion = formalizacion;
+            var postModel = new FormalizacionPostModel()
+            {
+                Id = formalizacion.Id,
+                AreaPesca = formalizacion.AreaPesca,
+                ArtesPesca = formalizacion.ArtesPesca,
+                Cedula = formalizacion.Cedula,
+                Estado = formalizacion.Estado,
+                IdResponsable = formalizacion.IdResponsable,
+                Name = formalizacion.Name,
+                NombreAsociacion = formalizacion.NombreAsociacion
+            };
+
+            return View(postModel);
         }
 
 
@@ -387,6 +418,9 @@ namespace App_consulta.Controllers
                     break;
                 case Formalization.ESTADO_IMPRESO:
                     r = "Impreso";
+                    break;
+                case Formalization.ESTADO_CARNET_VIGENTE:
+                    r = "Carnet vigente";
                     break;
             }
             return r;

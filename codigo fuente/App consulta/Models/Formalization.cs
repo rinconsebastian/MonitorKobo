@@ -15,6 +15,7 @@ namespace App_consulta.Models
         public const int ESTADO_COMPLETO = 2;
         public const int ESTADO_CANCELADO = 3;
         public const int ESTADO_IMPRESO = 4;
+        public const int ESTADO_CARNET_VIGENTE= 5;
 
 
         [Required]

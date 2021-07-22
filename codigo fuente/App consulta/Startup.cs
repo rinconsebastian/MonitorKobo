@@ -96,6 +96,9 @@ namespace App_consulta
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Listado", "1"));
                 options.AddPolicy("Formalizacion.Imprimir", policy =>
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir", "1"));
+                
+                options.AddPolicy("Formalizacion.Cancelar", policy =>
+                                policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Cancelar", "1"));
 
                 options.AddPolicy("Formalizacion.Imagen.Cambiar", policy =>
                                 policy.RequireClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Cambiar", "1"));

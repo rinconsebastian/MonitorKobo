@@ -1,13 +1,18 @@
-﻿@model App_consulta.Models.Formalization
+﻿@model App_consulta.Models.FormalizacionPostModel
 
 @{
     ViewData["Title"] = "Panel de control";
     ViewData["Subtitle"] = "Formalización";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    Formalization original = ViewBag.Formalizacion;
+
     var permisoEditar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar" && c.Value == "1"));
     var permisoAdmin = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar" && c.Value == "1"));
     var permisoImprimir = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir" && c.Value == "1"));
+
+    var permisoCancelar = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Cancelar" && c.Value == "1"));
+
 
     var permisoSolicitud = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Crear" && c.Value == "1"));
 
@@ -22,12 +27,12 @@
 
 }
 @Html.Hidden("IdFormalizacion", Model.Id)
-@Html.Hidden("IdKobo", Model.IdKobo)
+@Html.Hidden("IdKobo", original.IdKobo)
 @Html.Hidden("PathStorage", @Url.Action("ViewImage", "Formalizacion"))
 <div class="card w-75 mt-4 mx-auto d-print-none">
     <div class="card-body">
         <h4 class="my-2">
-            @title formalización @Model.NumeroRegistro
+            @title formalización @original.NumeroRegistro
             @switch (Model.Estado)
             {
                 case Formalization.ESTADO_BORRADOR:
@@ -41,6 +46,9 @@
                     break;
                 case Formalization.ESTADO_IMPRESO:
                     <span class="badge bg-info text-white float-right">Impreso</span>
+                    break;
+                case Formalization.ESTADO_CARNET_VIGENTE:
+                    <span class="badge bg-danger text-white float-right">Carnet vigente</span>
                     break;
             }
         </h4>
@@ -102,24 +110,22 @@
                                 <div class="form-group row">
                                     <label asp-for="NombreAsociacion" class="col-md-4 col-form-label"></label>
                                     <div class="col-md-8">
-                                        <input asp-for="NombreAsociacion" class="form-control" required />
+                                        <input asp-for="NombreAsociacion" class="form-control" />
                                         <span asp-validation-for="NombreAsociacion" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label asp-for="Departamento" class="col-md-4 col-form-label"></label>
+                                    <label class="col-md-4 col-form-label">Departamento</label>
                                     <div class="col-md-8">
-                                        <input asp-for="Departamento" class="form-control-plaintext font-weight-light" readonly />
-                                        <span asp-validation-for="Departamento" class="form-text small text-danger"></span>
+                                        <input class="form-control-plaintext font-weight-light" value="@original.Departamento" readonly />
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label asp-for="Municipio" class="col-md-4 col-form-label"></label>
+                                    <label class="col-md-4 col-form-label">Municipio</label>
                                     <div class="col-md-8">
-                                        <input asp-for="Municipio" class="form-control-plaintext font-weight-light" readonly />
-                                        <span asp-validation-for="Municipio" class="form-text small text-danger"></span>
+                                        <input class="form-control-plaintext font-weight-light" value="@original.Municipio" readonly />
                                     </div>
                                 </div>
 
@@ -138,7 +144,7 @@
                                         <span asp-validation-for="ArtesPesca" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
-                                @if (false)
+                                @if (permisoCancelar)
                                 {
                                     <div class="form-group row">
                                         <label asp-for="Estado" class="col-md-4 col-form-label"></label>
@@ -197,11 +203,11 @@
                             </div>
 
                             <div class="form-group row">
-                                <label asp-for="Municipio" class="col-md-4 col-form-label"></label>
+                                <label class="col-md-4 col-form-label">Municipio</label>
                                 <div class="col-md-8">
                                     <p class="form-control-plaintext font-weight-light">
-                                        @Html.DisplayFor(model => model.Municipio) -
-                                        @Html.DisplayFor(model => model.Departamento)
+                                        @original.Municipio -
+                                        @original.Departamento
                                     </p>
                                 </div>
                             </div>
@@ -226,18 +232,18 @@
             </div>
             <div class="tab-pane fade" id="tab-5" role="tabpanel" aria-labelledby="tab-5">
                 <div class="text-center py-4 px-1">
-                    @await Component.InvokeAsync("Image", new { file = Model.ImgPescador, text = "Foto pescador", css = "img-detail-large", id = "img-pescador" })
-                    @if (Model.ImgPescador != null && Model.ImgPescador != "")
+                    @await Component.InvokeAsync("Image", new { file = original.ImgPescador, text = "Foto pescador", css = "img-detail-large", id = "img-pescador" })
+                    @if (original.ImgPescador != null && original.ImgPescador != "")
                     {
                         <br />
                         <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-pescador"
-                                data-filename="@Model.ImgPescador">
+                                data-filename="@original.ImgPescador">
                             <i class="fas fa-photo-video"></i> Editar
                         </button>
                         if (permisoImagen)
                         {
                             <button class="btn btn-outline-success mt-3 ml-4 btn-image-load"
-                                    data-filename="@Model.ImgPescador"
+                                    data-filename="@original.ImgPescador"
                                     data-name="Foto pescador"
                                     data-image="img-pescador">
                                 <i class="fas fa-upload"></i> Cargar
@@ -246,7 +252,7 @@
                         if (permisoRestablecer)
                         {
                             <button class="btn btn-outline-danger mt-3 ml-4 btn-image-reset"
-                                    data-filename="@Model.ImgPescador"
+                                    data-filename="@original.ImgPescador"
                                     data-name="Foto pescador"
                                     data-image="img-pescador">
                                 <i class="far fa-window-restore"></i> Restablecer
@@ -257,18 +263,18 @@
             </div>
             <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="tab-2">
                 <div class="text-center py-4 px-1">
-                    @await Component.InvokeAsync("Image", new { file = Model.ImgSolicitudCarnet, text = "Foto solicitud", css = "img-detail-large", id = "img-solicitud" })
-                    @if (Model.ImgSolicitudCarnet != null && Model.ImgSolicitudCarnet != "")
+                    @await Component.InvokeAsync("Image", new { file = original.ImgSolicitudCarnet, text = "Foto solicitud", css = "img-detail-large", id = "img-solicitud" })
+                    @if (original.ImgSolicitudCarnet != null && original.ImgSolicitudCarnet != "")
                     {
                         <br />
                         <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-solicitud"
-                                data-filename="@Model.ImgSolicitudCarnet">
+                                data-filename="@original.ImgSolicitudCarnet">
                             <i class="fas fa-photo-video"></i> Editar
                         </button>
                         if (permisoImagen)
                         {
                             <button class="btn btn-outline-success mt-3 ml-4 btn-image-load"
-                                    data-filename="@Model.ImgSolicitudCarnet"
+                                    data-filename="@original.ImgSolicitudCarnet"
                                     data-name="Foto solicitud"
                                     data-image="img-solicitud">
                                 <i class="fas fa-upload"></i> Cargar
@@ -277,7 +283,7 @@
                         if (permisoRestablecer)
                         {
                             <button class="btn btn-outline-danger mt-3 ml-4 btn-image-reset"
-                                    data-filename="@Model.ImgSolicitudCarnet"
+                                    data-filename="@original.ImgSolicitudCarnet"
                                     data-name="Foto solicitud"
                                     data-image="img-solicitud">
                                 <i class="far fa-window-restore"></i> Restablecer
@@ -288,18 +294,18 @@
             </div>
             <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="tab-3">
                 <div class="text-center py-4 px-1">
-                    @await Component.InvokeAsync("Image", new { file = Model.ImgCertificacion, text = "Foto certificación", css = "img-detail-large", id = "img-certificado" })
-                    @if (Model.ImgCertificacion != null && Model.ImgCertificacion != "")
+                    @await Component.InvokeAsync("Image", new { file = original.ImgCertificacion, text = "Foto certificación", css = "img-detail-large", id = "img-certificado" })
+                    @if (original.ImgCertificacion != null && original.ImgCertificacion != "")
                     {
                         <br />
                         <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-certificado"
-                                data-filename="@Model.ImgCertificacion">
+                                data-filename="@original.ImgCertificacion">
                             <i class="fas fa-photo-video"></i> Editar
                         </button>
                         if (permisoImagen)
                         {
                             <button class="btn btn-outline-success mt-3 ml-4 btn-image-load"
-                                    data-filename="@Model.ImgCertificacion"
+                                    data-filename="@original.ImgCertificacion"
                                     data-name="Foto certificación"
                                     data-image="img-certificado">
                                 <i class="fas fa-upload"></i> Cargar
@@ -308,7 +314,7 @@
                         if (permisoRestablecer)
                         {
                             <button class="btn btn-outline-danger mt-3 ml-4 btn-image-reset"
-                                    data-filename="@Model.ImgCertificacion"
+                                    data-filename="@original.ImgCertificacion"
                                     data-name="Foto certificación"
                                     data-image="img-certificado">
                                 <i class="far fa-window-restore"></i> Restablecer
@@ -321,18 +327,18 @@
             <div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="tab-4">
                 <div class="row">
                     <div class="col-12 col-sm-6 text-center py-4 px-1">
-                        @await Component.InvokeAsync("Image", new { file = Model.ImgCedulaAnverso, text = "Foto cédula", css = "img-detail-large", id = "img-cedula-a" })
-                        @if (Model.ImgCedulaAnverso != null && Model.ImgCedulaAnverso != "")
+                        @await Component.InvokeAsync("Image", new { file = original.ImgCedulaAnverso, text = "Foto cédula", css = "img-detail-large", id = "img-cedula-a" })
+                        @if (original.ImgCedulaAnverso != null && original.ImgCedulaAnverso != "")
                         {
                             <br />
                             <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-cedula-a"
-                                    data-filename="@Model.ImgCedulaAnverso">
+                                    data-filename="@original.ImgCedulaAnverso">
                                 <i class="fas fa-photo-video"></i> Editar
                             </button>
                             if (permisoImagen)
                             {
                                 <button class="btn btn-outline-success mt-3 ml-4 btn-image-load"
-                                        data-filename="@Model.ImgCedulaAnverso"
+                                        data-filename="@original.ImgCedulaAnverso"
                                         data-name="Foto cédula"
                                         data-image="img-cedula-a">
                                     <i class="fas fa-upload"></i> Cargar
@@ -341,7 +347,7 @@
                             if (permisoRestablecer)
                             {
                                 <button class="btn btn-outline-danger mt-3 ml-4 btn-image-reset"
-                                        data-filename="@Model.ImgCedulaAnverso"
+                                        data-filename="@original.ImgCedulaAnverso"
                                         data-name="Foto cédula"
                                         data-image="img-cedula-a">
                                     <i class="far fa-window-restore"></i> Restablecer
@@ -350,18 +356,18 @@
                         }
                     </div>
                     <div class="col-12 col-sm-6 text-center py-4 px-1">
-                        @await Component.InvokeAsync("Image", new { file = Model.ImgCedulaReverso, text = "Foto cédula reverso", css = "img-detail-large", id = "img-cedula-r" })
-                        @if (Model.ImgCedulaReverso != null && Model.ImgCedulaReverso != "")
+                        @await Component.InvokeAsync("Image", new { file = original.ImgCedulaReverso, text = "Foto cédula reverso", css = "img-detail-large", id = "img-cedula-r" })
+                        @if (original.ImgCedulaReverso != null && original.ImgCedulaReverso != "")
                         {
                             <br />
                             <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-cedula-r"
-                                    data-filename="@Model.ImgCedulaReverso">
+                                    data-filename="@original.ImgCedulaReverso">
                                 <i class="fas fa-photo-video"></i> Editar
                             </button>
                             if (permisoImagen)
                             {
                                 <button class="btn btn-outline-success mt-3 ml-4 btn-image-load"
-                                        data-filename="@Model.ImgCedulaReverso"
+                                        data-filename="@original.ImgCedulaReverso"
                                         data-name="Foto cédula reverso"
                                         data-image="img-cedula-r">
                                     <i class="fas fa-upload"></i> Cargar
@@ -370,7 +376,7 @@
                             if (permisoRestablecer)
                             {
                                 <button class="btn btn-outline-danger mt-3 ml-4 btn-image-reset"
-                                        data-filename="@Model.ImgCedulaReverso"
+                                        data-filename="@original.ImgCedulaReverso"
                                         data-name="Foto cédula reverso"
                                         data-image="img-cedula-r">
                                     <i class="far fa-window-restore"></i> Restablecer

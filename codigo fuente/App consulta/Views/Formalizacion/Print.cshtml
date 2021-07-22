@@ -40,6 +40,7 @@
                                 @switch (formalz.Estado)
                                 {
                                     case Formalization.ESTADO_CANCELADO:
+                                    case Formalization.ESTADO_CARNET_VIGENTE:
                                         <tr class="text-danger text-center"><td colspan="5"><b>Formalización cancelada</b>, no puede ser impresa</td></tr>
                                         break;
                                     case Formalization.ESTADO_BORRADOR:
@@ -68,6 +69,9 @@
                                                 break;
                                             case Formalization.ESTADO_IMPRESO:
                                                 <span class="badge bg-info text-white">Impreso</span>
+                                                break;
+                                            case Formalization.ESTADO_CARNET_VIGENTE:
+                                                <span class="badge bg-danger text-white float-right">Carnet vigente</span>
                                                 break;
                                         }
                                     </td>
