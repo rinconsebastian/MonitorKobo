@@ -79,6 +79,13 @@ namespace App_consulta.Controllers
         {
             var r = new RespuestaAccion();
 
+            var previo = await db.Formalization.Where(n => n.IdKobo == idKobo).FirstOrDefaultAsync();
+            if(previo != null)
+            {
+                r.Url = "Formalizacion/Edit/" + previo.Id;
+                r.Success = true;
+            }
+
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var configFormalizacion = await db.FormalizationConfig.Where(n => n.Group == 1 &&  n.Field != "" && n.Value != "").ToListAsync();
