@@ -84,6 +84,7 @@ namespace App_consulta.Controllers
             {
                 r.Url = "Formalizacion/Edit/" + previo.Id;
                 r.Success = true;
+                return r;
             }
 
             //Carga los datos de conexión desde la configuración 
