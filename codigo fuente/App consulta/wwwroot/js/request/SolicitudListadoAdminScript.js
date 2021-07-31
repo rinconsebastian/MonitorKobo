@@ -24,7 +24,7 @@ var funcLE = {
                 allowExportSelectedData: false
             },
             stateStoring: {
-                enabled: false,
+                enabled: true,
                 type: "localStorage",
                 storageKey: "storage"
             },
@@ -254,17 +254,30 @@ var funcLE = {
 
             onToolbarPreparing: function(e) {
                 var dataGrid = e.component;
-                e.toolbarOptions.items.unshift({
-                    location: "after",
-                    widget: "dxButton",
-                    options: {
-                        icon: "refresh",
-                        hint: "Actualizar",
-                        onClick: function() {
-                            dataGrid.refresh();
+                e.toolbarOptions.items.unshift(
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
+                            icon: "refresh",
+                            hint: "Actualizar",
+                            onClick: function () {
+                                dataGrid.refresh();
+                            }
+                        }
+                    },
+                    {
+                        location: "after",
+                        widget: "dxButton",
+                        options: {
+                            icon: "clearformat",
+                            hint: "Borrar filtros",
+                            onClick: function () {
+                                dataGrid.state(null);
+                            }
                         }
                     }
-                });
+                );
             }
         }).dxDataGrid('instance');
     },
