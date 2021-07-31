@@ -248,6 +248,16 @@ namespace App_consulta.Controllers
                         formalizacion.Departamento = municipio.LocationParent != null ? municipio.LocationParent.Name : formalizacion.Departamento;
                     }
 
+                    //Validación formalización previo a guardar
+                    previo = await db.Formalization.Where(n => n.IdKobo == idKobo).FirstOrDefaultAsync();
+                    if (previo != null)
+                    {
+                        r.Url = "Formalizacion/Edit/" + previo.Id;
+                        r.Success = true;
+                        return r;
+                    }
+
+                    //Guarda la formalización
                     db.Formalization.Add(formalizacion);
                     await db.SaveChangesAsync();
                     r.Url = "Formalizacion/Edit/" + formalizacion.Id;
