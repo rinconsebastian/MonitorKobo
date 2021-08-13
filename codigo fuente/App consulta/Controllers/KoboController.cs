@@ -435,6 +435,13 @@ namespace App_consulta.Controllers
                     //var sort = JsonConvert.SerializeObject(new { _id = 1 });
                     var limit = "&start=30000";
                     encuestas.AddRange(await GetDataFromUrl(url + limit, config.KoboApiToken, mapParams));
+
+                    //Consulta los siguientes 30.000 registros
+                    if (encuestas.Count == 60000)
+                    {
+                        limit = "&start=60000";
+                        encuestas.AddRange(await GetDataFromUrl(url + limit, config.KoboApiToken, mapParams));
+                    }
                 }
 
                 //Guarda la información mapeada en el archivo .json
