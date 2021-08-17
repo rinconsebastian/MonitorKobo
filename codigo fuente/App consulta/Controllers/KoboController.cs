@@ -646,7 +646,8 @@ namespace App_consulta.Controllers
 
                         //Permisos de columnas
                         var verValidacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
-
+                        var formalizacionControl = new FormalizacionController(db, userManager, _env);
+                            
                         foreach (var item in dataFiltered)
                         {
                             var nombreEncuestador = nombresEncuestadores.ContainsKey(item.User) ? nombresEncuestadores[item.User] : "";
@@ -677,7 +678,7 @@ namespace App_consulta.Controllers
                                 var aux = formalizaciones[item.IdKobo];
                                 encuesta.FormalizacionId = aux.Id;
                                 encuesta.FormalizacionEstado = aux.Estado;
-                                encuesta.Status = "Si";
+                                encuesta.Status = "Si (" + formalizacionControl.GetEstado(aux.Estado) + ")";
                             }                         
                             resp.Add(encuesta);
                         }

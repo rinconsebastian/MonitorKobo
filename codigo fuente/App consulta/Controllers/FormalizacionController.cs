@@ -402,7 +402,7 @@ namespace App_consulta.Controllers
         }
 
 
-        private string GetEstado(int s)
+        public string GetEstado(int s)
         {
             var r = s.ToString();
             switch (s)
