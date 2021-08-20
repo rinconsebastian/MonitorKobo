@@ -227,7 +227,7 @@ namespace App_consulta.Controllers
                 }
               
                 //Valida los adjuntos
-                if(imageErrors){r.Message = "ERROR: No fue posible cargar los archivos adjuntos"; return r; }
+                if(imageErrors){r.Message = "ERROR: El servidor esta bloqueado, intente más tarde."; return r; }
 
                 //Consulta la dependencia del encuestador
                 if(formalizacion.Encuestador != null && formalizacion.Encuestador != "")
@@ -847,6 +847,10 @@ namespace App_consulta.Controllers
             }
             catch (Exception e) {
                 var a = e.Message;
+                if(a == "The remote server returned an error: (404) Not Found.")
+                {
+                    relativePath = "noload.png";
+                }
             }
 
             return relativePath;
