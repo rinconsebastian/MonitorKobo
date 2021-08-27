@@ -832,7 +832,8 @@ namespace App_consulta.Controllers
 
         private string DownloadFile(string remoteUri, string fileName, string path, string relative, String token)
         {
-            var relativePath = "";
+            var relativePath = Path.Combine(relative, fileName);
+            var fullPath = Path.Combine(path, fileName);
 
             try
             {
@@ -840,16 +841,16 @@ namespace App_consulta.Controllers
                 WebClient myWebClient = new WebClient();
                 myWebClient.Headers.Add("User-Agent: Other");
                 myWebClient.Headers.Add(HttpRequestHeader.Authorization, "token  " + token);
-                var fullPath = Path.Combine(path, fileName);
+                
                 myWebClient.DownloadFile(myStringWebResource, fullPath);
-
-                relativePath = Path.Combine(relative, fileName);
+                
             }
             catch (Exception e) {
                 var a = e.Message;
                 if(a == "The remote server returned an error: (404) Not Found.")
                 {
-                    relativePath = "noload.png";
+                    var storagePath = Path.Combine(_env.ContentRootPath, "Storage");
+                    System.IO.File.Copy(Path.Combine(storagePath, "noload.png"), fullPath);
                 }
             }
 
