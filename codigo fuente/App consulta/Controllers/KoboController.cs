@@ -417,7 +417,7 @@ namespace App_consulta.Controllers
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var mapParams = JsonConvert.DeserializeObject<EncuestaMap>(config.KoboParamsMap);
-            var fields= JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation, mapParams.DNI, mapParams.Carnet });
+            var fields= JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Validation, mapParams.DNI, mapParams.Name, mapParams.Carnet });
             var sort = "&sort=%7B%22_id%22%3A1%7D";
             var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUid + "/submissions/?format=json&fields=" + HttpUtility.UrlEncode(fields) + sort;
 
@@ -489,6 +489,7 @@ namespace App_consulta.Controllers
                     Datetime = (String)result[mapParams.Datetime],
                     Validation = (String)result[mapParams.Validation],
                     DNI = (String)result[mapParams.DNI],
+                    Name = (String)result[mapParams.Name],
                     Carnet = (String)result[mapParams.Carnet],
                 });
             }
@@ -640,7 +641,9 @@ namespace App_consulta.Controllers
                             {
                                 n.IdKobo,
                                 n.Id,
-                                n.Estado
+                                n.Estado,
+                                n.Name,
+                                n.Cedula
                             }).ToDictionaryAsync(n => n.IdKobo, n => n);
 
 
@@ -657,6 +660,7 @@ namespace App_consulta.Controllers
                                 User = item.User,
                                 UserName = nombreEncuestador,
                                 DNI = item.DNI,
+                                Name = item.Name,
                                 LocationCode = item.LocationCode,
                                 Datetime = item.Datetime,
                                 Mun = item.LocationCode,
@@ -678,6 +682,11 @@ namespace App_consulta.Controllers
                                 var aux = formalizaciones[item.IdKobo];
                                 encuesta.FormalizacionId = aux.Id;
                                 encuesta.FormalizacionEstado = aux.Estado;
+                                if(aux.Estado == Formalization.ESTADO_BORRADOR  || aux.Estado == Formalization.ESTADO_COMPLETO || aux.Estado == Formalization.ESTADO_IMPRESO)
+                                {
+                                    encuesta.Name = aux.Name;
+                                    encuesta.DNI = aux.Cedula;
+                                }
                                 encuesta.Status = "Si (" + formalizacionControl.GetEstado(aux.Estado) + ")";
                             }                         
                             resp.Add(encuesta);
