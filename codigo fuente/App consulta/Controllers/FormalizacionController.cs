@@ -163,6 +163,7 @@ namespace App_consulta.Controllers
                 Id = formalizacion.Id,
                 AreaPesca = formalizacion.AreaPesca,
                 ArtesPesca = formalizacion.ArtesPesca,
+                Especies = formalizacion.Especies,
                 Cedula = formalizacion.Cedula,
                 Estado = formalizacion.Estado,
                 IdResponsable = formalizacion.IdResponsable,
@@ -271,6 +272,7 @@ namespace App_consulta.Controllers
                     original.Cedula = formalizacion.Cedula;
                     original.NombreAsociacion = formalizacion.NombreAsociacion;
                     original.AreaPesca = formalizacion.AreaPesca;
+                    original.Especies = formalizacion.Especies;
                     original.ArtesPesca = formalizacion.ArtesPesca;
                 }
                 if(formalizacion.Estado > 0) { 
@@ -320,6 +322,7 @@ namespace App_consulta.Controllers
                 Id = formalizacion.Id,
                 AreaPesca = formalizacion.AreaPesca,
                 ArtesPesca = formalizacion.ArtesPesca,
+                Especies = formalizacion.Especies,
                 Cedula = formalizacion.Cedula,
                 Estado = formalizacion.Estado,
                 IdResponsable = formalizacion.IdResponsable,

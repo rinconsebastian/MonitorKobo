@@ -78,6 +78,10 @@ namespace App_consulta.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string ArtesPesca { get; set; }
 
+        [Display(Name = "Especies de pesca")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
+        public string Especies { get; set; }
+
         [Display(Name = "Nombre asociación")]
         public string NombreAsociacion { get; set; }
 

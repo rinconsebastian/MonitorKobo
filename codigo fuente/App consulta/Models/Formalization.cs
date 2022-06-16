@@ -48,10 +48,11 @@ namespace App_consulta.Models
         [Display(Name = "Municipio")]
         public string Municipio { get; set; }
 
+        [Display(Name = "Especies")]
+        public string Especies { get; set; }
 
         [Display(Name = "Área de pesca")]
         public string AreaPesca { get; set; }
-
 
         [Display(Name = "Artes de pesca")]
         public string ArtesPesca { get; set; }

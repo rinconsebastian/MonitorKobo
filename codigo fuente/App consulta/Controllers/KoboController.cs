@@ -150,6 +150,8 @@ namespace App_consulta.Controllers
                 //variables de formalizacion
                 var artes = await db.FormalizationVariable.Where(n => n.Group == "Arte")
                     .ToDictionaryAsync(n => n.Key, n => n.Value);
+                var especies = await db.FormalizationVariable.Where(n => n.Group == "Especie")
+                    .ToDictionaryAsync(n => n.Key, n => n.Value);
                 var zonas = await db.FormalizationVariable.Where(n => n.Group == "Zona")
                     .ToDictionaryAsync(n => n.Key, n => n.Value);
                 var configZonas = await db.FormalizationConfig.Where(n => n.Group == 2 && n.Field != "" && n.Value != "").ToListAsync();
@@ -203,6 +205,20 @@ namespace App_consulta.Controllers
                                     listResult.Add(GetValueForVariables(idArte, artes));
                                 }
                                 value = listResult.Count > 0 ? String.Join(", ", listResult) : "" ;
+                            }
+                        }
+                        if (name == "Especies")
+                        {
+                            var auxValue = (String)result[fieldName];
+                            if (auxValue != null & auxValue != "")
+                            {
+                                var idsList = auxValue.Split(' ').ToList();
+                                var listResult = new List<string>();
+                                foreach (var idEspecie in idsList)
+                                {
+                                    listResult.Add(GetValueForVariables(idEspecie, especies));
+                                }
+                                value = listResult.Count > 0 ? String.Join(", ", listResult) : "";
                             }
                         }
                         else
