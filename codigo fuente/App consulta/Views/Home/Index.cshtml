@@ -1,10 +1,12 @@
 ﻿@{
     ViewData["Title"] = "Inicio";
+    Configuracion conf = ViewBag.config;
 }
 
 <div class="text-center mt-4">
-    <h1 class="display-4">Bienvenido</h1>
-    <p>Acuerdo AUNAP - PNUD 2022</p>
+    <h1 class="display-4 titulo-principal">Bienvenido</h1>
+    <h2 class="titulo-principal">@conf.NombreApp</h2>
+    <p>@conf.DescripcionApp</p>
     <hr />
     <div class="row">
 

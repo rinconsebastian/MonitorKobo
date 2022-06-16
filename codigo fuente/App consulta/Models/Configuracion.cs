@@ -11,10 +11,9 @@ namespace App_consulta.Models
     {
         [Required]
         [Key]
-        public int id { get; set; }
+        public int Id { get; set; }
 
 
-       
         [Display(Name = "Imagen logo")]
         public string Logo { get; set; }
 
@@ -24,26 +23,19 @@ namespace App_consulta.Models
         [Display(Name = "Imagen encabezado")]
         public string ImgHeader { get; set; }
 
-        [Display(Name = "Imagen fondo")]
-        public string ImgBackgroud { get; set; }
-
-
         [Display(Name = "Color Texto Cabecera")]
-        public string colorTextoHeader { get; set; }
+        public string ColorTextoHeader { get; set; }
 
         [Display(Name = "Color  Principal")]
-        public string colorPrincipal { get; set; }
+        public string ColorPrincipal { get; set; }
 
         [Display(Name = "Color Texto Principal")]
-        public string colorTextoPrincipal { get; set; }
+        public string ColorTextoPrincipal { get; set; }
+
 
         [Required]
         [Display(Name = "Email  contacto")]
-        public string contacto { get; set; }
-
-        [Required]
-        [Display(Name = "Sistema activo")]
-        public bool activo { get; set; }
+        public string Contacto { get; set; }
 
         [Required]
         [Display(Name = "Nombre entidad")]
@@ -53,9 +45,14 @@ namespace App_consulta.Models
         [Display(Name = "Nombre plan estratégico")]
         public string NombrePlan { get; set; }
 
-       [Required]
-        [Display(Name = "Libre")]
-        public bool libre { get; set; }
+
+        [Required]
+        [Display(Name = "Nombre aplicación")]
+        public string NombreApp { get; set; }
+
+        [Required]
+        [Display(Name = "Descrición aplicación")]
+        public string DescripcionApp { get; set; }
 
         [Required]
         [Range(0, 99999,ErrorMessage = "El valor del {0} debe estar entre {1} y {2}.")]

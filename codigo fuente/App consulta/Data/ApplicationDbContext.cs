@@ -84,21 +84,38 @@ namespace App_consulta.Data
             //Permisos rol administrador
             var policiesRol = new List<IdentityRoleClaim<string>>
             {
-                new IdentityRoleClaim<string>() { Id =1, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =2, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Responsable", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =3, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Responsable.Editar", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =4, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =5, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =6, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =7, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =8, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver", ClaimValue = "1"},
-                new IdentityRoleClaim<string>() { Id =9, RoleId = "1", ClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =1, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.General", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =2, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Responsable", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =3, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Responsable.Editar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =4, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Rol.Editar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =5, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Usuario.Editar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =6, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Configuracion.Logs", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =7, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =8, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =9, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =10, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Actualizar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =11, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Listado", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =12, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Usuario", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =13, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =14, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =15, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =16, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Listado", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =17, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =18, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =19, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Cambiar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =20, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Restablecer", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =21, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Crear", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =22, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Administrar", ClaimValue = "1"}
                 };
             modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(policiesRol);
 
             //Entidad por defecto
-            var responsable = new Responsable() { Id = 1, Nombre = "Entidad", Editar = true };
-            modelBuilder.Entity<Responsable>().HasData(responsable);
+            var responsables = new List<Responsable>(){
+                new Responsable() { Id = 1, Nombre = "Entidad" },
+                new Responsable() { Id = 2, Nombre = "[CDR] Coordinación", IdJefe = 1 },
+            };
+
+            modelBuilder.Entity<Responsable>().HasData(responsables);
 
             //Usuario administrador
             var user = new ApplicationUser()
@@ -127,17 +144,17 @@ namespace App_consulta.Data
             //Configuración inicial
             var config = new Configuracion()
             {
-                id = 1,
-
-                Logo = "/images/SIE.png",
-                contacto = "rinconsebastian@gmail.com",
-                activo = true,
-                Entidad = "Entidad",
-                NombrePlan = "Plan",
-                libre = true,
-                colorPrincipal = "#52a3a1",
-                colorTextoHeader = "#ffffff",
-                colorTextoPrincipal = "#00000"
+                Id = 1,
+                Logo = "/images/favicon1.png",
+                Favicon = "/images/favicon.png",
+                Entidad = "PNUD-AUNAP",
+                NombreApp="App Consulta",
+                DescripcionApp = "Acuerdo AUNAP - PNUD 2022",
+                NombrePlan = "Coordinación",
+                ColorPrincipal = "#4287F5",
+                ColorTextoHeader = "#FFFFFF",
+                ColorTextoPrincipal = "#0448B5",
+                Contacto = "rinconsebastian@gmail.com",
             };
             modelBuilder.Entity<Configuracion>().HasData(config);
 

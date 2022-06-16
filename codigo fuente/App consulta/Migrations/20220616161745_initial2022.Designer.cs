@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210630153949_Solicitudes")]
-    partial class Solicitudes
+    [Migration("20220616161745_initial2022")]
+    partial class initial2022
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -151,21 +151,35 @@ namespace App_consulta.Migrations
 
             modelBuilder.Entity("App_consulta.Models.Configuracion", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     b.Property<int>("CodeEncuestador")
                         .HasColumnType("int");
 
+                    b.Property<string>("ColorPrincipal")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ColorTextoHeader")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ColorTextoPrincipal")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Contacto")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("DescripcionApp")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Entidad")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Favicon")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImgBackgroud")
                         .HasColumnType("longtext");
 
                     b.Property<string>("ImgHeader")
@@ -198,47 +212,33 @@ namespace App_consulta.Migrations
                     b.Property<string>("Logo")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("NombreApp")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("NombrePlan")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("activo")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("colorPrincipal")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("colorTextoHeader")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("colorTextoPrincipal")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("contacto")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("libre")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.ToTable("Configuracion");
 
                     b.HasData(
                         new
                         {
-                            id = 1,
+                            Id = 1,
                             CodeEncuestador = 0,
-                            Entidad = "Entidad",
-                            Logo = "/images/SIE.png",
-                            NombrePlan = "Plan",
-                            activo = true,
-                            colorPrincipal = "#52a3a1",
-                            colorTextoHeader = "#ffffff",
-                            colorTextoPrincipal = "#00000",
-                            contacto = "rinconsebastian@gmail.com",
-                            libre = true
+                            ColorPrincipal = "#4287F5",
+                            ColorTextoHeader = "#FFFFFF",
+                            ColorTextoPrincipal = "#0448B5",
+                            Contacto = "rinconsebastian@gmail.com",
+                            DescripcionApp = "Acuerdo AUNAP - PNUD 2022",
+                            Entidad = "PNUD-AUNAP",
+                            Favicon = "/images/favicon.png",
+                            Logo = "/images/favicon1.png",
+                            NombreApp = "App Consulta",
+                            NombrePlan = "Coordinación"
                         });
                 });
 
@@ -265,6 +265,9 @@ namespace App_consulta.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Encuestador")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Especies")
                         .HasColumnType("longtext");
 
                     b.Property<int>("Estado")
@@ -1031,6 +1034,9 @@ namespace App_consulta.Migrations
                     b.Property<bool>("AlertUser")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("File")
                         .HasColumnType("longtext");
 
@@ -1053,6 +1059,9 @@ namespace App_consulta.Migrations
 
                     b.Property<int>("State")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("ValidationDate")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -1085,8 +1094,15 @@ namespace App_consulta.Migrations
                         new
                         {
                             Id = 1,
-                            Editar = true,
+                            Editar = false,
                             Nombre = "Entidad"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Editar = false,
+                            IdJefe = 1,
+                            Nombre = "[CDR] Coordinación"
                         });
                 });
 
@@ -1158,14 +1174,14 @@ namespace App_consulta.Migrations
                         new
                         {
                             Id = 7,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar",
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver",
                             ClaimValue = "1",
                             RoleId = "1"
                         },
                         new
                         {
                             Id = 8,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Ver",
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Editar",
                             ClaimValue = "1",
                             RoleId = "1"
                         },
@@ -1173,6 +1189,97 @@ namespace App_consulta.Migrations
                         {
                             Id = 9,
                             ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestador.Administrar",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Actualizar",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Listado",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Encuestas.Usuario",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Editar",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Listado",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Cambiar",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Restablecer",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Crear",
+                            ClaimValue = "1",
+                            RoleId = "1"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Administrar",
                             ClaimValue = "1",
                             RoleId = "1"
                         });
