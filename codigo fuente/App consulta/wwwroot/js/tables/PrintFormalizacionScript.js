@@ -20,6 +20,16 @@ var funcPrint = {
                 });
         }
     },
+    LoadValidImages: function () {
+        $('body').on('change', '#print_ck', function (e) {
+            var value = $('input#print_ck:checkbox:checked').length;
+            if (value == 1) {
+                $('.pageExtra').removeClass('d-print-block');
+            } else {
+                $('.pageExtra').addClass('d-print-block');
+            }
+        });
+    },
     init: function () {
         // Carga las variables de configuración.
         root_print = $('#Root').val();
@@ -27,6 +37,8 @@ var funcPrint = {
         if (typeof myIdsPrint !== "undefined") {
             idsPrint = myIdsPrint;
         }
+
+        funcPrint.LoadValidImages();
     }
 };
 

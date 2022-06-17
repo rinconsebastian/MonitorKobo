@@ -25,6 +25,14 @@
             <div class="card-body">
                 <h4 class="my-2">Imprimir formalizaciones</h4>
                 <hr />
+                <div class="m-2 p-2">
+                    <div class="alert alert-secondary" role="alert">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="print_ck" value="1">
+                            <label for="print_ck" class="custom-control-label">Versión simplificada</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="row mb-4">
                     <div class=" col-4 offset-4">
                         <button onclick="window.print();" @disabled class="btn btn-lg btn-block btn-success"><i class="fas fa-print"></i> IMPRIMIR </button>
@@ -41,6 +49,7 @@
                                 {
                                     case Formalization.ESTADO_CANCELADO:
                                     case Formalization.ESTADO_CARNET_VIGENTE:
+                                    case Formalization.ESTADO_CARNET_DUPLICADO:
                                         <tr class="text-danger text-center"><td colspan="5"><b>Formalización cancelada</b>, no puede ser impresa</td></tr>
                                         break;
                                     case Formalization.ESTADO_BORRADOR:
@@ -72,6 +81,9 @@
                                                 break;
                                             case Formalization.ESTADO_CARNET_VIGENTE:
                                                 <span class="badge bg-danger text-white float-right">Carnet vigente</span>
+                                                break;
+                                            case Formalization.ESTADO_CARNET_DUPLICADO:
+                                                <span class="badge bg-danger text-white float-right">Duplicado</span>
                                                 break;
                                         }
                                     </td>
@@ -107,49 +119,12 @@
     {
         continue;
     }
+
     <div class="page-f d-none d-print-block">
         @await Html.PartialAsync("_FormalizacionPartial")
         <p class="font-weight-bold text-center">INFORMACIÓN GENERAL</p>
         <p class="text-justify">
-            <strong><i class="far fa-check-circle"></i> F1. - Formato solicitud de carnetización:</strong>
-            Documento Original
-        </p>
-
-        <table class="table table-bordered table-formalz  table-sm">
-            <tbody>
-                <tr>
-                    <td class="font-weight-bold">Fecha de solicitud</td>
-                    <td>@formalz.FechaSolicitud</td>
-                    <td class="font-weight-bold">No. de registro</td>
-                    <td>@formalz.NumeroRegistro</td>
-                </tr>
-                <tr>
-                    <td class="font-weight-bold">Nombre y apellidos</td>
-                    <td colspan="3" class="text-uppercase">@formalz.Name</td>
-                </tr>
-                <tr>
-                    <td class="font-weight-bold">No. de Cedula</td>
-                    <td>@formalz.Cedula</td>
-                    <td class="font-weight-bold">Municipio</td>
-                    <td>@formalz.Municipio - @formalz.Departamento</td>
-                </tr>
-                <tr>
-                    <td class="font-weight-bold"> Nombre del formato</td>
-                    <td colspan="3">F1. - Formato Solicitud de Carnetización: Documento Original</td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="text-center">
-                        @await Component.InvokeAsync("Image", new { file = formalz.ImgSolicitudCarnet, text = "Image Documento Original", css = "img-large" })
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-    </div>
-    <div class="page-f d-none d-print-block">
-        @await Html.PartialAsync("_FormalizacionPartial")
-        <p class="text-justify">
-            <strong><i class="far fa-check-circle"></i> F2. y F3. - Fotografía</strong> tamaño documento fondo blanco y Fotografía de la Cedula de Ciudadanía del
+            <strong><i class="far fa-check-circle"></i> F1. y F2. - Fotografía</strong> tamaño documento fondo blanco y Fotografía de la Cedula de Ciudadanía del
             pescador solicitante.
         </p>
 
@@ -186,7 +161,7 @@
                 <tr>
                     <td class="font-weight-bold"> Nombre del formato</td>
                     <td colspan="3">
-                        F2. y F3. - Fotografía tamaño documento fondo blanco y Fotografía de la Cedula
+                        F1. y F2. - Fotografía tamaño documento fondo blanco y Fotografía de la Cedula
                         de Ciudadanía del pescador solicitante.
                     </td>
                 </tr>
@@ -213,7 +188,48 @@
             </tbody>
         </table>
     </div>
-    <div class="page-f d-none d-print-block">
+
+    <div class="page-f d-none d-print-block pageExtra">
+
+        @await Html.PartialAsync("_FormalizacionPartial")
+        <p class="text-justify">
+            <strong><i class="far fa-check-circle"></i> F3. - Formato autorización de uso de datos personales:</strong>
+            Documento Original
+        </p>
+
+        <table class="table table-bordered table-formalz  table-sm">
+            <tbody>
+                <tr>
+                    <td class="font-weight-bold">Fecha de solicitud</td>
+                    <td>@formalz.FechaSolicitud</td>
+                    <td class="font-weight-bold">No. de registro</td>
+                    <td>@formalz.NumeroRegistro</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Nombre y apellidos</td>
+                    <td colspan="3" class="text-uppercase">@formalz.Name</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">No. de Cedula</td>
+                    <td>@formalz.Cedula</td>
+                    <td class="font-weight-bold">Municipio</td>
+                    <td>@formalz.Municipio - @formalz.Departamento</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"> Nombre del formato</td>
+                    <td colspan="3">F3. - Formato autorización de uso de datos personales: Documento Original</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        @await Component.InvokeAsync("Image", new { file = formalz.ImgAutorizacion, text = "Image Documento Original", css = "img-large" })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="page-f d-none d-print-block pageExtra">
         @await Html.PartialAsync("_FormalizacionPartial")
         <p class="text-justify">
             <strong><i class="far fa-check-circle"></i> F4. - Formato Certificación de acreditación de pescado artesanal:</strong>
@@ -255,6 +271,48 @@
             </tbody>
         </table>
     </div>
+
+    <div class="page-f d-none d-print-block pageExtra">
+        @await Html.PartialAsync("_FormalizacionPartial")
+
+        <p class="text-justify">
+            <strong><i class="far fa-check-circle"></i> F5. - Formato solicitud de carnetización:</strong>
+            Documento Original
+        </p>
+
+        <table class="table table-bordered table-formalz  table-sm">
+            <tbody>
+                <tr>
+                    <td class="font-weight-bold">Fecha de solicitud</td>
+                    <td>@formalz.FechaSolicitud</td>
+                    <td class="font-weight-bold">No. de registro</td>
+                    <td>@formalz.NumeroRegistro</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">Nombre y apellidos</td>
+                    <td colspan="3" class="text-uppercase">@formalz.Name</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold">No. de Cedula</td>
+                    <td>@formalz.Cedula</td>
+                    <td class="font-weight-bold">Municipio</td>
+                    <td>@formalz.Municipio - @formalz.Departamento</td>
+                </tr>
+                <tr>
+                    <td class="font-weight-bold"> Nombre del formato</td>
+                    <td colspan="3">F5. - Formato Solicitud de Carnetización: Documento Original</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="text-center">
+                        @await Component.InvokeAsync("Image", new { file = formalz.ImgSolicitudCarnet, text = "Image Documento Original", css = "img-large" })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
 
 }
 

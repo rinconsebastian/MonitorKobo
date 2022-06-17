@@ -3,14 +3,16 @@ using System;
 using App_consulta.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App_consulta.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220617140703_imagen_autorizacion")]
+    partial class imagen_autorizacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -937,13 +939,6 @@ namespace App_consulta.Migrations
                         },
                         new
                         {
-                            id = 23,
-                            claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Cancelar",
-                            group = 5,
-                            nombre = "Cancelar formalización"
-                        },
-                        new
-                        {
                             id = 18,
                             claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado",
                             group = 6,
@@ -1288,13 +1283,6 @@ namespace App_consulta.Migrations
                         {
                             Id = 22,
                             ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Administrar",
-                            ClaimValue = "1",
-                            RoleId = "1"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            ClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Cancelar",
                             ClaimValue = "1",
                             RoleId = "1"
                         });

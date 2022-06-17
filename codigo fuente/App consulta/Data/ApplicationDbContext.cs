@@ -66,6 +66,7 @@ namespace App_consulta.Data
                 new Policy() { id = 14, nombre = "Validar formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Validar", group = 5  },
                 new Policy() { id = 15, nombre = "Informe formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Listado", group = 5  },
                 new Policy() { id = 17, nombre = "Imprimir formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imprimir", group = 5  },
+                new Policy() { id = 23, nombre = "Cancelar formalización", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Cancelar", group = 5  },
 
                 new Policy() { id = 18, nombre = "Exportar listados", claim = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Exportar.Listado", group = 6  },
 
@@ -105,7 +106,8 @@ namespace App_consulta.Data
                  new IdentityRoleClaim<string>() { Id =19, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Cambiar", ClaimValue = "1"},
                  new IdentityRoleClaim<string>() { Id =20, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Imagen.Restablecer", ClaimValue = "1"},
                  new IdentityRoleClaim<string>() { Id =21, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Crear", ClaimValue = "1"},
-                 new IdentityRoleClaim<string>() { Id =22, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Administrar", ClaimValue = "1"}
+                 new IdentityRoleClaim<string>() { Id =22, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Solicitud.Administrar", ClaimValue = "1"},
+                 new IdentityRoleClaim<string>() { Id =23, RoleId = "1", ClaimType= "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Cancelar", ClaimValue = "1"}
                 };
             modelBuilder.Entity<IdentityRoleClaim<string>>().HasData(policiesRol);
 

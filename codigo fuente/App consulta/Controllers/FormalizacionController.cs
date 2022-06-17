@@ -153,7 +153,8 @@ namespace App_consulta.Controllers
                 {  Formalization.ESTADO_COMPLETO, "Completo" },
                 {  Formalization.ESTADO_CANCELADO, "Cancelado" },
                 {  Formalization.ESTADO_IMPRESO, "Impreso" },
-                {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" }
+                {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" },
+                {  Formalization.ESTADO_CARNET_DUPLICADO, "Duplicado" }
             };
 
             ViewBag.Estados = new SelectList(estados, "Key", "Value", formalizacion.Estado);
@@ -310,13 +311,13 @@ namespace App_consulta.Controllers
                 {  Formalization.ESTADO_COMPLETO, "Completo" },
                 {  Formalization.ESTADO_CANCELADO, "Cancelado" },
                 {  Formalization.ESTADO_IMPRESO, "Impreso" },
-                {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" }
-
+                {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" },
+                {  Formalization.ESTADO_CARNET_DUPLICADO, "Duplicado" }
             };
 
             ViewBag.Estados = new SelectList(estados, "Key", "Value", formalizacion.Estado);
 
-            ViewBag.Formalizacion = formalizacion;
+            ViewBag.Formalizacion = original;
             var postModel = new FormalizacionPostModel()
             {
                 Id = formalizacion.Id,
@@ -424,6 +425,9 @@ namespace App_consulta.Controllers
                     break;
                 case Formalization.ESTADO_CARNET_VIGENTE:
                     r = "Carnet vigente";
+                    break;
+                case Formalization.ESTADO_CARNET_DUPLICADO:
+                    r = "Duplicado";
                     break;
             }
             return r;

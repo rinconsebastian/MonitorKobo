@@ -16,6 +16,7 @@ namespace App_consulta.Models
         public const int ESTADO_CANCELADO = 3;
         public const int ESTADO_IMPRESO = 4;
         public const int ESTADO_CARNET_VIGENTE= 5;
+        public const int ESTADO_CARNET_DUPLICADO = 6;
 
 
         [Required]
@@ -76,6 +77,9 @@ namespace App_consulta.Models
 
         [Display(Name = "Foto Cédula (Reverso)")]
         public string ImgCedulaReverso { get; set; }
+
+        [Display(Name = "Autorización datos personales")]
+        public string ImgAutorizacion { get; set; }
 
         [Display(Name = "Firma digital")]
         public string ImgFirmaDigital { get; set; }

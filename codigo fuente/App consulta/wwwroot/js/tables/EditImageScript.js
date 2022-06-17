@@ -349,6 +349,29 @@ var funcImg = {
             }
         });
     },
+    LoadValidImages: function () {
+        $('body').on('change', '.ck_field', function (e) {
+            var basic = $('#ck_bar').data('basic');
+            var value = $('input.ck_field:checkbox:checked').length;
+            var total = basic + (value * 14);
+
+            var tab = $(this).data('tab');
+            var countCedula = $('input.ck_cedula:checkbox:checked').length;
+            if (tab != "cedula-tab" || (tab == "cedula-tab" && countCedula == 2) ) {
+                $('#' + tab).attr('style', 'color: #387a40;');
+            }
+
+            if (total == 100) {
+                $('.ck_button').prop('disabled', false);
+                $('#ck_panel').attr('style', 'display:none !important');
+            } else {
+                $('.ck_button').prop('disabled', true);
+                $('#ck_panel').show();
+            }
+            $('#ck_bar').css('width', total + '%').attr('aria-valuenow', total);
+
+        });
+    },
     init: function () {
         // Carga las variables de configuración.
         root = $('#Root').val();
@@ -370,6 +393,7 @@ var funcImg = {
         funcImg.loadShowModalImage();
         funcImg.loadImageReset();
         funcImg.loadImageChange();
+        funcImg.LoadValidImages();
 
         funcImg.showSelectionFileInput();
 

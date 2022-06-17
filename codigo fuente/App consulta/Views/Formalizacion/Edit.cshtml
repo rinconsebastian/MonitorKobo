@@ -50,32 +50,44 @@
                 case Formalization.ESTADO_CARNET_VIGENTE:
                     <span class="badge bg-danger text-white float-right">Carnet vigente</span>
                     break;
+                case Formalization.ESTADO_CARNET_DUPLICADO:
+                    <span class="badge bg-danger text-white float-right">Duplicado</span>
+                    break;
             }
         </h4>
+
+        <div class="progress">
+            <div id="ck_bar" data-basic="@(permisoEditar? 2 : 16)"  class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @(permisoEditar? 2 : 16)%" aria-valuenow="@(permisoEditar? 2 : 16)" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
         <hr />
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab1" aria-selected="true">General</a>
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab1" 
+                   aria-selected="true" style="@(permisoEditar ? "" : "color: #387a40")" >General</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#tab-5" role="tab" aria-controls="tab5" aria-selected="false">Pescador</a>
+                <a class="nav-link" id="foto-tab" data-toggle="tab" href="#tab-foto" role="tab" aria-controls="tabfoto" aria-selected="false">Pescador</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#tab-4" role="tab" aria-controls="tab4" aria-selected="false">Cédula</a>
+                <a class="nav-link" id="cedula-tab" data-toggle="tab" href="#tab-cedula" role="tab" aria-controls="tabcedula" aria-selected="false">Cédula</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#tab-2" role="tab" aria-controls="tab2" aria-selected="false"> Solicitud</a>
+                <a class="nav-link" id="autorizacion-tab" data-toggle="tab" href="#tab-autorizacion" role="tab" aria-controls="tabautorizacion" aria-selected="false">Autorización</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#tab-3" role="tab" aria-controls="tab3" aria-selected="false">Certificación</a>
+                <a class="nav-link" id="certificado-tab" data-toggle="tab" href="#tab-certificado" role="tab" aria-controls="tabcertificado" aria-selected="false">Certificación</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="final-tab" data-toggle="tab" href="#tab-6" role="tab" aria-controls="tab6" aria-selected="false">Finalizar</a>
+                <a class="nav-link" id="solicitud-tab" data-toggle="tab" href="#tab-solicitud" role="tab" aria-controls="tabsolicitud" aria-selected="false"> Solicitud</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="final-tab" data-toggle="tab" href="#tab-final" role="tab" aria-controls="tabfinal" aria-selected="false">Finalizar</a>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="tab-1">
 
+            <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="tab-1">
                 <div class="row">
                     <div class="col-12 col-lg-8 offset-lg-2 p-4">
                         @if (ViewBag.error != null)
@@ -132,7 +144,7 @@
                                 <div class="form-group row">
                                     <label asp-for="AreaPesca" class="col-md-4 col-form-label"></label>
                                     <div class="col-md-8">
-                                        <input asp-for="AreaPesca" class="form-control" required />
+                                        <input asp-for="AreaPesca" class="form-control" />
                                         <span asp-validation-for="AreaPesca" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
@@ -140,7 +152,7 @@
                                 <div class="form-group row">
                                     <label asp-for="ArtesPesca" class="col-md-4 col-form-label"></label>
                                     <div class="col-md-8">
-                                        <input asp-for="ArtesPesca" class="form-control" required />
+                                        <input asp-for="ArtesPesca" class="form-control" />
                                         <span asp-validation-for="ArtesPesca" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
@@ -148,7 +160,7 @@
                                 <div class="form-group row">
                                     <label asp-for="Especies" class="col-md-4 col-form-label"></label>
                                     <div class="col-md-8">
-                                        <input asp-for="Especies" class="form-control" required />
+                                        <input asp-for="Especies" class="form-control" />
                                         <span asp-validation-for="Especies" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
@@ -181,6 +193,14 @@
                                 <div class="form-group row">
                                     <div class="col-sm-4 offset-lg-4">
                                         <input type="submit" value="Guardar" class="btn btn-outline-primary btn-block" />
+                                    </div>
+                                </div>
+                                <div class="m-2 p-2">
+                                    <div class="alert alert-secondary" role="alert">
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input ck_field" data-tab="home-tab" id="v_form" value="1">
+                                            <label for="v_form" class="custom-control-label">Confirma que esta información ha sido revisada. </label>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -243,12 +263,21 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-5" role="tabpanel" aria-labelledby="tab-5">
+
+            <div class="tab-pane fade" id="tab-foto" role="tabpanel" aria-labelledby="tab-foto">
                 <div class="text-center py-4 px-1">
                     @await Component.InvokeAsync("Image", new { file = original.ImgPescador, text = "Foto pescador", css = "img-detail-large", id = "img-pescador" })
                     @if (original.ImgPescador != null && original.ImgPescador != "")
                     {
                         <br />
+                        <div class="m-2 p-2">
+                            <div class="alert alert-secondary" role="alert">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input ck_field"  data-tab="foto-tab" id="v_pescador" value="1">
+                                    <label for="v_pescador" class="custom-control-label">Confirma que la imagen fue revisada.</label>
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-pescador"
                                 data-filename="@original.ImgPescador">
                             <i class="fas fa-photo-video"></i> Editar
@@ -274,12 +303,21 @@
                     }
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-2" role="tabpanel" aria-labelledby="tab-2">
+
+            <div class="tab-pane fade" id="tab-solicitud" role="tabpanel" aria-labelledby="tab-solicitud">
                 <div class="text-center py-4 px-1">
                     @await Component.InvokeAsync("Image", new { file = original.ImgSolicitudCarnet, text = "Foto solicitud", css = "img-detail-large", id = "img-solicitud" })
                     @if (original.ImgSolicitudCarnet != null && original.ImgSolicitudCarnet != "")
                     {
                         <br />
+                        <div class="m-2 p-2">
+                            <div class="alert alert-secondary" role="alert">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input ck_field" data-tab="solicitud-tab" id="v_solicitud" value="1">
+                                    <label for="v_solicitud" class="custom-control-label">Confirma que la imagen fue revisada.</label>
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-solicitud"
                                 data-filename="@original.ImgSolicitudCarnet">
                             <i class="fas fa-photo-video"></i> Editar
@@ -305,12 +343,21 @@
                     }
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-3" role="tabpanel" aria-labelledby="tab-3">
+
+            <div class="tab-pane fade" id="tab-certificado" role="tabpanel" aria-labelledby="tab-certificado">
                 <div class="text-center py-4 px-1">
                     @await Component.InvokeAsync("Image", new { file = original.ImgCertificacion, text = "Foto certificación", css = "img-detail-large", id = "img-certificado" })
                     @if (original.ImgCertificacion != null && original.ImgCertificacion != "")
                     {
                         <br />
+                        <div class="m-2 p-2">
+                            <div class="alert alert-secondary" role="alert">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input ck_field" data-tab="certificado-tab" id="v_certi" value="1">
+                                    <label for="v_certi" class="custom-control-label">Confirma que la imagen fue revisada.</label>
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-certificado"
                                 data-filename="@original.ImgCertificacion">
                             <i class="fas fa-photo-video"></i> Editar
@@ -337,13 +384,64 @@
 
                 </div>
             </div>
-            <div class="tab-pane fade" id="tab-4" role="tabpanel" aria-labelledby="tab-4">
+
+            <div class="tab-pane fade" id="tab-autorizacion" role="tabpanel" aria-labelledby="tab-autorizacion">
+                <div class="text-center py-4 px-1">
+                    @await Component.InvokeAsync("Image", new { file = original.ImgAutorizacion, text = "Autorización datos personales", css = "img-detail-large", id = "img-autorizacion" })
+                    @if (original.ImgAutorizacion != null && original.ImgAutorizacion != "")
+                    {
+                        <br />
+                        <div class="m-2 p-2">
+                            <div class="alert alert-secondary" role="alert">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input ck_field" data-tab="autorizacion-tab" id="v_autorizacion" value="1">
+                                    <label for="v_autorizacion" class="custom-control-label">Confirma que la imagen fue revisada.</label>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-warning mt-3 showEditModal"
+                                data-img="img-autorizacion"
+                                data-filename="@original.ImgAutorizacion">
+                            <i class="fas fa-photo-video"></i> Editar
+                        </button>
+                        if (permisoImagen)
+                        {
+                            <button class="btn btn-outline-success mt-3 ml-4 btn-image-load"
+                                    data-filename="@original.ImgAutorizacion"
+                                    data-name="Autorización datos personales"
+                                    data-image="img-autorizacion">
+                                <i class="fas fa-upload"></i> Cargar
+                            </button>
+                        }
+                        if (permisoRestablecer)
+                        {
+                            <button class="btn btn-outline-danger mt-3 ml-4 btn-image-reset"
+                                    data-filename="@original.ImgAutorizacion"
+                                    data-name="Autorización datos personales"
+                                    data-image="img-autorizacion">
+                                <i class="far fa-window-restore"></i> Restablecer
+                            </button>
+                        }
+                    }
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="tab-cedula" role="tabpanel" aria-labelledby="tab-cedula">
                 <div class="row">
                     <div class="col-12 col-sm-6 text-center py-4 px-1">
                         @await Component.InvokeAsync("Image", new { file = original.ImgCedulaAnverso, text = "Foto cédula", css = "img-detail-large", id = "img-cedula-a" })
                         @if (original.ImgCedulaAnverso != null && original.ImgCedulaAnverso != "")
                         {
                             <br />
+                            <div class="m-2 p-2">
+                                <div class="alert alert-secondary" role="alert">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input ck_field ck_cedula" data-tab="cedula-tab" id="v_cedula_a" value="1">
+                                        <label for="v_cedula_a" class="custom-control-label">Confirma que la imagen fue revisada.</label>
+                                    </div>
+                                </div>
+                            </div>
                             <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-cedula-a"
                                     data-filename="@original.ImgCedulaAnverso">
                                 <i class="fas fa-photo-video"></i> Editar
@@ -373,6 +471,14 @@
                         @if (original.ImgCedulaReverso != null && original.ImgCedulaReverso != "")
                         {
                             <br />
+                            <div class="m-2 p-2">
+                                <div class="alert alert-secondary" role="alert">
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input ck_field ck_cedula" data-tab="cedula-tab" id="v_cedula_b" value="1">
+                                        <label for="v_cedula_b" class="custom-control-label">Confirma que la imagen fue revisada.</label>
+                                    </div>
+                                </div>
+                            </div>
                             <button class="btn btn-outline-warning mt-3 showEditModal" data-img="img-cedula-r"
                                     data-filename="@original.ImgCedulaReverso">
                                 <i class="fas fa-photo-video"></i> Editar
@@ -400,19 +506,24 @@
                 </div>
             </div>
 
-            <div class="tab-pane fade" id="tab-6" role="tabpanel" aria-labelledby="tab-6">
+            <div class="tab-pane fade" id="tab-final" role="tabpanel" aria-labelledby="tab-final">
+                <div class="row mt-4 p-2 d-flex justify-content-center" id="ck_panel">
+                    <div class="alert alert-warning" role="alert">
+                        Para finalizar la formalización primero debe marcar todos los cuadros de confirmación.
+                    </div>
+                </div>
                 <div class="row py-4 px-1">
                     <div class="col-12 col-md-4 mb-1">
-                        <button class="btn btn-outline-success btn-lg btn-block btn-finalizar" data-accion="finalizar">Finalizar <i class="fas"></i></u></button>
+                        <button class="btn btn-outline-success btn-lg btn-block btn-finalizar ck_button" disabled data-accion="finalizar">Finalizar <i class="fas"></i></button>
                     </div>
                     @if (permisoImprimir)
                     {
                         <div class="col-12 col-md-4 mb-1">
-                            <button class="btn btn-outline-info btn-lg btn-block btn-finalizar" data-accion="imprimir" data-link="@Url.Action("Print","Formalizacion", new { ids = Model.Id })">Finalizar e imprimir <i class="fas"></i></button>
+                            <button class="btn btn-outline-info btn-lg btn-block btn-finalizar ck_button" disabled data-accion="imprimir" data-link="@Url.Action("Print","Formalizacion", new { ids = Model.Id })">Finalizar e imprimir <i class="fas"></i></button>
                         </div>
                     }
                     <div class="col-12 col-md-4 mb-1">
-                        <button class="btn btn-outline-danger btn-lg btn-block" data-toggle="modal" data-target="#modalConfirm">No valida</button>
+                        <button class="btn btn-outline-danger btn-lg btn-block" data-toggle="modal"  data-target="#modalConfirm">No valida</button>
                     </div>
                 </div>
             </div>
@@ -622,7 +733,7 @@
 @section Scripts{
     <script type="text/javascript" src="~/lib/cropper/cropper.js"></script>
     <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
-    <script type="text/javascript" src="~/js/tables/EditImageScript.js?v=1.0"></script>
+    <script type="text/javascript" src="~/js/tables/EditImageScript.js?v=1.1"></script>
     <script type="text/javascript" src="~/js/tables/ValidarFormalizacionScript.js?v=1.0"></script>
     <script>
         function goBack() {

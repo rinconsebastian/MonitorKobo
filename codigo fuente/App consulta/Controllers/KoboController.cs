@@ -207,7 +207,7 @@ namespace App_consulta.Controllers
                                 value = listResult.Count > 0 ? String.Join(", ", listResult) : "" ;
                             }
                         }
-                        if (name == "Especies")
+                        else if (name == "Especies")
                         {
                             var auxValue = (String)result[fieldName];
                             if (auxValue != null & auxValue != "")

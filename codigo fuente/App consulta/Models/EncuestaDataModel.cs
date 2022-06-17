@@ -71,15 +71,12 @@ namespace App_consulta.Models
         public string Cedula { get; set; }
 
         [Display(Name = "Área de pesca")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string AreaPesca { get; set; }
 
         [Display(Name = "Artes de pesca")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string ArtesPesca { get; set; }
 
         [Display(Name = "Especies de pesca")]
-        [Required(ErrorMessage = "El campo {0} es obligatorio. ")]
         public string Especies { get; set; }
 
         [Display(Name = "Nombre asociación")]
