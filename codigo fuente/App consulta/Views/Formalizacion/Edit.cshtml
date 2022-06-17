@@ -57,13 +57,13 @@
         </h4>
 
         <div class="progress">
-            <div id="ck_bar" data-basic="@(permisoEditar? 2 : 16)"  class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @(permisoEditar? 2 : 16)%" aria-valuenow="@(permisoEditar? 2 : 16)" aria-valuemin="0" aria-valuemax="100"></div>
+            <div id="ck_bar" data-basic="@(permisoEditar? 2 : 16)" class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: @(permisoEditar? 2 : 16)%" aria-valuenow="@(permisoEditar? 2 : 16)" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <hr />
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab1" 
-                   aria-selected="true" style="@(permisoEditar ? "" : "color: #387a40")" >General</a>
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab1"
+                   aria-selected="true" style="@(permisoEditar ? "" : "color: #387a40")">General</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="foto-tab" data-toggle="tab" href="#tab-foto" role="tab" aria-controls="tabfoto" aria-selected="false">Pescador</a>
@@ -89,7 +89,7 @@
 
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="tab-1">
                 <div class="row">
-                    <div class="col-12 col-lg-8 offset-lg-2 p-4">
+                    <div class="col-12 col-lg-10 offset-lg-1 p-4">
                         @if (ViewBag.error != null)
                         {
                             <div class="alert alert-warning" role="alert">
@@ -144,7 +144,7 @@
                                 <div class="form-group row">
                                     <label asp-for="AreaPesca" class="col-md-4 col-form-label"></label>
                                     <div class="col-md-8">
-                                        <input asp-for="AreaPesca" class="form-control" />
+                                        <textarea asp-for="AreaPesca" class="form-control" ></textarea>
                                         <span asp-validation-for="AreaPesca" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
@@ -152,7 +152,7 @@
                                 <div class="form-group row">
                                     <label asp-for="ArtesPesca" class="col-md-4 col-form-label"></label>
                                     <div class="col-md-8">
-                                        <input asp-for="ArtesPesca" class="form-control" />
+                                        <input id="artesInput" asp-for="ArtesPesca" class="form-control" data-role="tagsinput" />
                                         <span asp-validation-for="ArtesPesca" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
@@ -160,7 +160,7 @@
                                 <div class="form-group row">
                                     <label asp-for="Especies" class="col-md-4 col-form-label"></label>
                                     <div class="col-md-8">
-                                        <input asp-for="Especies" class="form-control" />
+                                        <input id="especiesInput" asp-for="Especies" class="form-control" data-role="tagsinput" />
                                         <span asp-validation-for="Especies" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
@@ -273,7 +273,7 @@
                         <div class="m-2 p-2">
                             <div class="alert alert-secondary" role="alert">
                                 <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input ck_field"  data-tab="foto-tab" id="v_pescador" value="1">
+                                    <input type="checkbox" class="custom-control-input ck_field" data-tab="foto-tab" id="v_pescador" value="1">
                                     <label for="v_pescador" class="custom-control-label">Confirma que la imagen fue revisada.</label>
                                 </div>
                             </div>
@@ -523,7 +523,7 @@
                         </div>
                     }
                     <div class="col-12 col-md-4 mb-1">
-                        <button class="btn btn-outline-danger btn-lg btn-block" data-toggle="modal"  data-target="#modalConfirm">No valida</button>
+                        <button class="btn btn-outline-danger btn-lg btn-block" data-toggle="modal" data-target="#modalConfirm">No valida</button>
                     </div>
                 </div>
             </div>
@@ -729,8 +729,18 @@
 
 @section Styles{
     <link rel="stylesheet" href="~/lib/cropper/cropper.css" />
+    <link rel="stylesheet" href="~/lib/tagsinput/bootstrap-tagsinput.css">
+    <link rel="stylesheet" href="~/lib/tagsinput/app.css">
+
 }
 @section Scripts{
+    <script type="text/javascript" src="~/lib/tagsinput/typeahead.bundle.min.js"></script>
+    <script type="text/javascript" src="~/lib/tagsinput/angular.min.js"></script>
+    <script type="text/javascript" src="~/lib/tagsinput/bootstrap-tagsinput.js"></script>
+    <script type="text/javascript" src="~/lib/tagsinput/bootstrap-tagsinput-angular.js"></script>
+    <script type="text/javascript" src="~/lib/tagsinput/app.js"></script>
+
+
     <script type="text/javascript" src="~/lib/cropper/cropper.js"></script>
     <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
     <script type="text/javascript" src="~/js/tables/EditImageScript.js?v=1.1"></script>
@@ -743,5 +753,47 @@
                 window.history.back();
             }
         }
+    </script>
+    <script>
+        var especies = JSON.parse('@Html.Raw(ViewBag.Especies)');
+        var artes = JSON.parse('@Html.Raw(ViewBag.Artes)');
+
+        var dataArtes = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: $.map(artes, function (item) {
+                return {
+                    value: item
+                };
+            })
+        });
+        dataArtes.initialize();
+
+        $('#artesInput').tagsinput({
+            typeaheadjs: {
+                displayKey: 'value',
+                valueKey: 'value',
+                source: dataArtes.ttAdapter()
+            }
+        });
+
+        var dataEspecies = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: $.map(especies, function (item) {
+                return {
+                    value: item
+                };
+            })
+        });
+        dataEspecies.initialize();
+
+        $('#especiesInput').tagsinput({
+            typeaheadjs: {
+                displayKey: 'value',
+                valueKey: 'value',
+                source: dataEspecies.ttAdapter()
+            }
+        });
     </script>
 }

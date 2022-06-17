@@ -172,6 +172,12 @@ namespace App_consulta.Controllers
                 NombreAsociacion = formalizacion.NombreAsociacion
             };
 
+            var artes = await db.FormalizationVariable.Where(n => n.Group == "Arte").Select(n => n.Value).ToListAsync();
+            ViewBag.Artes = JsonConvert.SerializeObject(artes);
+            var especies = await db.FormalizationVariable.Where(n => n.Group == "Especie").Select(n => n.Value).ToListAsync();
+            ViewBag.Especies = JsonConvert.SerializeObject(especies);
+
+
             return View(postModel);
 
         }
