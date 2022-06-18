@@ -177,6 +177,7 @@ namespace App_consulta.Controllers
             var especies = await db.FormalizationVariable.Where(n => n.Group == "Especie").Select(n => n.Value).ToListAsync();
             ViewBag.Especies = JsonConvert.SerializeObject(especies);
 
+            ViewBag.Zonas = new SelectList(await db.FormalizationVariable.Where(n => n.Group == "Zona").ToListAsync(), "Value", "Value");
 
             return View(postModel);
 

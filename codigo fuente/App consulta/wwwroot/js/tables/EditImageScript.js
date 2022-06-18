@@ -356,9 +356,12 @@ var funcImg = {
             var total = basic + (value * 14);
 
             var tab = $(this).data('tab');
+            $('#' + tab).attr('style', '')
             var countCedula = $('input.ck_cedula:checkbox:checked').length;
-            if (tab != "cedula-tab" || (tab == "cedula-tab" && countCedula == 2) ) {
-                $('#' + tab).attr('style', 'color: #387a40;');
+            if ($(this).is(':checked')) {
+                if (tab != "cedula-tab" || (tab == "cedula-tab" && countCedula == 2)) {
+                    $('#' + tab).attr('style', 'color: #387a40;')
+                }
             }
 
             if (total == 100) {

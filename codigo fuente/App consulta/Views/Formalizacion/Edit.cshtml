@@ -25,6 +25,8 @@
     var listaCoordinacion = (SelectList)ViewBag.Coordinaciones;
     var listaEstados = (SelectList)ViewBag.Estados;
 
+    var listaZonas = (SelectList)ViewBag.Zonas;
+
 }
 @Html.Hidden("IdFormalizacion", Model.Id)
 @Html.Hidden("IdKobo", original.IdKobo)
@@ -89,7 +91,7 @@
 
             <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="tab-1">
                 <div class="row">
-                    <div class="col-12 col-lg-10 offset-lg-1 p-4">
+                    <div class="col-12 p-4">
                         @if (ViewBag.error != null)
                         {
                             <div class="alert alert-warning" role="alert">
@@ -104,71 +106,87 @@
                                 <input asp-for="Id" type="hidden" />
                                 <div asp-validation-summary="All" class="small text-danger"></div>
                                 <div class="form-group row">
-                                    <label asp-for="Cedula" class="col-md-4 col-form-label"></label>
-                                    <div class="col-md-8">
+                                    <label asp-for="Cedula" class="col-md-3 col-form-label"></label>
+                                    <div class="col-md-9">
                                         <input asp-for="Cedula" class="form-control" required />
                                         <span asp-validation-for="Cedula" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label asp-for="Name" class="col-md-4 col-form-label"></label>
-                                    <div class="col-md-8">
+                                    <label asp-for="Name" class="col-md-3 col-form-label"></label>
+                                    <div class="col-md-9">
                                         <input asp-for="Name" class="form-control" required />
                                         <span asp-validation-for="Name" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label asp-for="NombreAsociacion" class="col-md-4 col-form-label"></label>
-                                    <div class="col-md-8">
+                                    <label asp-for="NombreAsociacion" class="col-md-3 col-form-label"></label>
+                                    <div class="col-md-9">
                                         <input asp-for="NombreAsociacion" class="form-control" />
                                         <span asp-validation-for="NombreAsociacion" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">Departamento</label>
-                                    <div class="col-md-8">
+                                    <label class="col-md-3 col-form-label">Departamento</label>
+                                    <div class="col-md-9">
                                         <input class="form-control-plaintext font-weight-light" value="@original.Departamento" readonly />
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label class="col-md-4 col-form-label">Municipio</label>
-                                    <div class="col-md-8">
+                                    <label class="col-md-3 col-form-label">Municipio</label>
+                                    <div class="col-md-9">
                                         <input class="form-control-plaintext font-weight-light" value="@original.Municipio" readonly />
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label asp-for="AreaPesca" class="col-md-4 col-form-label"></label>
-                                    <div class="col-md-8">
-                                        <textarea asp-for="AreaPesca" class="form-control" ></textarea>
+                                <div class="form-group row border p-2" id="zonaDiv">
+                                    <label asp-for="AreaPesca" class="col-md-3 col-form-label"></label>
+                                    <div class="col-md-9">
+                                        <input id="zonaInput" asp-for="AreaPesca" class="form-control" data-role="tagsinput" />
+                                        <div class="mt-2 row form-row">
+                                            <div class="col-md-5">
+                                                <select id="zonaTipo" asp-items="@listaZonas" class="form-control">
+                                                    <option value="">Tipo de zona</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input id="zonaNombre" type="text" class="form-control" placeholder="Nombre zona de pesca" />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button id="zonaBoton" type="button" class="btn btn-warning ">Agregar</button>
+                                            </div>
+                                        </div>
+
                                         <span asp-validation-for="AreaPesca" class="form-text small text-danger"></span>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label asp-for="ArtesPesca" class="col-md-4 col-form-label"></label>
-                                    <div class="col-md-8">
-                                        <input id="artesInput" asp-for="ArtesPesca" class="form-control" data-role="tagsinput" />
+                                <div class="form-group row border p-2">
+                                    <label asp-for="ArtesPesca" class="col-md-3 col-form-label"></label>
+                                    <div class="col-md-9">
+                                        <input id="artesInput" asp-for="ArtesPesca" placeholder="Nombre arte de pesca" class="form-control" data-role="tagsinput" />
                                         <span asp-validation-for="ArtesPesca" class="form-text small text-danger"></span>
+                                        <span class="block small text-secondary">[Presione Enter para confirmar el valor ingresado]</span>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label asp-for="Especies" class="col-md-4 col-form-label"></label>
-                                    <div class="col-md-8">
-                                        <input id="especiesInput" asp-for="Especies" class="form-control" data-role="tagsinput" />
+                                <div class="form-group row border p-2">
+                                    <label asp-for="Especies" class="col-md-3 col-form-label"></label>
+                                    <div class="col-md-9">
+                                        <input id="especiesInput" asp-for="Especies" placeholder="Nombre especie" class="form-control" data-role="tagsinput" />
                                         <span asp-validation-for="Especies" class="form-text small text-danger"></span>
+                                        <span class="block small text-secondary">[Presione Enter para confirmar el valor ingresado]</span>
                                     </div>
                                 </div>
                                 @if (permisoCancelar)
                                 {
                                     <div class="form-group row">
-                                        <label asp-for="Estado" class="col-md-4 col-form-label"></label>
-                                        <div class="col-md-8">
+                                        <label asp-for="Estado" class="col-md-3 col-form-label"></label>
+                                        <div class="col-md-9">
                                             <select asp-for="Estado" asp-items="@listaEstados" class="form-control" required>
                                                 <option value="">Seleccione una opción</option>
                                             </select>
@@ -180,8 +198,8 @@
                                 {
                                     <hr />
                                     <div class="form-group row">
-                                        <label asp-for="IdResponsable" class="col-md-4 col-form-label"></label>
-                                        <div class="col-md-8">
+                                        <label asp-for="IdResponsable" class="col-md-3 col-form-label"></label>
+                                        <div class="col-md-9">
                                             <select asp-for="IdResponsable" asp-items="@listaCoordinacion" class="form-control" required>
                                                 <option value="">Seleccione una opción</option>
                                             </select>
@@ -758,6 +776,7 @@
         var especies = JSON.parse('@Html.Raw(ViewBag.Especies)');
         var artes = JSON.parse('@Html.Raw(ViewBag.Artes)');
 
+        //Inicia el campo taginput para artes de pesca
         var dataArtes = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -777,6 +796,7 @@
             }
         });
 
+        //Inicia el campo taginput para especies
         var dataEspecies = new Bloodhound({
             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
             queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -795,5 +815,28 @@
                 source: dataEspecies.ttAdapter()
             }
         });
+
+        $(function () {
+
+
+            //Define el campo zona de pesca
+            $('#zonaInput').tagsinput();
+            $('#zonaDiv .bootstrap-tagsinput input').attr('style', 'display:none!important');
+
+            $('body').on('click', '#zonaBoton', function (e) {
+                var tipo = $('#zonaTipo').val();
+                var nombre = $('#zonaNombre').val();
+                if (tipo == "") {
+                    funcGenerico.mostrarMensaje("Seleccione un tipo de zona.", "warning");
+                } else if (nombre == "") {
+                    funcGenerico.mostrarMensaje("Complete el nombre de la zona.", "warning");
+                } else {
+                    $('#zonaInput').tagsinput('add', " "+tipo + " '" + nombre + "'");
+                    $('#zonaTipo').val("");
+                    $('#zonaNombre').val("");
+                }
+            });
+        });
+
     </script>
 }
