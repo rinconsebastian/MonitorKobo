@@ -182,6 +182,7 @@ namespace App_consulta.Controllers
                                     zonaAux = tipoZona != null && tipoZona != "" ? GetValueForVariables(tipoZona, zonas) + " " : "";
 
                                     var nombreZona = (String)a[czNombre];
+                                    nombreZona = nombreZona.Replace(',', ';');
                                     zonaAux += nombreZona != null && nombreZona != "" ? "'" +nombreZona +"'" : "";
 
                                     if (zonaAux != "")
