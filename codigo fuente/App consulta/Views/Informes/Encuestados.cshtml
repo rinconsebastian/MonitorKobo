@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Informe encuestadores";
     ViewData["Subtitle"] = "";
+    ViewData["Fluid"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var verFormalizacion = User.HasClaim(c => (c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/Formalizacion.Ver" && c.Value == "1"));
@@ -34,6 +35,7 @@
         var myShowValidation = @(verFormalizacion ? "true": "false");
         var myLoadValidation =@(validarFormalizacion ? "true": "false");
         var myShowDni = true;
+        var myShowFull = true;
     </script>
     <script type="text/javascript" src="~/js/tables/AlertScript.js"></script>
     <script type="text/javascript" src="~/js/tables/EncuestaListadoScript.js?v=1.1"></script>

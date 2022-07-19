@@ -8,6 +8,8 @@ var ShowValidar = false;
 var showPrint = false;
 var urlPrint = "";
 
+var tablename = "form_p_";
+
 //*********************************** funcForm ******************************************
 
 var funcForm = {
@@ -94,36 +96,40 @@ var funcForm = {
             },
             columns: [
                 {
+                    name: tablename + "registro",
                     dataField: "registro",
                     caption: "Número\r\nRegistro",
                     headerCellTemplate: function (header, info) {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '80',
+                    width: '90',
                     hidingPriority: 9,
                 },
                 {
+                    name: tablename + "cedula",
                     dataField: "cedula",
                     caption: "Cedula\r\nPescador",
                     headerCellTemplate: function (header, info) {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '80',
+                    width: '100',
                     hidingPriority: 8,
                 },
                 {
+                    name: tablename + "nombre",
                     dataField: "nombre",
                     caption: "Nombre\r\nPescador",
                     headerCellTemplate: function (header, info) {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '180',
+                    width: '200',
                     hidingPriority: 6,
                 },
                 {
+                    name: tablename + "mun",
                     dataField: "municipio",
                     caption: "Muninicipio",
                     alignment: "center",
@@ -131,6 +137,7 @@ var funcForm = {
                     hidingPriority: 5
                 },
                 {
+                    name: tablename + "dep",
                     dataField: "departamento",
                     caption: "Departamento",
                     alignment: "center",
@@ -138,17 +145,30 @@ var funcForm = {
                     hidingPriority: 1
                 },
                 {
+                    name: tablename + "coordinacion",
                     dataField: "coordinacion",
                     caption: "Coordinación",
                     alignment: "center",
-                    width: '190',
+                    width: '170',
                     hidingPriority: 3
                 },
                 {
+                    name: tablename + "encuestador",
+                    dataField: "encuestador",
+                    caption: "Cédula\r\nencuestador",
+                    headerCellTemplate: function (header, info) {
+                        $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
+                    },
+                    alignment: "center",
+                    width: '100',
+                    hidingPriority: 10
+                },
+                {
+                    name: tablename + "fecha",
                     dataField: "fecha",
                     caption: "Fecha",
                     alignment: "center",
-                    width: '80',
+                    width: '90',
                     hidingPriority: 4,
                     dataType: "date",
                     calculateFilterExpression: function (value, selectedFilterOperations, target) {
@@ -159,10 +179,11 @@ var funcForm = {
                     }
                 },
                 {
+                    name: tablename + "estado",
                     dataField: "nombreEstado",
                     caption: "Estado",
                     alignment: "center",
-                    width: '70',
+                    width: '90',
                     hidingPriority: 2,
                     cellTemplate: function (container, options) {
                         var nombre = options.data.nombreEstado;
@@ -191,11 +212,12 @@ var funcForm = {
                 },
 
                 {
+                    name: tablename + "opciones",
                     dataField: "Opciones",
                     caption: "Opciones",
                     alignment: "center",
                     allowHeaderFiltering: false,
-                    width: '70',
+                    width: '80',
                     hidingPriority: 7,
                     cellTemplate: function (container, options) {
 

@@ -5,6 +5,7 @@
 @{
     var appName = "App Consulta";
 
+
     var conf = await db.Configuracion.FirstOrDefaultAsync();
     if (conf != null)
     {
@@ -12,6 +13,7 @@
     }
 
     var containerClass = ViewData["Fluid"] != null ? "container-fluid" : "container";
+
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +51,7 @@
         </div>
     </nav>
 
-    <div class="container bodyccs  @(ViewBag.ClaseContainer) ">
+    <div class="bodyccs @containerClass">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

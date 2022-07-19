@@ -8,6 +8,10 @@ var showDNI = false;
 var showValidation = false;
 var loadValidation = false;
 var code = "";
+
+var showFull = false;
+var tablename = "";
+
 //*********************************** funcLE ******************************************
 
 var funcLE = {
@@ -113,47 +117,52 @@ var funcLE = {
             columns: [
 
                 {
+                    name: tablename + "dni",
                     dataField: "dni",
                     caption: "Cedula\r\nPescador",
                     headerCellTemplate: function (header, info) {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '120',
+                    width: showFull ? '120' : '100',
                     hidingPriority: 10
                 },
 
                 {
+                    name: tablename + "name",
                     dataField: "name",
                     caption: "Nombre\r\nPescador",
                     headerCellTemplate: function (header, info) {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '120',
+                    width: showFull ? '220' : '180',
                     hidingPriority: 5
                 },
               
                 {
+                    name: tablename + "mun",
                     dataField: "mun",
                     caption: "Municipio",
                     alignment: "center",
-                    width: '120',
+                    width: showFull ? '130' : '110',
                     hidingPriority: 8
                 },
                 {
+                    name: tablename + "dep",
                     dataField: "dep",
                     caption: "Departamento",
                     alignment: "center",
-                    width: '120',
+                    width: showFull ? '130' : '110',
                     hidingPriority: 2
                 },
                
                 {
+                    name: tablename + "datetime",
                     dataField: "datetime",
                     caption: "Fecha",
                     alignment: "center",
-                    width: '100',
+                    width: showFull ? '100' : '90',
                     hidingPriority: 9,
                     dataType: "date",
                     calculateFilterExpression: function (value, selectedFilterOperations, target) {
@@ -165,6 +174,7 @@ var funcLE = {
                 },
 
                 {
+                    name: tablename + "user",
                     dataField: "user",
                     caption: "Cedula\r\nEncuestador",
                     headerCellTemplate: function (header, info) {
@@ -172,11 +182,12 @@ var funcLE = {
                     },
                     alignment: "center",
                     visible: showDNI,
-                    width: '120',
+                    width: showFull ? '120' : '100',
                     hidingPriority: 3
                 },
 
                 {
+                    name: tablename + "username",
                     dataField: "userName",
                     caption: "Nombre\r\nEncuestador",
                     headerCellTemplate: function (header, info) {
@@ -184,32 +195,34 @@ var funcLE = {
                     },
                     alignment: "center",
                     visible: showDNI,
-                    width: '200',
+                    width: showFull ? '150' : '100',
                     hidingPriority: 1
                 },
                 {
+                    name: tablename + "carnet",
                     dataField: "carnet",
                     caption: "Carnet",
                     visible: (showValidation),
                     alignment: "center",
-                    width: '100',
+                    width: showFull ? '100' : '80',
                     hidingPriority: 4
                 },
                 {
+                    name: tablename + "status",
                     dataField: "status",
                     caption: "Formalización",
                     visible: (showValidation && showDNI),
                     alignment: "center",
-                    width: '100',
+                    width: showFull ? '100' : '100',
                     hidingPriority: 6
                 },
                 {
-                    
+                    name: tablename + "opciones",
                     caption: "Opciones",
                     visible: showValidation,
                     alignment: "center",
                     hidingPriority: 7,
-                    width: '80',
+                    width: showFull ? '80' : '80',
                     cellTemplate: function (container, options) {
 
                         var idKobo = options.data.idKobo;
@@ -338,6 +351,12 @@ var funcLE = {
         if (typeof myLoadValidation !== "undefined") {
             loadValidation = myLoadValidation;
         }
+
+        if (typeof myShowFull !== "undefined") {
+            showFull = myShowFull;
+        }
+        tablename = showFull ? "carac_" : "carac_min_";
+
        
         if (code != "") {
             source = root + "Kobo/ListadoEncuestasUsuario/?code=" + code;

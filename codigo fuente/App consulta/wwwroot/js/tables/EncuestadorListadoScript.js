@@ -7,6 +7,7 @@ var showExport = false;
 var showEditar = false;
 var showDelete = false;
 
+var tablename = "encuestador";
 //*********************************** funcLE ******************************************
 
 var funcLE = {
@@ -94,6 +95,7 @@ var funcLE = {
             columns: [
 
                 {
+                    name: tablename + "cedula",
                     dataField: "cedula",
                     caption: "Cedula",
                     alignment: "center",
@@ -102,13 +104,15 @@ var funcLE = {
                     hidingPriority: 9
                 },
                 {
+                    name: tablename + "nombre",
                     dataField: "nombre",
                     caption: "Nombre",
                     alignment: "center",
-                    width: '220',
+                    width: '250',
                     hidingPriority: 8
                 },
                 {
+                    name: tablename + "mun",
                     dataField: "municipio",
                     caption: "Municipio",
                     alignment: "center",
@@ -117,13 +121,15 @@ var funcLE = {
 
                 },
                 {
+                    name: tablename + "dep",
                     dataField: "departamento",
                     caption: "Departamento",
                     alignment: "center",
-                    width: '100',
+                    width: '130',
                     hidingPriority: 4
                 },
                 {
+                    name: tablename + "coordinacion",
                     dataField: "coordinacion",
                     caption: "Coordinación",
                     alignment: "center",
@@ -131,6 +137,7 @@ var funcLE = {
                     hidingPriority: 5
                 },
                 {
+                    name: tablename + "telefono",
                     dataField: "telefono",
                     caption: "Teléfono",
                     alignment: "center",
@@ -138,13 +145,15 @@ var funcLE = {
                     hidingPriority: 2
                 },
                 {
+                    name: tablename + "email",
                     dataField: "email",
                     caption: "Correo electrónico",
                     alignment: "center",
-                    width: '120',
+                    width: '200',
                     hidingPriority: 1
                 },
                 {
+                    name: tablename + "num_enc",
                     dataField: "numeroEncuestas",
                     caption: "Nº\r\nCaracterizaciones",
                     headerCellTemplate: function (header, info) {
@@ -155,6 +164,7 @@ var funcLE = {
                     hidingPriority: 6
                 },
                 {
+                    name: tablename + "num_asoc",
                     dataField: "numeroAsociaciones",
                     caption: "Nº\r\nAsociaciones",
                     headerCellTemplate: function (header, info) {
@@ -165,12 +175,13 @@ var funcLE = {
                     hidingPriority: 7
                 },
                 {
+                    name: tablename + "opciones",
                     dataField: "Opciones",
                     hidingPriority: 10,
                     caption: "Opciones",
                     alignment: "left",
                     allowHeaderFiltering: false,
-                    width: '80',
+                    width: '100',
                     cellTemplate: function (container, options) {
 
                         var idEnc = options.data.id;

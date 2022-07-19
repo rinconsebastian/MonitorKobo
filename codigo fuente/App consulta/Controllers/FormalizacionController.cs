@@ -76,7 +76,8 @@ namespace App_consulta.Controllers
                     Municipio = n.Municipio,
                     Fecha = n.FechaSolicitud,
                     Estado = n.Estado,
-                    Coordinacion = n.Responsable.Nombre
+                    Coordinacion = n.Responsable.Nombre,
+                    Encuestador = n.Encuestador
                 })
                 .ToListAsync();
             foreach (var formalizacion in formalizaciones)

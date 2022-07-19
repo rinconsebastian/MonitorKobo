@@ -30,5 +30,7 @@ namespace App_consulta.Models
 
         public string Fecha { get; set; }
 
+        public string Encuestador { get; set; }
+
     }
 }

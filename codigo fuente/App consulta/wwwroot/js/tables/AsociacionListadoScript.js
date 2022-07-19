@@ -5,6 +5,10 @@ var source_A = "";
 
 var showExport = false;
 var showDNI_A = false;
+
+var showFull = false;
+var tablename = "";
+
 var code_A = "";
 //*********************************** funcAsoc ******************************************
 
@@ -97,34 +101,38 @@ var funcAsoc = {
             columns: [
 
                 {
+                    name: tablename + "name",
                     dataField: "name",
                     caption: "Nombre\r\nAsociación",
                     headerCellTemplate: function (header, info) {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: '250',
+                    width: showFull ? '350': '300',
                     hidingPriority: 6
                 },
                 {
+                    name: tablename + "mun",
                     dataField: "mun",
                     caption: "Muninicipio",
                     alignment: "center",
-                    width: '120',
+                    width: showFull ?  '170' : '140',
                     hidingPriority: 4
                 },
                 {
+                    name: tablename + "dep",
                     dataField: "dep",
                     caption: "Departamento",
                     alignment: "center",
-                    width: '120',
+                    width: showFull ? '170' : '140',
                     hidingPriority: 2
                 },
                 {
+                    name: tablename + "datetime",
                     dataField: "datetime",
                     caption: "Fecha",
                     alignment: "center",
-                    width: '100',
+                    width: showFull ? '120' : '100',
                     hidingPriority: 5,
                     dataType: "date",
                     calculateFilterExpression: function (value, selectedFilterOperations, target) {
@@ -135,6 +143,7 @@ var funcAsoc = {
                     }
                 },
                 {
+                    name: tablename + "user",
                     dataField: "user",
                     caption: "Cedula\r\nEncuestador",
                     headerCellTemplate: function (header, info) {
@@ -142,10 +151,11 @@ var funcAsoc = {
                     },
                     alignment: "center",
                     visible: showDNI_A,
-                    width: '150',
+                    width: showFull ? '150': '150',
                     hidingPriority: 3
                 },
                 {
+                    name: tablename + "username",
                     dataField: "userName",
                     caption: "Nombre\r\nEncuestador",
                     headerCellTemplate: function (header, info) {
@@ -153,7 +163,7 @@ var funcAsoc = {
                     },
                     alignment: "center",
                     visible: showDNI_A,
-                    width: '200',
+                    width: showFull ? '280' : '200',
                     hidingPriority: 1
                 },
                 
@@ -204,6 +214,11 @@ var funcAsoc = {
         root_A = $('#Root').val();
         code_A = $('#code').val();
         showExport = $('#showExport').val() == 1;
+
+        if (typeof myShowFull !== "undefined") {
+            showFull = myShowFull;
+        }
+        tablename = showFull ? "asoc_" : "asoc_min_";
 
         if (typeof myShowDni !== "undefined") {
             showDNI_A = myShowDni;
