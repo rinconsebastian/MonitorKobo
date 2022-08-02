@@ -193,7 +193,8 @@ namespace App_consulta.Controllers
                     ValidationDate = n.AdminName != null ? n.ValidationDate.ToString() : "",
                     AdminName = n.AdminName,
                     FormalizationId = n.FormalizationId,
-                    FormalizationNumber = ""
+                    FormalizationNumber = "",
+                    Message = n.Message
                 }).ToListAsync();
 
             var idsUsuarios = solicitudes.Select(n => n.IdUser).Distinct().ToList();
@@ -258,6 +259,49 @@ namespace App_consulta.Controllers
             ViewBag.Formalizacion = formalizacion;
 
             return View(dataForm);
+        }
+
+
+        [Authorize(Policy = "Solicitud.Administrar")]
+        [HttpPost]
+        public async Task<ActionResult> QuickResponse(int id)
+        {
+            RespuestaAccion r = new();
+
+            var solicitud = await db.RequestUser.FindAsync(id);
+            if (solicitud != null) {
+                var formalizacion = await db.Formalization.FindAsync(solicitud.FormalizationId);
+                if(formalizacion != null)
+                {
+                    if(formalizacion.Estado != Formalization.ESTADO_BORRADOR)
+                    {
+                        var user = await userManager.FindByNameAsync(User.Identity.Name);
+
+                        solicitud.Response = "FORMALIZACIÓN PASA A BORRADOR.";
+                        solicitud.State = RequestUser.ESTADO_SOLUCIONADA;
+                        solicitud.AdminName = user.Nombre + " " + user.Apellido;
+                        solicitud.ValidationDate = DateTime.Now;
+                        solicitud.AlertAdmin = false;
+                        solicitud.AlertUser = true;
+
+                        formalizacion.Estado = Formalization.ESTADO_BORRADOR;
+                        formalizacion.LastEditDate = DateTime.Now;
+                        formalizacion.LastEditByUser = user;
+
+                        db.Entry(solicitud).State = EntityState.Modified;                        
+                        db.Entry(formalizacion).State = EntityState.Modified;
+                        await db.SaveChangesAsync();
+
+                        r.Success = true;
+                    }
+                    else { r.Message = "ERROR: Formalización ya esta en estado borrador."; }
+                }
+                else { r.Message = "ERROR: Formalización no encontrada."; }
+            }
+            else { r.Message = "ERROR: Solicitud no encontrada.";  }
+
+            return Json(r);
+         
         }
 
         [Authorize(Policy = "Solicitud.Administrar")]

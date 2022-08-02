@@ -136,9 +136,9 @@ namespace App_consulta.Controllers
                 };
 
                 //folder para los adjunto
-
-                var _path = Path.Combine(_env.ContentRootPath, "Storage", "Formalizacion", idKobo);
-                var _relative = Path.Combine("Formalizacion", idKobo);
+                var substring = idKobo.Substring(0, 5);
+                var _path = Path.Combine(_env.ContentRootPath, "Storage", "Formalizacion", substring, idKobo);
+                var _relative = Path.Combine("Formalizacion", substring, idKobo);
                 var remoteUri = config.KoboAttachment + config.KoboUsername + "/attachments/";
 
                 if (!Directory.Exists(_path))
@@ -307,7 +307,8 @@ namespace App_consulta.Controllers
 
                 var config = await db.Configuracion.FirstOrDefaultAsync();
                 var remoteUri = config.KoboAttachment + config.KoboUsername + "/attachments/";
-                var _path = Path.Combine(_env.ContentRootPath, "Storage", "Formalizacion", idKobo);
+                var substring = idKobo.Substring(0, 5);
+                var _path = Path.Combine(_env.ContentRootPath, "Storage", "Formalizacion", substring, idKobo);
 
                 DownloadFile(remoteUri, _fileName, _path, "", config.KoboApiToken);
 
