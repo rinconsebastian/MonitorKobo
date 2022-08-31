@@ -99,7 +99,14 @@ var funcAsoc = {
                 visible: true
             },
             columns: [
-
+                {
+                    name: tablename + "nit",
+                    dataField: "nit",
+                    caption: "NIT",
+                    alignment: "center",
+                    width: showFull ? '100' : '100',
+                    hidingPriority: 7
+                },
                 {
                     name: tablename + "name",
                     dataField: "name",
@@ -108,7 +115,7 @@ var funcAsoc = {
                         $("<div>").html(info.column.caption.replace(/\r\n/g, "<br/>")).appendTo(header);
                     },
                     alignment: "center",
-                    width: showFull ? '350': '300',
+                    width: showFull ? '300': '250',
                     hidingPriority: 6
                 },
                 {
@@ -116,7 +123,7 @@ var funcAsoc = {
                     dataField: "mun",
                     caption: "Muninicipio",
                     alignment: "center",
-                    width: showFull ?  '170' : '140',
+                    width: showFull ?  '150' : '120',
                     hidingPriority: 4
                 },
                 {
@@ -124,7 +131,7 @@ var funcAsoc = {
                     dataField: "dep",
                     caption: "Departamento",
                     alignment: "center",
-                    width: showFull ? '170' : '140',
+                    width: showFull ? '150' : '120',
                     hidingPriority: 2
                 },
                 {
@@ -132,7 +139,7 @@ var funcAsoc = {
                     dataField: "datetime",
                     caption: "Fecha",
                     alignment: "center",
-                    width: showFull ? '120' : '100',
+                    width: showFull ? '100' : '90',
                     hidingPriority: 5,
                     dataType: "date",
                     calculateFilterExpression: function (value, selectedFilterOperations, target) {
@@ -163,7 +170,7 @@ var funcAsoc = {
                     },
                     alignment: "center",
                     visible: showDNI_A,
-                    width: showFull ? '280' : '200',
+                    width: showFull ? '250' : '200',
                     hidingPriority: 1
                 },
                 

@@ -520,7 +520,7 @@ namespace App_consulta.Controllers
             //Carga los datos de conexión desde la configuración 
             var config = await db.Configuracion.FirstOrDefaultAsync();
             var mapParams = JsonConvert.DeserializeObject<AsociacionMap>(config.KoboParamsMapAssociation);
-            var fields = JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Name});
+            var fields = JsonConvert.SerializeObject(new string[] { mapParams.IdKobo, mapParams.User, mapParams.LocationCode, mapParams.Datetime, mapParams.Name, mapParams.Nit});
             var url = config.KoboKpiUrl + "/assets/" + config.KoboAssetUidAssociation + "/submissions/?format=json&fields=" + HttpUtility.UrlEncode(fields);
 
 
@@ -552,6 +552,7 @@ namespace App_consulta.Controllers
                         User = (String)result[mapParams.User],
                         LocationCode = (String)result[mapParams.LocationCode],
                         Datetime = (String)result[mapParams.Datetime],
+                        Nit = (String)result[mapParams.Nit],
                         Name = (String)result[mapParams.Name]
                     });
                 }
@@ -779,6 +780,7 @@ namespace App_consulta.Controllers
                                 Datetime = item.Datetime,
                                 Mun = item.LocationCode,
                                 Dep = "",
+                                Nit = item.Nit,
                                 Name = item.Name
                             };
                             //Completa los municipios y departamentos
