@@ -701,7 +701,7 @@ namespace App_consulta.Controllers
                                 var aux = formalizaciones[item.IdKobo];
                                 encuesta.FormalizacionId = aux.Id;
                                 encuesta.FormalizacionEstado = aux.Estado;
-                                if(aux.Estado == Formalization.ESTADO_BORRADOR  || aux.Estado == Formalization.ESTADO_COMPLETO || aux.Estado == Formalization.ESTADO_IMPRESO)
+                                if(aux.Estado == Formalization.ESTADO_BORRADOR  || aux.Estado == Formalization.ESTADO_COMPLETO || aux.Estado == Formalization.ESTADO_CARNET_ENTREGADO || aux.Estado == Formalization.ESTADO_IMPRESO)
                                 {
                                     encuesta.Name = aux.Name;
                                     encuesta.DNI = aux.Cedula;

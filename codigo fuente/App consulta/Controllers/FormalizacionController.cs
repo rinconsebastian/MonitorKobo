@@ -113,7 +113,7 @@ namespace App_consulta.Controllers
         public async Task<ActionResult> Print(int[] ids)
         {
             var formalizaciones = await db.Formalization.Where(n => ids.Contains(n.Id)).ToListAsync();
-            var estadosValidos = new List<int> { Formalization.ESTADO_COMPLETO, Formalization.ESTADO_IMPRESO };
+            var estadosValidos = new List<int> { Formalization.ESTADO_COMPLETO, Formalization.ESTADO_IMPRESO, Formalization.ESTADO_CARNET_ENTREGADO };
             ViewBag.EstadosValidos = estadosValidos;
             var idsValidos = formalizaciones.Where(n => estadosValidos.Contains(n.Estado)).Select(n => n.Id).ToList();
             ViewBag.Ids = JsonConvert.SerializeObject( idsValidos );
@@ -155,6 +155,7 @@ namespace App_consulta.Controllers
                 {  Formalization.ESTADO_CANCELADO, "Cancelado" },
                 {  Formalization.ESTADO_IMPRESO, "Impreso" },
                 {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" },
+                {  Formalization.ESTADO_CARNET_ENTREGADO, "Entregado" },
                 {  Formalization.ESTADO_CARNET_DUPLICADO, "Duplicado" }
             };
 
@@ -240,7 +241,7 @@ namespace App_consulta.Controllers
                 {
                     var anterior = anteriores.Where(n => n.Id == formalizacion.Id).FirstOrDefault();
 
-                    formalizacion.Estado = Formalization.ESTADO_IMPRESO;
+                    formalizacion.Estado = formalizacion.Estado  == Formalization.ESTADO_CARNET_ENTREGADO ? Formalization.ESTADO_CARNET_ENTREGADO : Formalization.ESTADO_IMPRESO;
 
                     var user = await userManager.FindByNameAsync(User.Identity.Name);
                     formalizacion.LastEditDate = DateTime.Now;
@@ -320,6 +321,7 @@ namespace App_consulta.Controllers
                 {  Formalization.ESTADO_CANCELADO, "Cancelado" },
                 {  Formalization.ESTADO_IMPRESO, "Impreso" },
                 {  Formalization.ESTADO_CARNET_VIGENTE, "Carnet vigente" },
+                {  Formalization.ESTADO_CARNET_ENTREGADO, "Entregado" },
                 {  Formalization.ESTADO_CARNET_DUPLICADO, "Duplicado" }
             };
 
@@ -427,6 +429,9 @@ namespace App_consulta.Controllers
                     break;
                 case Formalization.ESTADO_CANCELADO:
                     r = "Cancelado";
+                    break;
+                case Formalization.ESTADO_CARNET_ENTREGADO:
+                    r = "Entregado";
                     break;
                 case Formalization.ESTADO_IMPRESO:
                     r = "Impreso";

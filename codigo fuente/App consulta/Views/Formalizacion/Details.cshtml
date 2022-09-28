@@ -34,6 +34,9 @@
                         case Formalization.ESTADO_CANCELADO:
                             <span class="badge bg-danger text-white float-right">Cancelado</span>
                             break;
+                        case Formalization.ESTADO_CARNET_ENTREGADO:
+                            <span class="badge bg-dark text-white float-right">Entregado</span>
+                            break;
                         case Formalization.ESTADO_IMPRESO:
                             <span class="badge bg-info text-white float-right">Impreso</span>
                             break;
@@ -163,7 +166,8 @@
                                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary btn-block">@btnEditar</a>
                             </div>
                         }
-                        @if (permisoImprimir && (Model.Estado == Formalization.ESTADO_COMPLETO || Model.Estado == Formalization.ESTADO_IMPRESO))
+                        @if (permisoImprimir && (Model.Estado == Formalization.ESTADO_COMPLETO || Model.Estado == Formalization.ESTADO_IMPRESO
+                            || Model.Estado == Formalization.ESTADO_CARNET_ENTREGADO))
                         {
                             <div class="col-md text-center mb-2">
                                 <button data-link="@Url.Action("Print","Formalizacion", new { ids = Model.Id })" class="btn btn-outline-success btn-block btn-print-formlz">Imprimir</button>

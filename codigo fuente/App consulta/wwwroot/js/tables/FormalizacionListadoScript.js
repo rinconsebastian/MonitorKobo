@@ -203,6 +203,9 @@ var funcForm = {
                             case 4:
                                 color = "bg-info text-white";
                                 break;
+                            case 7:
+                                color = "bg-dark text-white";
+                                break;
                         }
                         contenido = '<h6 class="mb-0"><span class="badge ' + color + '">' + nombre + '</span></h6>';
                         $("<div class='preventSelection'>")
