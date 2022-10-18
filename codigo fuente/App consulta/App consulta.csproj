@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>aspnet-App_consulta-37F7DFCB-4FAD-4416-8BD6-FA3877BFBD04</UserSecretsId>
